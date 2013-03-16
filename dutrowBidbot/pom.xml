@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>dutrowMarket</artifactId>
+		<groupId>dutrow.dutrowMarket</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	
+    <groupId>dutrow.dutrowMarket.dutrowBidbot</groupId>
+    <artifactId>dutrowBidbot</artifactId>
+    <packaging>pom</packaging>
+
+    <name>My dutrowBidbot package</name>
+    <description>
+        This is the dutrowBidbot application
+    </description>
+    <modules>
+        <module>dutrowBidbotImpl</module>
+    </modules>
+
+    <properties>
+    </properties>
+
+</project>
