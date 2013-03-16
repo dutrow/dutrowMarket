@@ -4,8 +4,7 @@
 package dutrow.bidbot.blimpl;
 
 import dutrow.bidbot.bl.OrderMgmt;
-import dutrow.bidbot.bo.Bid;
-import dutrow.bidbot.bo.Order;
+import dutrow.bidbot.bo.BidOrder;
 
 /**
  * @author dutroda1
@@ -14,19 +13,19 @@ import dutrow.bidbot.bo.Order;
 public class OrderMgmtImpl implements OrderMgmt {
 
 	/* (non-Javadoc)
-	 * @see dutrow.bidbot.bl.OrderMgmt#createOrder(dutrow.bidbot.bo.Order)
+	 * @see dutrow.bidbot.bl.OrderMgmt#createOrder(dutrow.bidbot.bo.BidOrder)
 	 */
 	@Override
-	public void createOrder(Order order) {
+	public void createOrder(BidOrder order) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	/* (non-Javadoc)
-	 * @see dutrow.bidbot.bl.OrderMgmt#placeBid(dutrow.bidbot.bo.Bid)
+	 * @see dutrow.bidbot.bl.OrderMgmt#placeBid(float)
 	 */
 	@Override
-	public void placeBid(Bid bid) {
+	public void placeBid(BidOrder order, float bid) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -37,7 +36,7 @@ public class OrderMgmtImpl implements OrderMgmt {
 	@Override
 	public boolean endOrder() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 	/* (non-Javadoc)
@@ -46,7 +45,7 @@ public class OrderMgmtImpl implements OrderMgmt {
 	@Override
 	public boolean getOrderStatus() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 }

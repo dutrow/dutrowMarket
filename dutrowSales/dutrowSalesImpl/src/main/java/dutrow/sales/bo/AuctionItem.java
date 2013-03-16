@@ -33,7 +33,9 @@ import org.hibernate.annotations.SortType;
 @Table(name = "DUTROW_SALES_AUCTIONITEM")
 public class AuctionItem {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	// Can't be generated because parser expects to be able
+	// to set the id
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	long id = 0;
 	String title;
 	Category category;
@@ -42,26 +44,27 @@ public class AuctionItem {
 	Date endTime;
 	float askingPrice;
 	float purchasePrice;
-	
-	@OneToMany(cascade={CascadeType.ALL})
+
+	@OneToMany(cascade = { CascadeType.ALL })
 	@Sort(type = SortType.NATURAL)
 	SortedSet<Bid> bids;
-	//@OrderBy("amount")
-	//Set<Bid> bids;
-	
-	@ManyToOne(optional=true, cascade={CascadeType.PERSIST})
+	// @OrderBy("amount")
+	// Set<Bid> bids;
+
+	@ManyToOne(optional = true, cascade = { CascadeType.PERSIST })
 	@JoinColumn
 	POC buyer;
-	
-	@OneToOne (cascade={CascadeType.PERSIST})
+
+	@OneToOne(cascade = { CascadeType.PERSIST })
 	@JoinColumn
 	Address shipTo;
-	
+
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	POC seller;
-	
-	@OneToMany @JoinTable(name = "DUTROW_ITEM_IMAGE_LINK")
+
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinTable(name = "DUTROW_SALES_ITEM_IMAGE_LINK")
 	List<Image> images;
 
 	// JPA Requires no-arg constructor
@@ -84,9 +87,9 @@ public class AuctionItem {
 	 * @param seller
 	 * @param images2
 	 */
-	public AuctionItem(String title, Category category, String description,
-			Date startTime, Date endTime, float askingPrice,
-			POC seller) {
+	public AuctionItem(long id, String title, Category category, String description,
+			Date startTime, Date endTime, float askingPrice, POC seller) {
+		this.id = id;
 		this.title = title;
 		this.category = category;
 		this.description = description;
@@ -299,7 +302,7 @@ public class AuctionItem {
 	public List<Image> getImages() {
 		if (images == null)
 			images = new ArrayList<Image>();
-		
+
 		return images;
 	}
 
@@ -318,10 +321,10 @@ public class AuctionItem {
 	public Bid getHighestBid() {
 		if (bids == null || bids.size() == 0)
 			return null;
-		
-		return bids.last();		
+
+		return bids.last();
 	}
-	
+
 	@Override
 	public String toString() {
 
@@ -333,7 +336,7 @@ public class AuctionItem {
 				.append(", title=")
 				.append(this.title)
 				.append(", category=")
-				.append(this.category.prettyName)
+				.append(this.category == null ? "" : this.category.prettyName)
 				.append(", description=")
 				.append(this.description)
 				.append(", askingPrice=")
@@ -341,11 +344,9 @@ public class AuctionItem {
 				.append(", start=")
 				.append(dateFormatter.format(this.getStartTime()))
 				.append(", end=")
-				.append(this.getEndTime() != null ? dateFormatter
-						.format(this.getEndTime()) : "")
-				.append(", seller=")
-				.append(this.seller.getUserId())
-				.append(", #images=")
+				.append(this.getEndTime() != null ? dateFormatter.format(this
+						.getEndTime()) : "").append(", seller=")
+				.append(this.seller.getUserId()).append(", #images=")
 				.append(this.images == null ? 0 : this.images.size());
 		return builder.toString();
 	}

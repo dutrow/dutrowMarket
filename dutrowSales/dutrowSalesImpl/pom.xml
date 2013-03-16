@@ -34,13 +34,13 @@
 			<artifactId>hibernate-jpa-2.0-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 		</dependency>
 		<!-- core project testing dependencies -->
-		
+
 
 		<dependency>
 			<groupId>junit</groupId>

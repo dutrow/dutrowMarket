@@ -5,16 +5,16 @@ package dutrow.bidbot.dao;
 
 import java.util.Collection;
 
-import dutrow.bidbot.bo.Account;
+import dutrow.bidbot.bo.BidAccount;
 
 /**
  * @author dutroda1
  *
  */
 public interface BidAccountDAO {
-	boolean createAccount(Account accountDetails);
-	Account getAccountById(String userId);
-	boolean updateAccount(Account accountDetails);
+	boolean createAccount(BidAccount accountDetails);
+	BidAccount getAccountById(String userId);
+	boolean updateAccount(BidAccount accountDetails);
 	boolean removeAccount(String userId);
-	Collection<Account> getAccounts();
+	Collection<BidAccount> getAccounts();
 }

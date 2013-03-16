@@ -42,8 +42,8 @@ public class Ingestor {
 	 * @param is
 	 * @param accountDao2
 	 */
-	public Ingestor(InputStream is, JPAAccountDAO accountDaoIn, JPAAuctionDAO auctionDaoIn)
-			throws IllegalArgumentException {
+	public Ingestor(InputStream is, JPAAccountDAO accountDaoIn,
+			JPAAuctionDAO auctionDaoIn) throws IllegalArgumentException {
 		this.inputStream = is;
 		this.accountDAO = accountDaoIn;
 		this.auctionDAO = auctionDaoIn;
@@ -94,17 +94,20 @@ public class Ingestor {
 	 * @param object
 	 */
 	private void createImage(ejava.projects.esales.dto.Image object) {
-		
-		ejava.projects.esales.dto.Auction auctionObject = 
-				(ejava.projects.esales.dto.Auction) object.getAuctionRef();
+
+		ejava.projects.esales.dto.Auction auctionObject = (ejava.projects.esales.dto.Auction) object
+				.getAuctionRef();
 		AuctionItem ai = auctionDAO.getAuctionById(auctionObject.getId());
-		
+
 		Image i = new Image();
 		i.setImage(object.getImage());
-		ai.getImages().add(i);
-		
-		auctionDAO.updateAuction(ai);
-		log.info("updated auction: " + ai);
+		if (ai != null) {
+			ai.getImages().add(i);
+
+			auctionDAO.updateAuction(ai);
+			log.info("updated auction: " + ai);
+		}
+		else log.warn("AuctionItem does not exist with id: " + auctionObject.getId());
 	}
 
 	/**
@@ -112,18 +115,19 @@ public class Ingestor {
 	 */
 	private void createAuction(ejava.projects.esales.dto.Auction object) {
 		AuctionItem ai = new AuctionItem();
+		ai.setId(object.getId());
 		ai.setTitle(object.getTitle());
 		ai.setCategory(Category.getCategory(object.getCategory()));
 		ai.setDescription(object.getDescription());
 		ai.setStartTime(object.getStartTime());
 		ai.setEndTime(object.getEndTime());
 		ai.setAskingPrice(object.getAskingPrice());
-		
-		
-		ejava.projects.esales.dto.Account s = (ejava.projects.esales.dto.Account)object.getSeller();
+
+		ejava.projects.esales.dto.Account s = (ejava.projects.esales.dto.Account) object
+				.getSeller();
 		Account a = accountDAO.getAccountByUser(s.getLogin());
-		ai.setSeller(a.getPoc());			
-		
+		ai.setSeller(a.getPoc());
+
 		auctionDAO.createAuction(ai);
 		log.info("created auction item: " + ai);
 	}

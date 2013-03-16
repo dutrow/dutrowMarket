@@ -65,7 +65,7 @@ public class TestSupportImpl implements TestSupport {
 	private void deleteByJPA(EntityManager em) throws DAOException {
 		log.info("Delete By JPA");
 
-		boolean useCascades = false;
+		boolean useCascades = true;
 		
 		// Delete the auctions first because the auction item
 		// has a link to the seller accounts
@@ -108,10 +108,7 @@ public class TestSupportImpl implements TestSupport {
 			else{
 				accountDao.removeAccount(a.getUserId());
 			}
-		}
-		
-
-		
+		}		
 	}
 	
 	@SuppressWarnings("unused")
@@ -128,6 +125,8 @@ public class TestSupportImpl implements TestSupport {
 		query = em.createNativeQuery("delete from DUTROW_SALES_AUCTIONITEM_DUTROW_SALES_BID");
 		rows += query.executeUpdate();
 		query = em.createNativeQuery("delete from DUTROW_SALES_BID");
+		rows += query.executeUpdate();
+		query = em.createNativeQuery("delete from DUTROW_SALES_ITEM_IMAGE_LINK");
 		rows += query.executeUpdate();
 		query = em.createNativeQuery("delete from DUTROW_SALES_IMAGE");
 		rows += query.executeUpdate();
@@ -198,7 +197,7 @@ public class TestSupportImpl implements TestSupport {
 		
 		Date startTime = createTime(5);
 		Date endTime = createTime(8);
-		AuctionItem item =  new AuctionItem(
+		AuctionItem item =  new AuctionItem(itemName.hashCode(),
 				itemName, null, "A beautiful " + itemName, 
 				startTime, endTime, 10, seller.getPoc());
 		

@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 
 import dutrow.sales.bo.AuctionItem;
 import dutrow.sales.bo.Bid;
+import dutrow.sales.bo.Image;
 import dutrow.sales.dao.AuctionDAO;
 import dutrow.sales.dao.DAOException;
 
@@ -69,12 +70,17 @@ public class JPAAuctionDAO implements AuctionDAO {
 	public boolean updateAuction(AuctionItem ai) {
 		// I expect that persisting will just do an overwrite
 
-		boolean useCascade = true;
+		boolean useCascade = false;
 		try {
 			if (useCascade == false) {
-				for (Bid b : ai.getBids()) {
-					em.persist(b);
-				}
+				if (ai.getBids() != null)
+					for (Bid b : ai.getBids()) {
+						em.persist(b);
+					}
+				if (ai.getImages() != null)
+					for (Image i : ai.getImages()) {
+						em.persist(i);
+					}
 			}
 			em.persist(ai);
 		} catch (RuntimeException ex) {
