@@ -21,7 +21,7 @@
 	
     <groupId>dutrow.dutrowMarket</groupId>
     <artifactId>dutrowMarket</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${dutrowMarket.version}</version>
 	<packaging>pom</packaging>
     <name>My dutrowMarket Project</name>
 	<description>
@@ -84,6 +84,7 @@
     </pluginRepositories>
 
     <properties>
+    <dutrowMarket.version>1.0.RC1</dutrowMarket.version>
     </properties>
 
     <dependencyManagement>

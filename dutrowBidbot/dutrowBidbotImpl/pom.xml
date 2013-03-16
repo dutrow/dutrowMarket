@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>dutrowBidbot</artifactId>
 		<groupId>dutrow.dutrowMarket.dutrowBidbot</groupId>
-		<version>1.0-SNAPSHOT</version>
+		<version>${dutrowMarket.version}</version>
 	</parent>
 
 	<artifactId>dutrowBidbotImpl</artifactId>
