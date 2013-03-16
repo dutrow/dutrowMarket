@@ -7,40 +7,18 @@ import junit.framework.Assert;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import dutrow.bidbot.blimpl.OrderMgmtImpl;
 import dutrow.bidbot.bo.BidOrder;
+import dutrow.bidbot.dao.JPATestBase;
 
 /**
  * @author dutroda1
  *
  */
-public class EndToEndTest {
-	private static Log log = LogFactory.getLog(BusinessLogicTest.class);
-	
-	OrderMgmt orderManager;
-	BidbotTestUtil testSupport;
-	
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		log.trace("Set up for EndToEndTest");
-		orderManager = new OrderMgmtImpl();
-		testSupport = new BidbotTestUtilImpl();
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-		log.trace("Tear down for EndToEndTest");
-	}
+public class EndToEndTest extends JPATestBase{
+	private static Log log = LogFactory.getLog(EndToEndTest.class);
+		
 	
 	@Test
 	public void endToEnd(){

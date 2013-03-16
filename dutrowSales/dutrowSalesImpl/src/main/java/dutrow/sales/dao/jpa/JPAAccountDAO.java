@@ -44,6 +44,13 @@ public class JPAAccountDAO implements AccountDAO {
 	@Override
 	public Account createAccount(Account accountDetails) {
 		try {
+			Account existingAcct = getAccountByUser(accountDetails.getUserId());
+			if (existingAcct != null) {
+				log.warn("User Account already exists with this id: "
+						+ accountDetails.getUserId());
+				return null;
+			}
+
 			em.persist(accountDetails);
 		} catch (RuntimeException ex) {
 			throw new DAOException("troubles: " + ex.toString(), ex);
@@ -153,11 +160,11 @@ public class JPAAccountDAO implements AccountDAO {
 	@Override
 	public Collection<Account> getAccounts(int offset, int limit) {
 		try {
-			TypedQuery<Account> q = em.createQuery(
-					"select a from Account a", Account.class);
+			TypedQuery<Account> q = em.createQuery("select a from Account a",
+					Account.class);
 			q.setMaxResults(limit);
 			q.setFirstResult(offset);
-			
+
 			return q.getResultList();
 		} catch (RuntimeException ex) {
 			throw new DAOException("troubles: " + ex.toString(), ex);

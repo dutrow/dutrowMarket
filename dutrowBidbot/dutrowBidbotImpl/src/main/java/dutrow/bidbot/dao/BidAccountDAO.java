@@ -12,7 +12,7 @@ import dutrow.bidbot.bo.BidAccount;
  *
  */
 public interface BidAccountDAO {
-	boolean createAccount(BidAccount accountDetails);
+	BidAccount createAccount(BidAccount accountDetails);
 	BidAccount getAccountById(String userId);
 	boolean updateAccount(BidAccount accountDetails);
 	boolean removeAccount(String userId);

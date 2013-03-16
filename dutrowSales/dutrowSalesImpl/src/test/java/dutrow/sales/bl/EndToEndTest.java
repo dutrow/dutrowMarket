@@ -22,6 +22,7 @@ import dutrow.sales.bl.impl.Ingestor;
 import dutrow.sales.bo.Account;
 import dutrow.sales.bo.AuctionItem;
 import dutrow.sales.bo.Bid;
+import dutrow.sales.bo.Image;
 import dutrow.sales.bo.POC;
 import dutrow.sales.dao.JPATestBase;
 
@@ -51,7 +52,7 @@ public class EndToEndTest extends JPATestBase{
 		super.tearDown();
 	}
 	
-	@Test
+	//@Test
 	public void clear(){
 		log.info("Simple way to clear the database.");
 	}
@@ -101,9 +102,14 @@ public class EndToEndTest extends JPATestBase{
 		
 		log.info("Create Auction Item");
 		AuctionItem auctionDetails = testSupport.createAuctionItem("silver dollar",	seller);
+		Image img = new Image();
+		byte [] byteArray = new byte[100]; 
+		img.setImage(byteArray);
+		auctionDetails.getImages().add(img);
 		log.info("Create Auction");
 		long auctionId = sellerManager.createAuction(auctionDetails).getId();
 		log.info("Auction ID: " + auctionId);
+		
 		
 		// * get auctions for seller
 		// not yet implemented
@@ -113,11 +119,12 @@ public class EndToEndTest extends JPATestBase{
 		//Assert.assertNotNull("Could not find seller auctions", sellerAuctions);
 
 		// getAuction for seller
-		log.info("Get Auction Item for buyers");
+		log.info("Get Auction Item for seller");
 		AuctionItem sellerAuction = sellerManager.getAuction(auctionId);
 		Assert.assertNotNull("Could not find seller auction " + auctionId, sellerAuction);
 		
 		// get auctions for buyer
+		log.info("Get Auction Item for buyers");
 		Collection<AuctionItem> openAuctions = buyerManager.getOpenAuctions();
 		Assert.assertNotNull("Could not find buyer auctions", openAuctions);
 

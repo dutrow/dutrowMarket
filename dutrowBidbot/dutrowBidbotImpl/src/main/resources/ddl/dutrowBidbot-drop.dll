@@ -1,0 +1,15 @@
+
+    alter table DUTROW_BIDBOT_ACCT_DUTROW_BIDBOT_ORDER 
+        drop constraint FK8FC49222A00BA803;
+
+    alter table DUTROW_BIDBOT_ACCT_DUTROW_BIDBOT_ORDER 
+        drop constraint FK8FC492223AE0FF29;
+
+    alter table DUTROW_BIDBOT_ORDER 
+        drop constraint FK3CAB30A13C4E5EF5;
+
+    drop table DUTROW_BIDBOT_ACCT if exists;
+
+    drop table DUTROW_BIDBOT_ACCT_DUTROW_BIDBOT_ORDER if exists;
+
+    drop table DUTROW_BIDBOT_ORDER if exists;

@@ -4,6 +4,7 @@
 package dutrow.bidbot.jpa;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
@@ -12,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.dao.BidAccountDAO;
+import dutrow.bidbot.dao.DAOException;
 
 /**
  * @author dutroda1
@@ -33,51 +35,91 @@ public class JPABidAccountDAO implements BidAccountDAO {
 	public JPABidAccountDAO(EntityManager emIn) {
 		setEntityManager(emIn);
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see dutrow.bidbot.dao.BidAccountDAO#createAccount(dutrow.bidbot.bo.BidAccount)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * dutrow.bidbot.dao.BidAccountDAO#createAccount(dutrow.bidbot.bo.BidAccount
+	 * )
 	 */
 	@Override
-	public boolean createAccount(BidAccount accountDetails) {
-		// TODO Auto-generated method stub
-		return false;
+	public BidAccount createAccount(BidAccount accountDetails) {
+		try {
+			em.persist(accountDetails);
+		} catch (RuntimeException ex) {
+			throw new DAOException("troubles: " + ex.toString(), ex);
+		}
+		return accountDetails;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see dutrow.bidbot.dao.BidAccountDAO#getAccountById(java.lang.String)
 	 */
 	@Override
 	public BidAccount getAccountById(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return em.find(BidAccount.class, userId);
+		} catch (RuntimeException ex) {
+			throw new DAOException("troubles: " + ex.toString(), ex);
+		}
+
 	}
 
-	/* (non-Javadoc)
-	 * @see dutrow.bidbot.dao.BidAccountDAO#updateAccount(dutrow.bidbot.bo.BidAccount)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * dutrow.bidbot.dao.BidAccountDAO#updateAccount(dutrow.bidbot.bo.BidAccount
+	 * )
 	 */
 	@Override
 	public boolean updateAccount(BidAccount accountDetails) {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			em.persist(accountDetails);
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			log.warn(ex.toString());
+			throw new DAOException("troubles: " + ex.toString(), ex);
+		}
+
+		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see dutrow.bidbot.dao.BidAccountDAO#removeAccount(java.lang.String)
 	 */
 	@Override
 	public boolean removeAccount(String userId) {
-		// TODO Auto-generated method stub
-		return false;
+
+		try {
+			BidAccount accountToRemove = em.find(BidAccount.class, userId);
+			em.remove(accountToRemove);
+		} catch (RuntimeException ex) {
+			throw new DAOException("troubles: " + ex.toString(), ex);
+		}
+
+		return true;
+
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see dutrow.bidbot.dao.BidAccountDAO#getAccounts()
 	 */
 	@Override
-	public Collection<BidAccount> getAccounts() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<BidAccount> getAccounts() {
+		try {
+			return em.createQuery("select a from BidAccount a",
+					BidAccount.class).getResultList();
+		} catch (RuntimeException ex) {
+			throw new DAOException("troubles: " + ex.toString(), ex);
+		}
 	}
 
 }
