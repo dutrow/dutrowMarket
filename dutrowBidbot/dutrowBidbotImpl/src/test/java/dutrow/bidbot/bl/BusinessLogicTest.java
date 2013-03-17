@@ -39,5 +39,10 @@ public class BusinessLogicTest extends JPATestBase {
 		//Assert.assertTrue("Bidder should have won", orderStatus);
 	}
 	
+	@Test
+	public void cleanup(){
+		log.info("A simple way to clean up");
+	}
+	
 
 }

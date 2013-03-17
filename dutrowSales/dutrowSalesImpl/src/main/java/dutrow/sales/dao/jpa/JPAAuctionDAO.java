@@ -53,6 +53,14 @@ public class JPAAuctionDAO implements AuctionDAO {
 	public AuctionItem createAuction(AuctionItem auctionDetails) {
 
 		try {
+			AuctionItem existingAuction = em.find(AuctionItem.class,
+					auctionDetails.getId());
+			if (existingAuction != null) {
+				log.warn("AuctionItem already exists with id: "
+						+ auctionDetails.getId());
+				return existingAuction;
+			}
+
 			em.persist(auctionDetails);
 		} catch (RuntimeException ex) {
 			throw new DAOException("troubles: " + ex.toString(), ex);

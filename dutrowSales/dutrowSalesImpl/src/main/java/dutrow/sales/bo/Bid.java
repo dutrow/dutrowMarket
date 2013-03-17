@@ -60,6 +60,15 @@ public class Bid implements Comparable<Bid> {
 	public long getId() {
 		return id;
 	}
+	
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	
 
 	/**
 	 * @return the amount
@@ -130,4 +139,6 @@ public class Bid implements Comparable<Bid> {
 	public int compareTo(Bid other) {
 		return Float.compare(this.amount, other.amount);
 	}
+
+
 }

@@ -12,6 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import dutrow.bidbot.bo.BidAccount;
+import dutrow.bidbot.bo.BidOrder;
 import dutrow.bidbot.dao.BidAccountDAO;
 import dutrow.bidbot.dao.DAOException;
 
@@ -19,21 +20,11 @@ import dutrow.bidbot.dao.DAOException;
  * @author dutroda1
  * 
  */
-public class JPABidAccountDAO implements BidAccountDAO {
+public class JPABidAccountDAO extends JPADAO implements BidAccountDAO {
 	private static Log log = LogFactory.getLog(JPABidAccountDAO.class);
 
-	private EntityManager em;
-
-	public void setEntityManager(EntityManager em) {
-		this.em = em;
-	}
-
-	@SuppressWarnings("unused")
-	private JPABidAccountDAO() {
-	} // force EntityManager constructor
-
 	public JPABidAccountDAO(EntityManager emIn) {
-		setEntityManager(emIn);
+		super(emIn);
 	}
 
 	/*
@@ -117,6 +108,67 @@ public class JPABidAccountDAO implements BidAccountDAO {
 		try {
 			return em.createQuery("select a from BidAccount a",
 					BidAccount.class).getResultList();
+		} catch (RuntimeException ex) {
+			throw new DAOException("troubles: " + ex.toString(), ex);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see dutrow.bidbot.dao.OrderDAO#createOrder(dutrow.bidbot.bo.BidOrder)
+	 */
+	@Override
+	public boolean createOrder(BidOrder order) {
+	
+		try {
+			
+			BidOrder existingOrder = em.find(BidOrder.class,
+					order.getBidOrderId());
+			if (existingOrder != null){
+				log.warn("BidOrder already exists, not creating");
+				return false;
+			}
+
+			BidAccount bidder = order.getBidder();
+			if (bidder == null){
+				log.warn("BidOrder not assigned to BidAccount, not creating");
+				return false;
+			}
+			
+			em.persist(bidder);
+			
+		} catch (RuntimeException ex) {
+			throw new DAOException("troubles: " + ex.toString(), ex);
+		}
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see dutrow.bidbot.dao.OrderDAO#getBidOrders()
+	 */
+	@Override
+	public Collection<BidOrder> getBidOrders() {
+		try {
+			return (Collection<BidOrder>) em.createQuery(
+					"select a.orders from BidAccount a").getResultList();
+		} catch (RuntimeException ex) {
+			throw new DAOException("troubles: " + ex.toString(), ex);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see dutrow.bidbot.dao.OrderDAO#getOrderById(long)
+	 */
+	@Override
+	public BidOrder getOrderById(long bidOrderId) {
+		try {
+			BidOrder existingOrder = em.find(BidOrder.class, bidOrderId);
+			return existingOrder;
 		} catch (RuntimeException ex) {
 			throw new DAOException("troubles: " + ex.toString(), ex);
 		}

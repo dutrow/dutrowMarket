@@ -5,21 +5,13 @@ package dutrow.bidbot.bo;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
 
-import javax.annotation.Generated;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -33,7 +25,7 @@ public class BidOrder implements Serializable {
 	 * 
 	 */
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-	long bidId;
+	long bidOrderId;
 	long auctionId;
 	float startBid;
 	float maxBid;
@@ -41,7 +33,8 @@ public class BidOrder implements Serializable {
 	boolean result;
 	float finalBid;
 	
-	@ManyToOne
+	@ManyToOne(optional = false)
+	@JoinColumn
 	BidAccount bidder;
 	
 	@Override
@@ -51,7 +44,7 @@ public class BidOrder implements Serializable {
 				"E, y-M-d 'at' h:m:s a z");
 		StringBuilder builder = new StringBuilder();
 		builder.append("id=")
-				.append(this.bidId)
+				.append(this.bidOrderId)
 				.append(", auctionId=")
 				.append(this.auctionId)
 				.append(", startBid=")
@@ -71,15 +64,15 @@ public class BidOrder implements Serializable {
 	/**
 	 * @return the bidId
 	 */
-	public long getBidId() {
-		return bidId;
+	public long getBidOrderId() {
+		return bidOrderId;
 	}
 
 	/**
 	 * @param bidId the bidId to set
 	 */
-	public void setBidId(long bidId) {
-		this.bidId = bidId;
+	public void setBidOrderId(long bidId) {
+		this.bidOrderId = bidId;
 	}
 
 	/**

@@ -14,7 +14,7 @@ public interface BidbotTestUtil {
 	boolean reset(); // - reset the bidbot database to an initial starting state.
 
 	
-	BidOrder createOrder();
+	BidOrder createOrder(); // also creates bidder
 	BidAccount createBidder();
 
 }

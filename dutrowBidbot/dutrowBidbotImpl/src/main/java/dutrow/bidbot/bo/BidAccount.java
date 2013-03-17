@@ -5,51 +5,45 @@ package dutrow.bidbot.bo;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cascade;
 
 /**
  * @author dutroda1
  * 
  */
 @SuppressWarnings("serial")
-@Entity @Table(name = "DUTROW_BIDBOT_ACCT")
+@Entity
+@Table(name = "DUTROW_BIDBOT_ACCT")
 public class BidAccount implements Serializable {
 	/**
 	 * 
 	 */
-	@Id //@Column(name="USER_ID")
+	@Id
+	// @Column(name="USER_ID")
 	String userId;
 	String salesAccount;
 	String salesPassword;
-	
-	@OneToMany
+
+	@OneToMany(cascade = { CascadeType.ALL })
 	List<BidOrder> orders;
-	
+
 	@Override
 	public String toString() {
 
 		SimpleDateFormat dateFormatter = new SimpleDateFormat(
 				"E, y-M-d 'at' h:m:s a z");
 		StringBuilder builder = new StringBuilder();
-		builder.append("id=")
-				.append(this.userId)
-				.append(", salesAccount=")
-				.append(this.salesAccount)
-				.append(", salesPassword=")
-				.append(this.salesPassword)
-				;
+		builder.append("id=").append(this.userId).append(", salesAccount=")
+				.append(this.salesAccount).append(", salesPassword=")
+				.append(this.salesPassword);
 		return builder.toString();
 	}
 
@@ -61,7 +55,8 @@ public class BidAccount implements Serializable {
 	}
 
 	/**
-	 * @param userId the userId to set
+	 * @param userId
+	 *            the userId to set
 	 */
 	public void setUserId(String userId) {
 		this.userId = userId;
@@ -75,7 +70,8 @@ public class BidAccount implements Serializable {
 	}
 
 	/**
-	 * @param salesAccount the salesAccount to set
+	 * @param salesAccount
+	 *            the salesAccount to set
 	 */
 	public void setSalesAccount(String salesAccount) {
 		this.salesAccount = salesAccount;
@@ -89,7 +85,8 @@ public class BidAccount implements Serializable {
 	}
 
 	/**
-	 * @param salesPassword the salesPassword to set
+	 * @param salesPassword
+	 *            the salesPassword to set
 	 */
 	public void setSalesPassword(String salesPassword) {
 		this.salesPassword = salesPassword;
@@ -103,7 +100,8 @@ public class BidAccount implements Serializable {
 	}
 
 	/**
-	 * @param orders the orders to set
+	 * @param orders
+	 *            the orders to set
 	 */
 	public void setOrders(List<BidOrder> orders) {
 		this.orders = orders;

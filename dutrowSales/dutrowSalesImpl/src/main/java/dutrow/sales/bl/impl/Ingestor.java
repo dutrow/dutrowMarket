@@ -5,6 +5,7 @@ package dutrow.sales.bl.impl;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBException;
@@ -16,6 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import dutrow.sales.bo.Account;
 import dutrow.sales.bo.Address;
 import dutrow.sales.bo.AuctionItem;
+import dutrow.sales.bo.Bid;
 import dutrow.sales.bo.Category;
 import dutrow.sales.bo.Image;
 import dutrow.sales.bo.POC;
@@ -106,8 +108,9 @@ public class Ingestor {
 
 			auctionDAO.updateAuction(ai);
 			log.info("updated auction: " + ai);
-		}
-		else log.warn("AuctionItem does not exist with id: " + auctionObject.getId());
+		} else
+			log.warn("AuctionItem does not exist with id: "
+					+ auctionObject.getId());
 	}
 
 	/**
@@ -127,6 +130,48 @@ public class Ingestor {
 				.getSeller();
 		Account a = accountDAO.getAccountByUser(s.getLogin());
 		ai.setSeller(a.getPoc());
+		
+		
+		List<ejava.projects.esales.dto.Bid> bids = object.getBid();
+		if (bids != null){
+			for (ejava.projects.esales.dto.Bid bid : bids){
+				Bid lBid = new Bid();
+				//lBid.setId(bid.getId());// the bid id isn't necessary
+				lBid.setAuction(ai);
+				
+				lBid.setAmount(bid.getAmount());
+				lBid.setTimestamp(bid.getBidTime());
+				
+				ejava.projects.esales.dto.Account dtoBidder = (ejava.projects.esales.dto.Account) bid.getBidder();
+				Account lAccount = accountDAO.getAccountByUser(dtoBidder.getLogin());
+				lBid.setBidder(lAccount.getPoc());
+				
+				ai.getBids().add(lBid);
+			}
+		}
+		
+
+		ejava.projects.esales.dto.Account b = (ejava.projects.esales.dto.Account) object
+				.getBuyer();
+
+		if (b != null) {
+			Account localAccount = accountDAO.getAccountByUser(b.getLogin());
+			ai.setBuyer(localAccount.getPoc());
+
+			ejava.projects.esales.dto.Address addr = (ejava.projects.esales.dto.Address) object
+					.getShipTo();
+
+			if (addr != null) {
+				Map<String, Address> buyerAddresses = localAccount.getAddresses();
+				Address localAddress = buyerAddresses.get(addr.getName());
+				ai.setShipTo(localAddress);
+			}
+		}
+		
+		Float purchasePrice = object.getPurchasePrice();
+		if (purchasePrice != null){
+			ai.setPurchasePrice(purchasePrice);
+		}
 
 		auctionDAO.createAuction(ai);
 		log.info("created auction item: " + ai);
@@ -150,6 +195,8 @@ public class Ingestor {
 				accountDTO.getFirstName(), accountDTO.getMiddleName(),
 				accountDTO.getLastName(), accountDTO.getStartDate(), addresses,
 				poc);
+		
+		accountBO.setEndDate(accountDTO.getEndDate());
 
 		accountBO.setFirstName(accountDTO.getFirstName());
 		for (Object o : accountDTO.getAddress()) {

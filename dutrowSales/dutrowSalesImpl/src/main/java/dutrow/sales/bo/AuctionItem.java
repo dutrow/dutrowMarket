@@ -70,6 +70,7 @@ public class AuctionItem {
 	// JPA Requires no-arg constructor
 	public AuctionItem() {
 		images = new ArrayList<Image>();
+		bids = new TreeSet<Bid>();
 	}
 
 	/**

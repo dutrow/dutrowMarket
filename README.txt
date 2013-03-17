@@ -2,29 +2,6 @@ Dan Dutrow
 Enterprise Java
 Spring 2013
 
-Intro:
-	eSales is planning an on-line auction site to allow sellers to 
-	auction items and buyers to place bids and ultimately purchase products. 
-	At the same time, eBidbot is planning an on-line automated bidding site 
-	that will help bidders make bids with eSales.
-	
-	Sellers can start an auction using the eSales on-line auction site. 
-	They specify a title, category, description, asking price, start/stop time, 
-	and any images. Using the eSales buyer interface, buyers can manually
-	bid on auctions until they close.
-	
-	With eBidbot, buyers also have the option of using an independent site 
-	to place their bids. Buyers place orders with eBidbot, providing them 
-	the auction and min/max bidding parameters. eBidbot will become a trusted 
-	client of eSales and be able to make bids on behalf of the actual buyer.
-	
-	Both eSales and eBidbot have come to you to develop the initial phase of 
-	their applications. You are tasked with implementing a low-cost prototype,
-	based on current standards, to automate much of this activity. 
-	At this point in the project we are primarily looking to build the data 
-	access tiers for both the eSales and eBidbot (two separate systems). 
-	We will also add a minor amount of business logic to coordinate the 
-	data access between the individual data access objects.
 	
 Technical Details:
 1.	Design 2 sets of database schema
@@ -44,13 +21,67 @@ Technical Details:
 	B.	eBidbot Candidate Business Logic (dutrowBidbotImpl src/main/java/dutrow.bidbot.bl and dutrow.bidbot.bl.impl)
 
 Testing:
+	All you will have to do is run mvn clean install from the dutrowMarket directory.
+	You can run with the h2db or h2srv profiles.
+
 1.	Provide a JUnit test for your business objects that test the manipulation of the data.
-	(dutrowSalesImpl src/test/java/dutrow.sales.bo)
-	(dutrowBidbotImpl src/test/java/dutrow.bidbot.bo)
+	(dutrowSalesImpl src/test/java/dutrow.sales.bo/*)
+	(dutrowBidbotImpl src/test/java/dutrow.bidbot.bo/*)
 2.	Provide a JUnit test for your JPA DAOs.
-	(dutrowSalesImpl src/test/java/dutrow.sales.dao)
-	(dutrowBidbotImpl src/test/java/dutrow.bidbot.dao)
+	(dutrowSalesImpl src/test/java/dutrow.sales.dao/*)
+	(dutrowBidbotImpl src/test/java/dutrow.bidbot.dao/*)
 3.	Provide a set of JUnit test programs to verify the following end-to-end functional scenario in eSales.
 	(dutrowSalesImpl src/test/java/dutrow.sales.bl.EndToEndTest)
 4.	Provide a set of JUnit test programs to verify the following end-to-end functional scenario in eBidbot.	
 	(dutrowBidbotImpl src/test/java/dutrow.sales.bl.EndToEndTest)
+	
+	
+Full List of Tests:
+
+::eSales::
+dutrow.sales.bl.EndToEnd
+:endToEnd
+dutrow.sales.bl.IngestorTest
+:testIngestAll
+:testIngest1
+:testIngest10
+:testIngest100
+dutrow.sales.bo.BusinessObjectTest
+:testSellers
+:testAccounts
+:createAuctionItems
+dutrow.sales.bl.BusinessLogicTest
+:testAccountManager
+:testSellerManager
+:testBuyerManager
+dutrow.sales.dao.JPAAccountDAOTest
+:testCreateAccount
+:testGetAccountByUser
+:testGetAccountByEmail
+:testUpdateAccount
+:testGetAccounts
+:testRemoveAccount
+dutrow.sales.dao.JPAAuctionDAOTest
+:testCreateAuction
+:testUpdateAuction
+:testGetAuctions
+:testGetAuctionById
+:testRemoveAuction
+
+::eBidbot::
+dutrow.bidbot.bl.EndToEndTest
+:endToEnd
+dutrow.bidbot.bl.BusinessLogicTest
+:testOrderManager
+:cleanup
+dutrow.bidbot.dao.JPABidAccountDAOTest
+:a_testCreateAccount
+:b_testGetAccountById
+:c_testUpdateAccount
+:d_testRemoveAccount
+:e_testGetAccounts
+:f_testCreateOrder
+:g_testGetBidOrders
+:h_testGetOrderById
+dutrow.bidbot.bo.BidOrderTest:*
+dutrow.bidbot.bo.BidAccountTest:*

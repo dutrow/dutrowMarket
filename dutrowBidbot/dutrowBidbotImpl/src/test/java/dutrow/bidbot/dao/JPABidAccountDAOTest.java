@@ -5,11 +5,14 @@ package dutrow.bidbot.dao;
 
 import java.util.Collection;
 
+import junit.framework.Assert;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
 import dutrow.bidbot.bo.BidAccount;
+import dutrow.bidbot.bo.BidOrder;
 
 /**
  * @author dutroda1
@@ -84,6 +87,50 @@ public class JPABidAccountDAOTest extends JPATestBase {
 		for (BidAccount acct : accounts) {
 			log.info(acct);
 		}
+	}
+
+	/**
+	 * Test method for
+	 * {@link dutrow.bidbot.jpa.JPAOrderDAO#createOrder(dutrow.bidbot.bo.BidOrder)}
+	 * .
+	 */
+	@Test
+	public void f_testCreateOrder() {
+		log.info("testCreateOrder");
+		BidOrder bo = testSupport.createOrder();
+		Assert.assertTrue("Order creation", accountDao.createOrder(bo));
+		log.info("Order created: " + bo);
+	}
+
+	/**
+	 * Test method for {@link dutrow.bidbot.jpa.JPAOrderDAO#getBidOrders()}.
+	 */
+	@Test
+	public void g_testGetBidOrders() {
+		log.info("testGetBidOrders");
+		BidOrder bo = testSupport.createOrder();
+		accountDao.createAccount(bo.getBidder()); // persist through the account
+		Collection<BidOrder> orders = accountDao.getBidOrders();
+
+		log.info("Get Orders: ");
+		for (BidOrder o : orders) {
+			log.info(o);
+		}
+
+	}
+
+	/**
+	 * Test method for {@link dutrow.bidbot.jpa.JPAOrderDAO#getOrderById(long)}.
+	 */
+	@Test
+	public void h_testGetOrderById() {
+		log.info("testGetOrderById");
+		BidOrder bo = testSupport.createOrder();
+		Assert.assertTrue("Order creation", accountDao.createOrder(bo));
+		BidOrder bid = accountDao.getOrderById(bo.getBidOrderId());
+		Assert.assertNotNull("Order retrieval", bid);
+		log.info("Order retrieved: " + bid);
+
 	}
 
 }

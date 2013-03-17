@@ -35,7 +35,7 @@ public class JPATestBase {
 	
 	protected EntityManager em;
 	protected JPABidAccountDAO accountDao;
-
+	
 	@BeforeClass
 	static public void setUpBeforeClass() throws Exception {
 		emf = Persistence.createEntityManagerFactory("dutrowSalesDAO-test");

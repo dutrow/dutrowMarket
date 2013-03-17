@@ -3,6 +3,7 @@
  */
 package dutrow.bidbot.blimpl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.EntityManager;
@@ -30,7 +31,8 @@ public class BidbotTestUtilImpl implements BidbotTestUtil {
 	}
 
 	public BidbotTestUtilImpl(EntityManager entityManager,
-			BidAccountDAO accounts) {
+			BidAccountDAO accounts
+			) {
 		em = entityManager;
 		accountDao = accounts;
 	}
@@ -66,11 +68,7 @@ public class BidbotTestUtilImpl implements BidbotTestUtil {
 		log.info("Delete By JPA");
 
 		boolean useCascades = true;
-
-		// Delete account address links
-		// delete addresses
-		// delete POCs
-		// delete accounts
+		
 		Collection<BidAccount> accounts = accountDao.getAccounts();
 		for (BidAccount a : accounts) {
 			if (useCascades == false) {
@@ -84,6 +82,8 @@ public class BidbotTestUtilImpl implements BidbotTestUtil {
 				accountDao.removeAccount(a.getUserId());
 			}
 		}
+		
+		
 	}
 
 	/**
@@ -111,6 +111,7 @@ public class BidbotTestUtilImpl implements BidbotTestUtil {
 		bid.setFinalBid(9.00f);
 		bid.setComplete(false);
 		bid.setResult(false);
+		ba.getOrders().add(bid);
 
 		return bid;
 
@@ -125,6 +126,7 @@ public class BidbotTestUtilImpl implements BidbotTestUtil {
 		acct.setUserId("bidbotSellerAcct");
 		acct.setSalesAccount("bidder");
 		acct.setSalesPassword("bidderPwd");
+		acct.setOrders(new ArrayList<BidOrder>());
 
 		return acct;
 	}

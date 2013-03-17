@@ -3,6 +3,7 @@
  */
 package dutrow.bidbot.bl;
 
+import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
 
 /**
@@ -10,8 +11,9 @@ import dutrow.bidbot.bo.BidOrder;
  *
  */
 public interface OrderMgmt {
-	void createOrder(BidOrder order);
+	boolean createOrder(BidOrder order);
 	boolean placeBid(BidOrder order, float bid);
 	boolean endOrder(); // complete order processing once auction has closed and note if won.
 	boolean getOrderStatus();// did user win or not
+	BidAccount createAccount(String userId, String accountId, String passwd);
 }
