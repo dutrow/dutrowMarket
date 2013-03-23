@@ -6,6 +6,7 @@ package dutrow.bidbot.bo;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,12 +20,14 @@ import javax.persistence.Table;
  * 
  */
 @SuppressWarnings("serial")
-@Entity @Table(name = "DUTROW_BIDBOT_ORDER")
+@Entity
+@Table(name = "DUTROW_BIDBOT_ORDER")
 public class BidOrder implements Serializable {
 	/**
 	 * 
 	 */
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	long bidOrderId;
 	long auctionId;
 	float startBid;
@@ -32,32 +35,48 @@ public class BidOrder implements Serializable {
 	boolean complete;
 	boolean result;
 	float finalBid;
-	
-	@ManyToOne(optional = false)
+
+	@ManyToOne(optional = false, cascade=CascadeType.PERSIST)
 	@JoinColumn
 	BidAccount bidder;
-	
+
+	// make JPA happy
+	@SuppressWarnings("unused")
+	private BidOrder() {
+		super();
+	}
+
+	/**
+	 * @param auctionId
+	 * @param startBid
+	 * @param maxBid
+	 * @param bidder
+	 */
+	public BidOrder(long auctionId, float startBid, float maxBid,
+			BidAccount bidder) {
+		super();
+		this.auctionId = auctionId;
+		this.startBid = startBid;
+		this.maxBid = maxBid;
+		this.complete = false;
+		this.result = false;
+		this.bidder = bidder;
+		this.bidder.getOrders().add(this);
+
+	}
+
 	@Override
 	public String toString() {
 
 		SimpleDateFormat dateFormatter = new SimpleDateFormat(
 				"E, y-M-d 'at' h:m:s a z");
 		StringBuilder builder = new StringBuilder();
-		builder.append("id=")
-				.append(this.bidOrderId)
-				.append(", auctionId=")
-				.append(this.auctionId)
-				.append(", startBid=")
-				.append(this.startBid)
-				.append(", maxBid=")
-				.append(this.maxBid)
-				.append(", complete=")
-				.append(this.complete)
-				.append(", result=")
-				.append(this.result)
-				.append(", finalBid=")
-				.append(this.finalBid)
-				;
+		builder.append("id=").append(this.bidOrderId).append(", auctionId=")
+				.append(this.auctionId).append(", startBid=")
+				.append(this.startBid).append(", maxBid=").append(this.maxBid)
+				.append(", complete=").append(this.complete)
+				.append(", result=").append(this.result).append(", finalBid=")
+				.append(this.finalBid);
 		return builder.toString();
 	}
 
@@ -69,7 +88,8 @@ public class BidOrder implements Serializable {
 	}
 
 	/**
-	 * @param bidId the bidId to set
+	 * @param bidId
+	 *            the bidId to set
 	 */
 	public void setBidOrderId(long bidId) {
 		this.bidOrderId = bidId;
@@ -83,7 +103,8 @@ public class BidOrder implements Serializable {
 	}
 
 	/**
-	 * @param auctionId the auctionId to set
+	 * @param auctionId
+	 *            the auctionId to set
 	 */
 	public void setAuctionId(long auctionId) {
 		this.auctionId = auctionId;
@@ -97,7 +118,8 @@ public class BidOrder implements Serializable {
 	}
 
 	/**
-	 * @param startBid the startBid to set
+	 * @param startBid
+	 *            the startBid to set
 	 */
 	public void setStartBid(float startBid) {
 		this.startBid = startBid;
@@ -111,7 +133,8 @@ public class BidOrder implements Serializable {
 	}
 
 	/**
-	 * @param maxBid the maxBid to set
+	 * @param maxBid
+	 *            the maxBid to set
 	 */
 	public void setMaxBid(float maxBid) {
 		this.maxBid = maxBid;
@@ -125,7 +148,8 @@ public class BidOrder implements Serializable {
 	}
 
 	/**
-	 * @param complete the complete to set
+	 * @param complete
+	 *            the complete to set
 	 */
 	public void setComplete(boolean complete) {
 		this.complete = complete;
@@ -134,12 +158,13 @@ public class BidOrder implements Serializable {
 	/**
 	 * @return the result
 	 */
-	public boolean isResult() {
+	public boolean getResult() {
 		return result;
 	}
 
 	/**
-	 * @param result the result to set
+	 * @param result
+	 *            the result to set
 	 */
 	public void setResult(boolean result) {
 		this.result = result;
@@ -153,7 +178,8 @@ public class BidOrder implements Serializable {
 	}
 
 	/**
-	 * @param finalBid the finalBid to set
+	 * @param finalBid
+	 *            the finalBid to set
 	 */
 	public void setFinalBid(float finalBid) {
 		this.finalBid = finalBid;
@@ -166,10 +192,4 @@ public class BidOrder implements Serializable {
 		return bidder;
 	}
 
-	/**
-	 * @param bidder the bidder to set
-	 */
-	public void setBidder(BidAccount bidder) {
-		this.bidder = bidder;
-	}
 }

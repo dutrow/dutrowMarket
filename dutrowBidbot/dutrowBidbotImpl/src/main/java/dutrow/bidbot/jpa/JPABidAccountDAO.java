@@ -120,24 +120,24 @@ public class JPABidAccountDAO extends JPADAO implements BidAccountDAO {
 	 */
 	@Override
 	public boolean createOrder(BidOrder order) {
-	
+
 		try {
-			
+
 			BidOrder existingOrder = em.find(BidOrder.class,
 					order.getBidOrderId());
-			if (existingOrder != null){
+			if (existingOrder != null) {
 				log.warn("BidOrder already exists, not creating");
 				return false;
 			}
 
 			BidAccount bidder = order.getBidder();
-			if (bidder == null){
+			if (bidder == null) {
 				log.warn("BidOrder not assigned to BidAccount, not creating");
 				return false;
 			}
-			
-			em.persist(bidder);
-			
+
+			em.persist(order);
+
 		} catch (RuntimeException ex) {
 			throw new DAOException("troubles: " + ex.toString(), ex);
 		}
@@ -150,9 +150,9 @@ public class JPABidAccountDAO extends JPADAO implements BidAccountDAO {
 	 * @see dutrow.bidbot.dao.OrderDAO#getBidOrders()
 	 */
 	@Override
-	public Collection<BidOrder> getBidOrders() {
+	public List<BidOrder> getBidOrders() {
 		try {
-			return (Collection<BidOrder>) em.createQuery(
+			return (List<BidOrder>) em.createQuery(
 					"select a.orders from BidAccount a").getResultList();
 		} catch (RuntimeException ex) {
 			throw new DAOException("troubles: " + ex.toString(), ex);
@@ -172,6 +172,28 @@ public class JPABidAccountDAO extends JPADAO implements BidAccountDAO {
 		} catch (RuntimeException ex) {
 			throw new DAOException("troubles: " + ex.toString(), ex);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * dutrow.bidbot.dao.BidAccountDAO#updateOrder(dutrow.bidbot.bo.BidOrder)
+	 */
+	@Override
+	public boolean updateOrder(BidOrder bo) {
+		try {
+			BidOrder existingOrder = em
+					.find(BidOrder.class, bo.getBidOrderId());
+			if (existingOrder == null)
+				return false;
+
+			em.persist(bo);
+
+		} catch (RuntimeException ex) {
+			throw new DAOException("troubles: " + ex.toString(), ex);
+		}
+		return true;
 	}
 
 }

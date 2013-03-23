@@ -9,11 +9,12 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Cascade;
+
 
 /**
  * @author dutroda1
@@ -32,7 +33,7 @@ public class BidAccount implements Serializable {
 	String salesAccount;
 	String salesPassword;
 
-	@OneToMany(cascade = { CascadeType.ALL })
+	@OneToMany(mappedBy = "bidder", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	List<BidOrder> orders;
 
 	@Override
@@ -90,6 +91,13 @@ public class BidAccount implements Serializable {
 	 */
 	public void setSalesPassword(String salesPassword) {
 		this.salesPassword = salesPassword;
+	}
+
+	/**
+	 * @param bidOrder
+	 */
+	public boolean addOrder(BidOrder bidOrder) {
+		return orders.add(bidOrder);
 	}
 
 	/**

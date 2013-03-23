@@ -103,15 +103,10 @@ public class BidbotTestUtilImpl implements BidbotTestUtil {
 	 */
 	@Override
 	public BidOrder createOrder() {
-		BidOrder bid = new BidOrder();
-		bid.setAuctionId(2);
 		BidAccount ba = createBidder();
-		bid.setBidder(ba);
-		bid.setStartBid(3.00f);
-		bid.setFinalBid(9.00f);
-		bid.setComplete(false);
-		bid.setResult(false);
-		ba.getOrders().add(bid);
+		BidOrder bid = new BidOrder(2, 3.0f, 9.0f, ba);
+		
+		ba.addOrder(bid);
 
 		return bid;
 

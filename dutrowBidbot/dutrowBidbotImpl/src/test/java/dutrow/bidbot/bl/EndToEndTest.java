@@ -51,10 +51,10 @@ public class EndToEndTest extends JPATestBase{
 		float newBid = 10f;
 		orderManager.placeBid(bidOrder, newBid);
 		//endOrder - complete order processing once auction has closed and note if won. This will require some stubbing in project1.
-		boolean ended = orderManager.endOrder();
+		boolean ended = orderManager.endOrder(bidOrder.getBidOrderId());
 		//Assert.assertTrue("Order not ended", ended);
 		//getOrderStatus - did user win or not.
-		boolean orderStatus = orderManager.getOrderStatus();
+		boolean orderStatus = orderManager.getOrderStatus(bidOrder.getBidOrderId());
 		//Assert.assertTrue("Bidder should have won", orderStatus);
 		
 		

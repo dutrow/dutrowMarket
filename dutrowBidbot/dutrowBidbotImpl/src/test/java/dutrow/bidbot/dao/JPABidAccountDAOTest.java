@@ -27,7 +27,7 @@ public class JPABidAccountDAOTest extends JPATestBase {
 	 * .
 	 */
 	@Test
-	public void a_testCreateAccount() {
+	public void testCreateAccount() {
 		log.info("testCreateAccount");
 		BidAccount ba = testSupport.createBidder();
 		accountDao.createAccount(ba);
@@ -39,7 +39,7 @@ public class JPABidAccountDAOTest extends JPATestBase {
 	 * .
 	 */
 	@Test
-	public void b_testGetAccountById() {
+	public void testGetAccountById() {
 		log.info("testGetAccountById");
 		BidAccount ba = testSupport.createBidder();
 		accountDao.createAccount(ba);
@@ -52,7 +52,7 @@ public class JPABidAccountDAOTest extends JPATestBase {
 	 * .
 	 */
 	@Test
-	public void c_testUpdateAccount() {
+	public void testUpdateAccount() {
 		log.info("testUpdateAccount");
 		BidAccount ba = testSupport.createBidder();
 		accountDao.createAccount(ba);
@@ -66,7 +66,7 @@ public class JPABidAccountDAOTest extends JPATestBase {
 	 * .
 	 */
 	@Test
-	public void d_testRemoveAccount() {
+	public void testRemoveAccount() {
 		log.info("testRemoveAccount");
 		BidAccount ba = testSupport.createBidder();
 		accountDao.createAccount(ba);
@@ -77,7 +77,7 @@ public class JPABidAccountDAOTest extends JPATestBase {
 	 * Test method for {@link dutrow.bidbot.jpa.JPABidAccountDAO#getAccounts()}.
 	 */
 	@Test
-	public void e_testGetAccounts() {
+	public void testGetAccounts() {
 		log.info("testGetAccounts");
 		BidAccount ba = testSupport.createBidder();
 		accountDao.createAccount(ba);
@@ -95,9 +95,10 @@ public class JPABidAccountDAOTest extends JPATestBase {
 	 * .
 	 */
 	@Test
-	public void f_testCreateOrder() {
+	public void testCreateOrder() {
 		log.info("testCreateOrder");
 		BidOrder bo = testSupport.createOrder();
+		accountDao.createAccount(bo.getBidder());
 		Assert.assertTrue("Order creation", accountDao.createOrder(bo));
 		log.info("Order created: " + bo);
 	}
@@ -106,10 +107,11 @@ public class JPABidAccountDAOTest extends JPATestBase {
 	 * Test method for {@link dutrow.bidbot.jpa.JPAOrderDAO#getBidOrders()}.
 	 */
 	@Test
-	public void g_testGetBidOrders() {
+	public void testGetBidOrders() {
 		log.info("testGetBidOrders");
 		BidOrder bo = testSupport.createOrder();
-		accountDao.createAccount(bo.getBidder()); // persist through the account
+		accountDao.createAccount(bo.getBidder());
+		accountDao.createOrder(bo);
 		Collection<BidOrder> orders = accountDao.getBidOrders();
 
 		log.info("Get Orders: ");
@@ -123,9 +125,10 @@ public class JPABidAccountDAOTest extends JPATestBase {
 	 * Test method for {@link dutrow.bidbot.jpa.JPAOrderDAO#getOrderById(long)}.
 	 */
 	@Test
-	public void h_testGetOrderById() {
+	public void testGetOrderById() {
 		log.info("testGetOrderById");
 		BidOrder bo = testSupport.createOrder();
+		accountDao.createAccount(bo.getBidder());
 		Assert.assertTrue("Order creation", accountDao.createOrder(bo));
 		BidOrder bid = accountDao.getOrderById(bo.getBidOrderId());
 		Assert.assertNotNull("Order retrieval", bid);

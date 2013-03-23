@@ -21,4 +21,6 @@ public interface BidAccountDAO {
 	Collection<BidOrder> getBidOrders();
 	BidOrder getOrderById(long bidOrderId);
 	boolean createOrder(BidOrder order);
+	boolean updateOrder(BidOrder bo);
+
 }
