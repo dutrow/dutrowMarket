@@ -46,7 +46,7 @@ public class SellerMgmtImpl implements SellerMgmt {
 	 */
 	@Override
 	public Collection<AuctionItem> getUserAuctions(String userId) {
-		throw new RuntimeException("SellerMgmtImpl::getUserAuctions Not Yet Implemented");
+		return auctions.getUserAuctions(userId);
 	}
 
 	/* (non-Javadoc)
@@ -54,9 +54,15 @@ public class SellerMgmtImpl implements SellerMgmt {
 	 */
 	@Override
 	public Collection<AuctionItem> getOpenUserAuctions(String userId) {
-		//throw new RuntimeException("SellerMgmtImpl::getOpenUserAuctions Not Yet Implemented");
-		log.warn("SellerMgmtImpl::getOpenUserAuctions Not Yet Implemented");
-		return new ArrayList<AuctionItem>();
+		Collection<AuctionItem> allUserAuctions = auctions.getUserAuctions(userId);
+		Collection<AuctionItem> openAuctions = new ArrayList<AuctionItem>();
+		
+		for (AuctionItem i : allUserAuctions){
+			if (i.isOpen())
+				openAuctions.add(i);
+		}
+		
+		return openAuctions;
 	}
 
 	/* (non-Javadoc)

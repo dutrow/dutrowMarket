@@ -5,6 +5,7 @@ package dutrow.sales.bo;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.SortedSet;
@@ -44,6 +45,7 @@ public class AuctionItem {
 	Date endTime;
 	float askingPrice;
 	float purchasePrice;
+	boolean open;
 
 	@OneToMany(cascade = { CascadeType.ALL })
 	@Sort(type = SortType.NATURAL)
@@ -350,6 +352,27 @@ public class AuctionItem {
 				.append(this.seller.getUserId()).append(", #images=")
 				.append(this.images == null ? 0 : this.images.size());
 		return builder.toString();
+	}
+
+	/**
+	 * @return the open
+	 */
+	public boolean isOpen() {
+		return open;
+	}
+
+	/**
+	 * @param open the open to set
+	 */
+	public void setOpen(boolean open) {
+		this.open = open;
+	}
+
+	/**
+	 * @return the expired
+	 */
+	public boolean isExpired() {
+		return this.endTime.before(Calendar.getInstance().getTime());
 	}
 
 }

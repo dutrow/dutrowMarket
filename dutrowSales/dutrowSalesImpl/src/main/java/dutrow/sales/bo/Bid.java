@@ -55,6 +55,17 @@ public class Bid implements Comparable<Bid> {
 	}
 
 	/**
+	 * @param poc
+	 * @param id2
+	 * @param f
+	 */
+	public Bid(POC bidder, AuctionItem auction, float value) {
+		this.setBidder(bidder);
+		this.setAuction(auction);
+		this.setAmount(value);
+	}
+
+	/**
 	 * @return the id
 	 */
 	public long getId() {

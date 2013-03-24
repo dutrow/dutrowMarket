@@ -57,43 +57,7 @@ public class BuyerMgmtImpl implements BuyerMgmt {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see dutrow.sales.bl.BuyerMgmt#placeBid(dutrow.sales.bo.Bid)
-	 */
-	public boolean placeBid(Bid bidDetails) {
-		
-		// TODO: Evaluate if this is efficient 
-		// or choose to just get the AuctionItem from the Bid object
-		AuctionItem ai = auctions.getAuctionById(bidDetails.getAuction().getId());
-		//AuctionItem ai = bidDetails.getAuction();
-		boolean auctionIsOpen = ai.getEndTime().after(bidDetails.getTimestamp());
-		if (auctionIsOpen)
-		{
-			ai.getBids().add(bidDetails);
-			auctions.updateAuction(ai);
-			return true;
-			
-			/*
-			double largestBid = 0;
-			if (!ai.getBids().isEmpty())
-				largestBid = ai.getBids().get(0).getAmount();
-			
-			
-			//Boolean userExists = bid
-			boolean bidIsValid = bidDetails.getAmount() > largestBid;
-			
-			// also check that the user exists
-			if (auctionIsOpen && bidIsValid){
-				ai.getBids().add(bidDetails);
-				auctions.updateAuction(ai);
-				return true;
-			}
-			*/
-		}
-		
-		return false;
-	}
-
+	
 	/* (non-Javadoc)
 	 * @see dutrow.sales.bl.BuyerMgmt#placeBid(dutrow.sales.bo.Account, dutrow.sales.bo.AuctionItem, float)
 	 */

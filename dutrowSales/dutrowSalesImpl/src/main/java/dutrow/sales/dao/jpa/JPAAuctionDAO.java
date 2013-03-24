@@ -6,10 +6,12 @@ package dutrow.sales.dao.jpa;
 import java.util.Collection;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import dutrow.sales.bo.Account;
 import dutrow.sales.bo.AuctionItem;
 import dutrow.sales.bo.Bid;
 import dutrow.sales.bo.Image;
@@ -145,6 +147,26 @@ public class JPAAuctionDAO implements AuctionDAO {
 			throw new DAOException("troubles: " + ex.toString(), ex);
 		}
 		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see dutrow.sales.dao.AuctionDAO#getUserAuctions(java.lang.String)
+	 */
+	@Override
+	public Collection<AuctionItem> getUserAuctions(String userId) {
+		try {
+			
+			TypedQuery<AuctionItem> auctionQuery = em.createQuery(
+					"select a from AuctionItem a where a.seller.userId=:userId",
+					AuctionItem.class);
+			auctionQuery.setParameter("userId", userId);
+
+			return auctionQuery.getResultList();
+		} catch (RuntimeException ex) {
+			throw new DAOException("troubles: " + ex.toString(), ex);
+		}
 	}
 
 }
