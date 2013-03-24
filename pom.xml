@@ -84,7 +84,7 @@
     </pluginRepositories>
 
     <properties>
-    <dutrowMarket.version>1.0.RC1</dutrowMarket.version>
+    <dutrowMarket.version>1.0.RC2</dutrowMarket.version>
     </properties>
 
     <dependencyManagement>
