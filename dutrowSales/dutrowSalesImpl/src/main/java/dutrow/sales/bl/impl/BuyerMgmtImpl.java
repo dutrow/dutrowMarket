@@ -72,14 +72,14 @@ public class BuyerMgmtImpl implements BuyerMgmt {
 		// the auction must exist
 		AuctionItem verifiedAuction = this.auctions.getAuctionById(auctionId);
 		if (verifiedAuction == null)
-			return new BidResult(null, "auction does not exist");
+			return new BidResult(null, "auction " + auctionId + " does not exist");
 		
 		// the auction must be open
 		if (verifiedAuction.isExpired())
-			return new BidResult(null, "auction is expired");
+			return new BidResult(null, "auction " + auctionId + " is expired");
 		
 		if (!verifiedAuction.isOpen())
-			return new BidResult(null, "auction is not open");
+			return new BidResult(null, "auction " + auctionId + " is not open");
 		
 		// the user must exist
 		Account verifiedBidder = this.accounts.getAccountByUser(bidder);

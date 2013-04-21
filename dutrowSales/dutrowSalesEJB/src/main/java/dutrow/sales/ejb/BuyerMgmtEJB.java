@@ -62,7 +62,7 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote {
 	 * @see dutrow.sales.ejb.BuyerMgmtRemote#listOpenAuctions()
 	 */
 	@Override
-	public Collection<AuctionDTO> listOpenAuctions() {
+	public Collection<AuctionDTO> getOpenAuctions() {
 		log.debug("*** listOpenAuctions() *** ");
 		Collection<AuctionItem> oas = buyerMgmt.getOpenAuctions();
 		Collection<AuctionDTO> openAuctions = new ArrayList<AuctionDTO>();

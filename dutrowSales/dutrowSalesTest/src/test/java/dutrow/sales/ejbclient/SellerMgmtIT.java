@@ -98,13 +98,13 @@ public class SellerMgmtIT extends Support {
 
 	/**
 	 * Test method for
-	 * {@link dutrow.sales.ejb.SellerMgmtEJB#listMyAuctions(java.lang.String)}.
+	 * {@link dutrow.sales.ejb.SellerMgmtEJB#getUserAuctions(java.lang.String)}.
 	 */
 	@Test
 	public void testListMyAuctions() {
 		log.info("*** testListMyAuctions() *** ");
 		Collection<AuctionDTO> myA = sellerManager
-				.listMyAuctions(seller.userId);
+				.getUserAuctions(seller.userId);
 		Assert.assertNotNull("My auctions list is null", myA);
 		for (AuctionDTO auctionDTO : myA) {
 			log.info(auctionDTO);
@@ -114,14 +114,14 @@ public class SellerMgmtIT extends Support {
 
 	/**
 	 * Test method for
-	 * {@link dutrow.sales.ejb.SellerMgmtEJB#listMyOpenAuctions(java.lang.String)}
+	 * {@link dutrow.sales.ejb.SellerMgmtEJB#getOpenUserAuctions(java.lang.String)}
 	 * .
 	 */
 	@Test
 	public void testListMyOpenAuctions() {
 		log.debug("*** testListMyOpenAuctions() *** ");
 		Collection<AuctionDTO> myOA = sellerManager
-				.listMyOpenAuctions(seller.userId);
+				.getOpenUserAuctions(seller.userId);
 		Assert.assertNotNull("My auctions list is null", myOA);
 		for (AuctionDTO auctionDTO : myOA) {
 			log.info(auctionDTO);

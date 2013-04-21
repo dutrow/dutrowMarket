@@ -11,3 +11,5 @@ Notes:
 	There was no explanation what the listMy* methods were supposed to do, so I made the "me" a userId parameter
 	I couldn't think of why we would want a transaction other than REQUIRED, so
 		all transactions are @TransactionAttribute(TransactionAttributeType.REQUIRED)
+	All of my DTOs have public attributes and no getters/setters. I know this is non-standard in Java, 
+		but it reduces code bloat for what are just simple structs.

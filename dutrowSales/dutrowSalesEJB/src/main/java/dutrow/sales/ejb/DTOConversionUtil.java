@@ -114,6 +114,7 @@ public final class DTOConversionUtil {
 			return null;
 
 		AuctionDTO adto = new AuctionDTO();
+		adto.id = ai.getId();
 		adto.title = ai.getTitle();
 		adto.category = ai.getCategory().toString();
 		adto.description = ai.getDescription();

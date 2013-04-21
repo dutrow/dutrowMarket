@@ -10,6 +10,7 @@ import javax.naming.NamingException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.After;
 import org.junit.Before;
 
 import dutrow.sales.ejb.TestSupportRemote;
@@ -53,5 +54,13 @@ public class Support {
 
 		testSupport.resetAll();
 		log.debug("reset complete");
+	}
+
+	@After
+	public void tearDown() throws NamingException{
+		if (jndi != null) {
+			jndi.close();
+		}
+		
 	}
 }

@@ -19,7 +19,7 @@ import dutrow.sales.dto.ImageDTO;
  */
 @Remote
 public interface BuyerMgmtRemote {
-	Collection<AuctionDTO> listOpenAuctions();
+	Collection<AuctionDTO> getOpenAuctions();
 
 	AuctionDTO getAuctionDTO(long auction) throws BuyerMgmtException;
 	Collection<ImageDTO> getAuctionImages(long auctionId);

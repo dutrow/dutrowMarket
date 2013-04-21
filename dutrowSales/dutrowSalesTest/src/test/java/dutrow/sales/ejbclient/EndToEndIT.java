@@ -4,7 +4,6 @@
 package dutrow.sales.ejbclient;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 import java.util.Calendar;
 import java.util.Collection;
@@ -18,12 +17,17 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 
+import dutrow.sales.bl.AccountMgmtException;
+import dutrow.sales.bl.BuyerMgmtException;
 import dutrow.sales.dto.AccountDTO;
 import dutrow.sales.dto.AuctionDTO;
-import dutrow.sales.dto.ImageDTO;
+import dutrow.sales.dto.BidDTO;
+import dutrow.sales.dto.BidResultDTO;
 import dutrow.sales.ejb.AccountMgmtRemote;
 import dutrow.sales.ejb.BuyerMgmtRemote;
+import dutrow.sales.ejb.ParserTestRemote;
 import dutrow.sales.ejb.SellerMgmtRemote;
+import ejava.util.ejb.EJBClient;
 
 /**
  * @author dutroda1
@@ -48,10 +52,11 @@ public class EndToEndIT extends Support {
 					"dutrowSalesEAR/dutrowSalesEJB/AccountMgmtEJB!dutrow.sales.ejb.AccountMgmtRemote");
 	private AccountMgmtRemote accountManager;
 
-	private AccountDTO seller;
-	private AccountDTO bidder;
-	private AuctionDTO auction;
-	long auctionId;
+	public static final String parserJNDI = System.getProperty("jndi.name",
+			EJBClient.getRemoteLookupName("dutrowSalesEAR", "dutrowSalesEJB",
+					"ParserTestEJB", ParserTestRemote.class.getName()));
+
+	private static ParserTestRemote parser;
 
 	public void configureJndi() {
 		assertNotNull("jndi.name.registrar not supplied", sellerJNDI);
@@ -59,31 +64,23 @@ public class EndToEndIT extends Support {
 		assertNotNull("jndi.name.registrar not supplied", accountJNDI);
 
 		log.debug("seller jndi name:" + sellerJNDI);
+		log.debug("account jndi name:" + accountJNDI);
+		log.debug("buyer jndi name:" + buyerJNDI);
+		log.debug("parser jndi name: " + parserJNDI);
+
 		try {
 			sellerManager = (SellerMgmtRemote) jndi.lookup(sellerJNDI);
+			accountManager = (AccountMgmtRemote) jndi.lookup(accountJNDI);
+			buyerManager = (BuyerMgmtRemote) jndi.lookup(buyerJNDI);
+			parser = (ParserTestRemote) jndi.lookup(parserJNDI);
 		} catch (NamingException ne) {
 			log.warn(ne.getMessage());
 			log.warn(ne.getExplanation());
 		}
 		log.debug("sellerManager=" + sellerManager);
-
-		log.debug("account jndi name:" + accountJNDI);
-		try {
-			accountManager = (AccountMgmtRemote) jndi.lookup(accountJNDI);
-		} catch (NamingException ne) {
-			log.warn(ne.getMessage());
-			log.warn(ne.getExplanation());
-		}
 		log.debug("accountManager=" + accountManager);
-
-		log.debug("jndi name:" + buyerJNDI);
-		try {
-			buyerManager = (BuyerMgmtRemote) jndi.lookup(buyerJNDI);
-		} catch (NamingException ne) {
-			log.warn(ne.getMessage());
-			log.warn(ne.getExplanation());
-		}
 		log.debug("buyerManager=" + buyerManager);
+		log.debug("parser=" + parser);
 
 	}
 
@@ -103,18 +100,72 @@ public class EndToEndIT extends Support {
 		// reset databases
 		boolean isReset = testSupport.resetAll();
 		Assert.assertTrue(isReset);
+		
 		// ingest data
+		try {
+			parser.ingest();
+		} catch (Exception e) {
+			Assert.fail("Parser ingest failed");
+		}
+		
 		// createAccount for seller, buyer1, and buyer2 in eSales
+		AccountDTO seller = new AccountDTO("seller", "John", "s", "Hopkins",
+				"seller@jhu.edu");
+		AccountDTO buyer1 = new AccountDTO("buyer1", "Alexander", "X", "Kossiakoff",
+				"kossi@jhuapl.edu");
+		AccountDTO buyer2 = new AccountDTO("buyer2", "Ralph", "D.", "Semmel",
+				"Ralph.Semmel@jhuapl.edu");
+		try {
+			accountManager.createAccountDTO(seller);
+			accountManager.createAccountDTO(buyer1);
+			accountManager.createAccountDTO(buyer2);
+		} catch (AccountMgmtException e) {
+			Assert.fail("Create accounts failed");
+		}
+		
 		// createAccount for buyer2 in eBidbot
+		// TODO: orderManager.createAccountDTO(buyer2);
+		
 		// createAuction for seller
+		AuctionDTO auction = new AuctionDTO("VT Fuse", "Science & Toys",
+				"detonates an explosive device automatically", Calendar
+						.getInstance().getTime(), 18.00f, seller, true);
+		auction.id = sellerManager.createAuction(auction);
+
 		// getUserAuctions for seller
+		Collection<AuctionDTO> userAuctions = sellerManager.getUserAuctions(seller.userId);
+		Assert.assertNotNull("User auctions came back null", userAuctions);
+		Assert.assertEquals("There should have been one auction", 1, userAuctions.size());
+		
 		// getAuction for the one created in earlier step
+		AuctionDTO gotAuction = null;
+		try {
+			gotAuction = buyerManager.getAuctionDTO(auction.id);
+		} catch (BuyerMgmtException e) {
+			Assert.fail("Buyer manager threw exception on getAuctionDTO");
+		}
+		Assert.assertEquals("requested " + auction.id + " and retreived " + gotAuction.id + " auction id was different", auction.id, gotAuction.id);
+		
 		// getOpenAuctions
+		Collection<AuctionDTO> gotOpenAuctions = buyerManager.getOpenAuctions();
 		// placeBid for buyer1
+		BidResultDTO bidResult = buyerManager.placeBid(buyer1.userId, gotAuction.id, 1f);
+		Assert.assertNotNull("Bid invalid: " + bidResult.result, bidResult.bid);
+		
 		// getAuctions for buyer1
+		// :: NOTE :: This isn't a defined interface in the buyerManager, 
+		// so I'm going to assume that this meant to get bids for buyer1 
+		Collection<BidDTO> gotBids = buyerManager.listMyOpenBids(buyer1.userId);
+		Assert.assertNotNull("Bids came back null", gotBids);
+		
 		// placeOrder for buyer2 in eBidbot (stimulate a bid)
+		// TODO: orderManager.placeOrder(buyer2.userId)
+		
 		// getAuction to verify bids were placed for buyer1 and buyer2
-
+		gotAuction = sellerManager.getAuction(auction.id);
+		Assert.assertNotNull("Auction item came back null", gotAuction);
+		Assert.assertTrue("Buyer1's bid not entered", gotAuction.bids.size() >= 1);
+		// TODO: Assert.assertTrue("Buyer2's bids not entered", gotAuction.bids.size() >= 2);
+		
 	}
-
 }

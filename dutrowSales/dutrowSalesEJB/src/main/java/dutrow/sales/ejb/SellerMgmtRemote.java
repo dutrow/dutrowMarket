@@ -17,8 +17,8 @@ import dutrow.sales.dto.ImageDTO;
 @Remote
 public interface SellerMgmtRemote {
 	long createAuction(AuctionDTO auction);
-	Collection<AuctionDTO> listMyAuctions(String userId);
-	Collection<AuctionDTO> listMyOpenAuctions(String userId);
+	Collection<AuctionDTO> getUserAuctions(String userId);
+	Collection<AuctionDTO> getOpenUserAuctions(String userId);
 	AuctionDTO getAuction(long auctionId);
 	Collection<ImageDTO> getAuctionImages(long auctionId);
 	

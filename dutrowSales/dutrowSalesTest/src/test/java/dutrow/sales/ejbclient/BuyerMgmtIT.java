@@ -83,7 +83,7 @@ public class BuyerMgmtIT extends Support {
 	@Test
 	public void testListOpenAuctions() {
 		log.debug("*** testListOpenAuctions() *** ");
-		Collection<AuctionDTO> openAuctions = buyerManager.listOpenAuctions();
+		Collection<AuctionDTO> openAuctions = buyerManager.getOpenAuctions();
 		Assert.assertNotSame("No Open Auctions", 0, openAuctions.size());
 		AuctionDTO anOpenAuction = openAuctions.iterator().next();
 		Assert.assertNotNull("An Open Auction is null", anOpenAuction);
