@@ -148,17 +148,19 @@ public final class DTOConversionUtil {
 		ai.setAskingPrice(auction.askingPrice);
 		ai.setPurchasePrice(auction.purchasePrice);
 		ai.setShipTo(DTOConversionUtil.convertAddressDTO(auction.shipTo));
+		
 		boolean isOpen;
 		Calendar now = Calendar.getInstance();
-		if (auction.startTime == null){
+		if (auction.startTime == null) {
 			isOpen = false;
-		} else if (auction.endTime == null){
+		} else if (auction.endTime == null) {
 			isOpen = now.getTime().after(auction.startTime);
-		} else{
-			isOpen = now.after(auction.startTime) && now.before(auction.endTime);
+		} else {
+			isOpen = now.after(auction.startTime)
+					&& now.before(auction.endTime);
 		}
-		
 		ai.setOpen(isOpen);
+
 		if (auction.bids != null)
 			for (BidDTO bd : auction.bids)
 				ai.addBids(DTOConversionUtil.convertBidDTO(bd, ai));

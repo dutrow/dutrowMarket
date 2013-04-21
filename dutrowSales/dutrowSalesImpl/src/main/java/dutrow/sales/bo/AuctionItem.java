@@ -372,6 +372,9 @@ public class AuctionItem {
 	 * @return the expired
 	 */
 	public boolean isExpired() {
+		if (this.endTime == null)
+			return false;
+			
 		return this.endTime.before(Calendar.getInstance().getTime());
 	}
 

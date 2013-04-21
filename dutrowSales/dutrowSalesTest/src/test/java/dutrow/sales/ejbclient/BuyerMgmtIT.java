@@ -71,7 +71,7 @@ public class BuyerMgmtIT extends Support {
 		auction = new AuctionDTO("VT Fuse", "Science & Toys",
 				"detonates an explosive device automatically", Calendar
 						.getInstance().getTime(), 18.00f, seller);
-		testSupport.createAuction(auction);
+		auction.id = testSupport.createAuction(auction);
 		
 		log.debug("bidder.userId: " + bidder.userId + " seller.userId: " + seller.userId + " auction.id: " + auction.id);
 		

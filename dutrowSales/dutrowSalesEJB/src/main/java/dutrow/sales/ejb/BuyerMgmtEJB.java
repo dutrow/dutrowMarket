@@ -101,7 +101,7 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote {
 		for (Image i : images) {
 			imageBytes.add(new ImageDTO(i.getImage()));
 		}
-
+		
 		return imageBytes;
 	}
 
@@ -153,10 +153,8 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote {
 		log.debug("*** placeBid() ***");
 		
 		BidResult bidResult = buyerMgmt.placeBid(userId, auctionId, bidValue);
-		BidResultDTO bidResultDTO = new BidResultDTO();
 		
-		
-		return bidResultDTO;
+		return DTOConversionUtil.convertBidResult(bidResult);
 	}
 	
 	@Override
@@ -164,10 +162,8 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote {
 		log.debug("*** placeBidLocal() ***");
 		
 		BidResult bidResult = buyerMgmt.placeBid(userId, auctionId, bidValue);
-		BidResultDTO bidResultDTO = new BidResultDTO();
 		
-		
-		return bidResultDTO;
+		return DTOConversionUtil.convertBidResult(bidResult);
 	}
 }
 
