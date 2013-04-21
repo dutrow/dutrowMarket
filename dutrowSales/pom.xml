@@ -12,7 +12,7 @@
 	<artifactId>dutrowSales</artifactId>
 	<packaging>pom</packaging>
 
-	<name>My dutrowSales package</name>
+	<name>dutrowSales</name>
 	<description>
         This is the dutrowSales application
     </description>

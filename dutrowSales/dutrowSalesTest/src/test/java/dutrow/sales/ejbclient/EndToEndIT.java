@@ -95,7 +95,7 @@ public class EndToEndIT extends Support {
 	}
 
 	@Test
-	public void endToEnd() {
+	public void endToEnd() throws BuyerMgmtException {
 
 		// reset databases
 		boolean isReset = testSupport.resetAll();
@@ -148,6 +148,7 @@ public class EndToEndIT extends Support {
 		
 		// getOpenAuctions
 		Collection<AuctionDTO> gotOpenAuctions = buyerManager.getOpenAuctions();
+		Assert.assertNotSame("Auctions not open", 0, gotOpenAuctions.size() ); 
 		// placeBid for buyer1
 		BidResultDTO bidResult = buyerManager.placeBid(buyer1.userId, gotAuction.id, 1f);
 		Assert.assertNotNull("Bid invalid: " + bidResult.result, bidResult.bid);

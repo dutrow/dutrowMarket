@@ -42,7 +42,7 @@ public class ParserServerIT {
     	}
     }
 
-    @Test
+    //@Test//tested in EndToEndIT
     public void testIngest() throws Exception {
         log.info("*** testIngest ***");
         parser.ingest();

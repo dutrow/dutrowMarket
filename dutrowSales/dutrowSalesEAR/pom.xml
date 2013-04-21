@@ -12,10 +12,7 @@
 	<artifactId>dutrowSalesEAR</artifactId>
 	<packaging>ear</packaging>
 	<name>dutrowSalesEAR</name>
-	<description>
-        This project provides a EAR for the Java EE components
-        associated with the overall project.
-    </description>
+	<description>This project provides a EAR for the Java EE components associated with the overall project.</description>
 
 	<dependencies>
 		<dependency>

@@ -32,6 +32,7 @@ public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	private AccountMgmt accountManager;
 
 	@PostConstruct
+	 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public void init() {
 		try {
 			log.debug("**** init ****");

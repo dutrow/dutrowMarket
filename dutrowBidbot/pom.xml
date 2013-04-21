@@ -13,7 +13,7 @@
     <artifactId>dutrowBidbot</artifactId>
     <packaging>pom</packaging>
 
-    <name>My dutrowBidbot package</name>
+    <name>dutrowBidbot</name>
     <description>
         This is the dutrowBidbot application
     </description>

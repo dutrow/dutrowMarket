@@ -11,7 +11,7 @@
 
 	<artifactId>dutrowSalesTest</artifactId>
 	<packaging>jar</packaging>
-	<name>dutrowSales Remote Interface Test</name>
+	<name>dutrowSalesTest</name>
 	<description>dutrowSales Remote Interface Test</description>
 
 	<dependencies>

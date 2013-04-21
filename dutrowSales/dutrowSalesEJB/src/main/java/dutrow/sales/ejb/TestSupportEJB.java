@@ -139,4 +139,5 @@ public class TestSupportEJB implements TestSupportRemote {
 		AuctionItem ai = testUtil.getAuctionDao().getAuctionById(id);
 		return DTOConversionUtil.convertAuctionItem(ai);
 	}
+
 }

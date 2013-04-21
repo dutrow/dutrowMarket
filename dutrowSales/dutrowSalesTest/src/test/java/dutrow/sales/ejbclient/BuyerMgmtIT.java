@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Calendar;
 import java.util.Collection;
 
+import javax.ejb.EJBException;
 import javax.naming.NamingException;
 
 import junit.framework.Assert;
@@ -97,7 +98,7 @@ public class BuyerMgmtIT extends Support {
 	}
 
 	@Test
-	public void testGetAuctionImages() {
+	public void testGetAuctionImages() throws BuyerMgmtException {
 		log.debug("*** testGetAuctionImages() *** ");
 		// TODO: add an image to an auction
 		Collection<ImageDTO> images = buyerManager.getAuctionImages(auction.id);
@@ -107,17 +108,17 @@ public class BuyerMgmtIT extends Support {
 	}
 
 	@Test
-	public void testListMyBids(){
+	public void testListMyBids() throws BuyerMgmtException {
 		log.info("*** testListMyBids() *** ");
 		Collection<BidDTO> bids = buyerManager.listMyBids(bidder.userId);
 		Assert.assertNotNull("listMyBids returned null", bids);
 		for (BidDTO bidDTO : bids) {
 			log.info(bidDTO);
-		}		
+		}
 	}
 
 	@Test
-	public void testListMyOpenBids() {
+	public void testListMyOpenBids() throws BuyerMgmtException {
 		log.debug("*** testListMyOpenBids() *** ");
 		Collection<BidDTO> bids = buyerManager.listMyOpenBids(bidder.userId);
 		Assert.assertNotNull("listMyBids returned null", bids);
@@ -125,16 +126,20 @@ public class BuyerMgmtIT extends Support {
 			log.info(bidDTO);
 			AuctionDTO a = testSupport.getAuction(bidDTO.auctionItem);
 			Assert.assertTrue("Bid must be open", a.isOpen);
-		}	
+		}
 	}
 
 	@Test
-	public void testPlaceBid() {
+	public void testPlaceBid() throws BuyerMgmtException {
 		log.debug("*** testPlaceBid() *** ");
 		BidResultDTO one = buyerManager.placeBid(bidder.userId, auction.id,
 				2.00f);
-		BidResultDTO two = buyerManager.placeBid(bidder.userId, auction.id,
-				1.00f);
+		BidResultDTO two = new BidResultDTO();
+		try {
+			two = buyerManager.placeBid(bidder.userId, auction.id, 1.00f);
+		} catch (EJBException e) {
+			log.info("Expected EJB Exception: ", e);
+		}
 		BidResultDTO three = buyerManager.placeBid(bidder.userId, auction.id,
 				3.00f);
 

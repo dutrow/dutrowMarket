@@ -10,8 +10,7 @@
 	</parent>
 	<artifactId>dutrowSalesWAR</artifactId>
 	<packaging>war</packaging>
-	<name>dutrowSalesWAR Maven Webapp</name>
-	<url>http://maven.apache.org</url>
+	<name>dutrowSalesWAR</name>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -19,8 +18,19 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <scope>provided</scope>
+        </dependency>
 	</dependencies>
 	<build>
 		<finalName>dutrowSalesWAR</finalName>
 	</build>
+	<description>Webapp</description>
 </project>

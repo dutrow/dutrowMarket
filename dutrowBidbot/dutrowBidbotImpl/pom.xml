@@ -11,7 +11,7 @@
 
 	<artifactId>dutrowBidbotImpl</artifactId>
 
-	<name>dutrowBidbot Impl</name>
+	<name>dutrowBidbotImpl</name>
 	<description>
         This is the implementation of the dutrowSales application
     </description>

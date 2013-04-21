@@ -27,9 +27,6 @@ public interface TestSupportRemote {
 	
 	void createAccount(AccountDTO seller);
 	long createAuction(AuctionDTO auction);
-	
-	
-	
-	
+	 
 	
 }
