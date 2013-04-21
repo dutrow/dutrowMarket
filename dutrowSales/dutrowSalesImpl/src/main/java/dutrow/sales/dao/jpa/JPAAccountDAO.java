@@ -5,6 +5,7 @@ package dutrow.sales.dao.jpa;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
@@ -24,6 +25,7 @@ public class JPAAccountDAO implements AccountDAO {
 
 	private EntityManager em;
 
+	@Inject
 	public void setEntityManager(EntityManager em) {
 		this.em = em;
 	}
@@ -42,20 +44,20 @@ public class JPAAccountDAO implements AccountDAO {
 	 * @see dutrow.sales.dao.AccountDAO#createAccount(dutrow.sales.bo.Account)
 	 */
 	@Override
-	public Account createAccount(Account accountDetails) {
+	public String createAccount(Account accountDetails) {
 		try {
 			Account existingAcct = getAccountByUser(accountDetails.getUserId());
 			if (existingAcct != null) {
 				log.warn("User Account already exists with this id: "
 						+ accountDetails.getUserId());
-				return null;
+				return accountDetails.getUserId();
 			}
 
 			em.persist(accountDetails);
 		} catch (RuntimeException ex) {
 			throw new DAOException("troubles: " + ex.toString(), ex);
 		}
-		return accountDetails;
+		return accountDetails.getUserId();
 	}
 
 	/*
@@ -108,7 +110,9 @@ public class JPAAccountDAO implements AccountDAO {
 		// If I just persist it, will it override automatically?
 		// should I check that it doesn't exist first?
 		try {
-			em.persist(accountDetails);
+			Account update = em.find(Account.class, accountDetails.getUserId());
+			update.copy(accountDetails);
+			em.persist(update);
 		} catch (RuntimeException ex) {
 			ex.printStackTrace();
 			log.warn(ex.toString());

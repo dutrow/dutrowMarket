@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 
 import dutrow.sales.bl.AuctionMgmt;
 import dutrow.sales.bo.Account;
+import dutrow.sales.bo.Address;
 import dutrow.sales.bo.AuctionItem;
 import dutrow.sales.bo.Bid;
 import dutrow.sales.bo.POC;
@@ -63,9 +64,9 @@ public class AuctionMgmtImpl implements AuctionMgmt {
 			accounts.updateAccount(accountDetails);
 			item.setBuyer(winner);
 			item.setPurchasePrice(winningBid.getAmount());
-			//TODO: when should we choose which shipping address the user prefers for this order? 
-			//Address shippingAddress = accounts.getAccountByUser(winningUser).getAddresses().values();
-			//item.setShipTo(shippingAddress);
+ 
+			Address shippingAddress = accountDetails.getAddresses().get("shipping");
+			item.setShipTo(shippingAddress);
 		}
 		else {
 			log.info("Nobody bought " + item.getTitle());
@@ -73,6 +74,7 @@ public class AuctionMgmtImpl implements AuctionMgmt {
 		
 		
 		item.setEndTime(Calendar.getInstance().getTime());
+		item.setOpen(false);
 		
 		auctions.updateAuction(item);
 	}

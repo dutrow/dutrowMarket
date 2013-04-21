@@ -158,7 +158,8 @@ public class JPAAuctionDAO implements AuctionDAO {
 	public Collection<AuctionItem> getUserAuctions(String userId) {
 		try {
 			
-			TypedQuery<AuctionItem> auctionQuery = em.createQuery(
+			TypedQuery<AuctionItem> auctionQuery = em
+					.createQuery(
 					"select a from AuctionItem a where a.seller.userId=:userId",
 					AuctionItem.class);
 			auctionQuery.setParameter("userId", userId);

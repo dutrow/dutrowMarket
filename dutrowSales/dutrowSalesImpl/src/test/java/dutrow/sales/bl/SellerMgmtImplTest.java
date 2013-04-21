@@ -37,7 +37,7 @@ public class SellerMgmtImplTest extends JPATestBase {
 	public void setUp() throws Exception {
 		super.setUp();
 		seller = testSupport.createSellerExample();
-		seller = this.accountDao.createAccount(seller);
+		String sellerid = this.accountDao.createAccount(seller);
 		myItem = testSupport.createAuctionItem("gold coin", seller);
 		sellerManager.createAuction(myItem);
 	}
@@ -74,6 +74,7 @@ public class SellerMgmtImplTest extends JPATestBase {
 	@Test
 	public void testGetOpenUserAuctions() {
 		Collection<AuctionItem> c = sellerManager.getOpenUserAuctions(seller.getUserId());
+		Assert.assertNotNull("Open User Auctions are Null", c);
 		for (AuctionItem i : c){
 			log.info("Open User Auction:" + i);
 			Assert.assertTrue("Auction Must be Open", i.isOpen());

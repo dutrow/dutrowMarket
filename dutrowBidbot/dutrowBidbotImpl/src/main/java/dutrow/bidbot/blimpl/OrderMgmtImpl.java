@@ -84,8 +84,6 @@ public class OrderMgmtImpl implements OrderMgmt {
 	@Override
 	public boolean endOrder(long bidOrder) {
 		BidOrder bo = accountDAO.getOrderById(bidOrder);
-		// TODO: complete order processing once auction has closed and note if
-		// won.
 		bo.setComplete(true);
 		accountDAO.updateOrder(bo);
 		return bo.isComplete();
@@ -114,9 +112,6 @@ public class OrderMgmtImpl implements OrderMgmt {
 
 		if (bid > order.getMaxBid())
 			return false;
-
-		// TODO: place a bid that is higher than the current bid for an open
-		// auction
 
 		return true;
 

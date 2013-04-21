@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -11,19 +10,18 @@
         <!-- relativePath>../../ejava-javaee</relativePath-->
     </parent>
 
-	<!-- I'm leaving this code in case I want to depend on my own projects instead of ejava-root -->
-	<!-- parent>
-		<groupId>dutrow.root</groupId>
-		<artifactId>dutrowRoot</artifactId>
-		<version>1.0-SNAPSHOT</version>
-		<relativePath>../dutrowRoot</relativePath>
-	</parent-->
+	<properties>
+		<ejava.version>3.0.2012.2-SNAPSHOT</ejava.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.version>2.0-SNAPSHOT</project.version>
+	</properties>
 	
     <groupId>dutrow.dutrowMarket</groupId>
     <artifactId>dutrowMarket</artifactId>
-    <version>${dutrowMarket.version}</version>
+    <version>2.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
     <name>My dutrowMarket Project</name>
+	
 	<description>
 		This project is the root project for the dutrowMarket application
 	</description>
@@ -83,12 +81,16 @@
     <pluginRepositories>
     </pluginRepositories>
 
-    <properties>
-    <dutrowMarket.version>1.0.RC2</dutrowMarket.version>
-    </properties>
+    
 
     <dependencyManagement>
         <dependencies>
+			<dependency>
+				<groupId>ejava.common</groupId>
+				<artifactId>jboss-rmi-client</artifactId>
+				<version>${ejava.version}</version>
+				<type>pom</type>
+			</dependency>
         </dependencies>
     </dependencyManagement>
 

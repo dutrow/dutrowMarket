@@ -12,7 +12,7 @@ import dutrow.sales.bo.Account;
  *
  */
 public interface AccountMgmt {
-	Account createAccount(Account accountDetails);
+	String createAccount(Account accountDetails);
 	Account getAccount(String userString);
 	boolean updateAccount(Account accountDetails);
 	boolean closeAccount(String userId);

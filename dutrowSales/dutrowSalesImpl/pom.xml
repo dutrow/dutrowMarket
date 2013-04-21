@@ -5,8 +5,8 @@
 
 	<parent>
 		<artifactId>dutrowSales</artifactId>
-		<groupId>dutrow.dutrowMarket.dutrowSales</groupId>
-		<version>${dutrowMarket.version}</version>
+		<groupId>dutrow.dutrowSales</groupId>
+		<version>2.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>dutrowSalesImpl</artifactId>
@@ -35,13 +35,22 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- see http://groups.yahoo.com/group/ejava_class/message/15981 
+		org.hibernate.common:hibernate-commons-annotations:jar:4.0.1.Final:test
+		-->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>4.0.1.Final</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- core project testing dependencies -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
+			<scope>test</scope>
 		</dependency>
-		<!-- core project testing dependencies -->
-
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -52,6 +61,11 @@
 			<artifactId>log4j</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <scope>provided</scope>
+        </dependency>  
 	</dependencies>
 
 	<build>

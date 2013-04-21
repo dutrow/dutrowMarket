@@ -74,12 +74,22 @@ public interface TestSupport {
 	/**
 	 * @return
 	 */
-	AuctionItem createAuctionItemExample(Account seller);
+	AuctionItem persistAuctionItemExample(Account seller);
 	
 	/**
 	 * @param secondsOffset
 	 * @return
 	 */
 	Date createDate(int secondsOffset);
+	/**
+	 * @param convertAccountDTO
+	 */
+	void persistAccount(Account convertAccountDTO);
+	/**
+	 * @param convertAuctionDTO
+	 * @return 
+	 */
+	long persistAuction(AuctionItem convertAuctionDTO);
+
 	
 }

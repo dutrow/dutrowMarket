@@ -20,6 +20,10 @@ import dutrow.bidbot.dao.JPATestBase;
 public class EndToEndTest extends JPATestBase{
 	private static Log log = LogFactory.getLog(EndToEndTest.class);
 		
+	@Test
+	public void clear(){
+		log.info("Simple way to clear the database.");
+	}
 	
 	@Test
 	public void endToEnd(){

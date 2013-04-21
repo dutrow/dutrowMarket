@@ -60,7 +60,7 @@ public class IngestorTest extends JPATestBase {
 	}
 	
 
-	@Test
+	//@Test
 	public void testIngest10() throws Exception {
 		log.info("*** testIngest10 ***");
 		
@@ -78,7 +78,7 @@ public class IngestorTest extends JPATestBase {
 				accountManager.getAccounts(0, 1000).size());
 	}
 
-	@Test
+	//@Test
 	public void testIngest100() throws Exception {
 		log.info("*** testIngest10 ***");
 		
@@ -96,7 +96,7 @@ public class IngestorTest extends JPATestBase {
 				accountManager.getAccounts(0, 1000).size());
 	}
 
-	@Test
+	//@Test
 	public void testIngestAll() throws Exception {
 		log.info("*** testIngestAll ***");
 		

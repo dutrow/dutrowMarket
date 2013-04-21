@@ -5,6 +5,7 @@ package dutrow.sales.bl;
 
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.SortedSet;
 import java.util.Vector;
 
 import javax.xml.bind.JAXBException;
@@ -22,6 +23,7 @@ import dutrow.sales.bl.impl.Ingestor;
 import dutrow.sales.bo.Account;
 import dutrow.sales.bo.AuctionItem;
 import dutrow.sales.bo.Bid;
+import dutrow.sales.bo.BidResult;
 import dutrow.sales.bo.Image;
 import dutrow.sales.bo.POC;
 import dutrow.sales.dao.JPATestBase;
@@ -33,7 +35,6 @@ import dutrow.sales.dao.JPATestBase;
 public class EndToEndTest extends JPATestBase{
 	private static Log log = LogFactory.getLog(EndToEndTest.class);
 
-	
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -52,7 +53,7 @@ public class EndToEndTest extends JPATestBase{
 		super.tearDown();
 	}
 	
-	//@Test
+	@Test
 	public void clear(){
 		log.info("Simple way to clear the database.");
 	}
@@ -65,11 +66,13 @@ public class EndToEndTest extends JPATestBase{
 		Assert.assertNotNull("Seller Manager Does Not Exist", sellerManager);
 		Assert.assertNotNull("TestSupport Does Not Exist", testSupport);
 
-		//testSupport.resetAll();// I do this in setUp // reset to starting state
+		testSupport.resetAll();// reset to starting state // for kicks and
+								// giggles since I already do this in setUp
 		String fileName = "xml/eSales-1.xml";
 		InputStream is = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream(fileName);
-		Ingestor ingestor = new Ingestor(is, accountDao, auctionDao); // ingest data
+		Ingestor ingestor = new Ingestor(is, accountDao, auctionDao); // ingest
+																		// data
 		try {
 			ingestor.ingest();
 		} catch (JAXBException e) {
@@ -83,7 +86,7 @@ public class EndToEndTest extends JPATestBase{
 		// Create a seller
 		log.info("Create Seller");
 		Account seller = testSupport.createSellerExample();
-		seller = accountManager.createAccount(seller);
+		String sellerId = accountManager.createAccount(seller);
 		
 		// Create a couple of bidders
 		Vector<POC> buyers = new Vector<POC>();
@@ -96,12 +99,11 @@ public class EndToEndTest extends JPATestBase{
 		accountManager.createAccount(jim);
 		buyers.add(jim.getPoc());
 		
-		
-
 		// Create Auction
 		
 		log.info("Create Auction Item");
-		AuctionItem auctionDetails = testSupport.createAuctionItem("silver dollar",	seller);
+		AuctionItem auctionDetails = testSupport.createAuctionItem(
+				"silver dollar", seller);
 		Image img = new Image();
 		byte [] byteArray = new byte[100]; 
 		img.setImage(byteArray);
@@ -110,18 +112,17 @@ public class EndToEndTest extends JPATestBase{
 		long auctionId = sellerManager.createAuction(auctionDetails).getId();
 		log.info("Auction ID: " + auctionId);
 		
-		
 		// * get auctions for seller
-		// not yet implemented
-		//log.info("Get Auctions for seller");
-		//Collection<AuctionItem> sellerAuctions = sellerManager
-		//		.getUserAuctions(seller.getPoc().getUserId());
-		//Assert.assertNotNull("Could not find seller auctions", sellerAuctions);
+		log.info("Get Auctions for seller");
+		Collection<AuctionItem> sellerAuctions = sellerManager
+				.getUserAuctions(seller.getPoc().getUserId());
+		Assert.assertNotNull("Could not find seller auctions", sellerAuctions);
 
 		// getAuction for seller
 		log.info("Get Auction Item for seller");
 		AuctionItem sellerAuction = sellerManager.getAuction(auctionId);
-		Assert.assertNotNull("Could not find seller auction " + auctionId, sellerAuction);
+		Assert.assertNotNull("Could not find seller auction " + auctionId,
+				sellerAuction);
 		
 		// get auctions for buyer
 		log.info("Get Auction Item for buyers");
@@ -130,7 +131,8 @@ public class EndToEndTest extends JPATestBase{
 
 		log.info("Get Auction Item for buyers");
 		AuctionItem buyerItem = buyerManager.getAuction(auctionId);
-		Assert.assertNotNull("Could not find buyer auction item " + auctionId, buyerItem);
+		Assert.assertNotNull("Could not find buyer auction item " + auctionId,
+				buyerItem);
 
 		float startingBid = buyerItem.getAskingPrice();
 		float nextBid = startingBid;
@@ -139,19 +141,30 @@ public class EndToEndTest extends JPATestBase{
 		for (POC b : buyers) {
 			log.info("Buyer " + b.getUserId() + " placed a bid of " + nextBid);
 			// place bid for buyer
-			Bid succesfulBid = buyerManager.placeBid(b, auctionId, nextBid);
-			log.info("placed bid: " + succesfulBid);
-			Assert.assertNotNull("Bid was rejected");
+			BidResult succesfulBid = buyerManager.placeBid(b.getUserId(), auctionId, nextBid);
+			log.info("placed bid: " + succesfulBid.getBid());
+			log.info(succesfulBid.getResult());
+			Assert.assertNotNull("Bid was rejected", succesfulBid.getBid());
 			
 		}
 
 		// * getAuction (using BuyerMgmtImpl) -- i.e., showing auction has bids
 		// associated.
+		AuctionItem completedAuction = buyerManager.getAuction(auctionId);
+		SortedSet<Bid> completedBids = completedAuction.getBids();
+		Assert.assertNotNull("Completed auction should have a bidset",
+				completedBids);
+		Assert.assertNotNull("Completed auction should have a bid associated",
+				completedBids.last());
+
 		// * closeAuction (using AuctionMgmtImpl) -- i.e., winner declared and
 		// no more bids should be accepted.
-
-		AuctionItem completedAuction = buyerManager.getAuction(auctionId);
 		auctionManager.closeAuction(completedAuction);
+		BidResult closedBid = buyerManager.placeBid(dan.getPoc().getUserId(), auctionId,
+				nextBid + 1);
+		log.info(closedBid.getResult());
+		Assert.assertNull("Closed auction should not accept new bids",
+				closedBid.getBid());
 
 	}
 

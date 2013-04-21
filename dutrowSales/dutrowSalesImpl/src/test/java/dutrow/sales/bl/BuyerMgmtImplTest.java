@@ -3,8 +3,6 @@
  */
 package dutrow.sales.bl;
 
-import static org.junit.Assert.*;
-
 import java.util.Collection;
 
 import junit.framework.Assert;
@@ -14,7 +12,7 @@ import org.junit.Test;
 
 import dutrow.sales.bo.Account;
 import dutrow.sales.bo.AuctionItem;
-import dutrow.sales.bo.Bid;
+import dutrow.sales.bo.BidResult;
 import dutrow.sales.dao.JPATestBase;
 
 /**
@@ -37,7 +35,7 @@ public class BuyerMgmtImplTest extends JPATestBase {
 		this.accountDao.createAccount(seller);
 		bidder = testSupport.createDan();
 		this.accountDao.createAccount(bidder);
-		auction = testSupport.createAuctionItemExample(seller);
+		auction = testSupport.persistAuctionItemExample(seller);
 		
 		this.auctionDao.createAuction(auction);
 	}
@@ -68,13 +66,13 @@ public class BuyerMgmtImplTest extends JPATestBase {
 	 */
 	@Test
 	public void testPlaceBid() {
-		Bid one = buyerManager.placeBid(bidder.getPoc(), auction.getId(), 2.00f);
-		Bid two = buyerManager.placeBid(bidder.getPoc(), auction.getId(), 1.00f);
-		Bid three = buyerManager.placeBid(bidder.getPoc(), auction.getId(), 3.00f);
+		BidResult one = buyerManager.placeBid(bidder.getPoc().getUserId(), auction.getId(), 2.00f);
+		BidResult two = buyerManager.placeBid(bidder.getPoc().getUserId(), auction.getId(), 1.00f);
+		BidResult three = buyerManager.placeBid(bidder.getPoc().getUserId(), auction.getId(), 3.00f);
 		
-		Assert.assertNotNull("First Bid invalid", one);
-		Assert.assertNull("Second Bid should have been rejected", two);
-		Assert.assertNotNull("Third Bid should have been accepted", three);
+		Assert.assertNotNull("First Bid invalid: " + one.getResult(), one.getBid());
+		Assert.assertNull("Second Bid should have been rejected: " + two.getResult(), two.getBid());
+		Assert.assertNotNull("Third Bid should have been accepted: " + three.getResult(), three.getBid());
 	}
 
 }

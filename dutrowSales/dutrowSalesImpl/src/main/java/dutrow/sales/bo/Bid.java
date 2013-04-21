@@ -5,6 +5,7 @@ package dutrow.sales.bo;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,16 +24,16 @@ public class Bid implements Comparable<Bid> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	long id;
-	
+	@Column(nullable = false)
 	float amount;
 	Date timestamp;
 
 	@ManyToOne
-	@JoinColumn
+	@JoinColumn(nullable = false)
 	POC bidder;
 
 	@ManyToOne
-	@JoinColumn
+	@JoinColumn(nullable = false)
 	AuctionItem auction;
 
 	// JPA Requires no-arg constructor
@@ -72,15 +73,6 @@ public class Bid implements Comparable<Bid> {
 		return id;
 	}
 	
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	
-
 	/**
 	 * @return the amount
 	 */
@@ -150,6 +142,5 @@ public class Bid implements Comparable<Bid> {
 	public int compareTo(Bid other) {
 		return Float.compare(this.amount, other.amount);
 	}
-
 
 }

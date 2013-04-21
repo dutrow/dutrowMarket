@@ -197,7 +197,7 @@ public class TestSupportImpl implements TestSupport {
 		
 		Date startTime = createTime(5);
 		Date endTime = createTime(8);
-		AuctionItem item =  new AuctionItem(itemName.hashCode(),
+		AuctionItem item =  new AuctionItem(
 				itemName, null, "A beautiful " + itemName, 
 				startTime, endTime, 10, seller.getPoc());
 		
@@ -262,7 +262,7 @@ public class TestSupportImpl implements TestSupport {
 		return sellerPOC;
 	}
 	@Override
-	public AuctionItem createAuctionItemExample(Account seller){
+	public AuctionItem persistAuctionItemExample(Account seller){
 		return auctionDao.createAuction(createAuctionItem("fashionable gear", seller));
 	}
 
@@ -297,6 +297,23 @@ public class TestSupportImpl implements TestSupport {
 	public void setAuctionDao(AuctionDAO auctionDao) {
 		this.auctionDao = auctionDao;
 	}
+	/* (non-Javadoc)
+	 * @see dutrow.sales.bl.TestSupport#persistAccount(dutrow.sales.bo.Account)
+	 */
+	@Override
+	public void persistAccount(Account account) {
+		accountDao.createAccount(account);
+		
+	}
+	/* (non-Javadoc)
+	 * @see dutrow.sales.bl.TestSupport#persistAuction(dutrow.sales.bo.AuctionItem)
+	 */
+	@Override
+	public long persistAuction(AuctionItem auction) {
+		auctionDao.createAuction(auction);
+		return auction.getId();
+	}
+
 	
 
 

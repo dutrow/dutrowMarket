@@ -118,7 +118,7 @@ public class Ingestor {
 	 */
 	private void createAuction(ejava.projects.esales.dto.Auction object) {
 		AuctionItem ai = new AuctionItem();
-		ai.setId(object.getId());
+		//ai.setId(object.getId());// not allowed
 		ai.setTitle(object.getTitle());
 		ai.setCategory(Category.getCategory(object.getCategory()));
 		ai.setDescription(object.getDescription());

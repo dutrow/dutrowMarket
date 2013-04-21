@@ -12,6 +12,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +27,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 
+
+
 /**
  * @author dutroda1
  * 
@@ -34,17 +37,23 @@ import org.hibernate.annotations.SortType;
 @Table(name = "DUTROW_SALES_AUCTIONITEM")
 public class AuctionItem {
 	@Id
-	// Can't be generated because parser expects to be able
-	// to set the id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
-	long id = 0;
+	// If you would like the parser to to set the id, then remove this generated value.
+	// The instructor/grader would rather I not allow something else to generate the primary keys.
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "AUCTION_ITEM_ID")
+	long id;
+	@Column(nullable=false)
 	String title;
 	Category category;
+	@Column(nullable=false)
 	String description;
+	@Column(nullable=false)
 	Date startTime;
 	Date endTime;
+	@Column(nullable=false)
 	float askingPrice;
 	float purchasePrice;
+	@Column(nullable=false)
 	boolean open;
 
 	@OneToMany(cascade = { CascadeType.ALL })
@@ -76,7 +85,6 @@ public class AuctionItem {
 	}
 
 	/**
-	 * @param id
 	 * @param title
 	 * @param category
 	 * @param description
@@ -90,9 +98,8 @@ public class AuctionItem {
 	 * @param seller
 	 * @param images2
 	 */
-	public AuctionItem(long id, String title, Category category, String description,
+	public AuctionItem(String title, Category category, String description,
 			Date startTime, Date endTime, float askingPrice, POC seller) {
-		this.id = id;
 		this.title = title;
 		this.category = category;
 		this.description = description;
@@ -105,6 +112,8 @@ public class AuctionItem {
 		this.shipTo = null;
 		this.seller = seller;
 		this.images = new ArrayList<Image>();
+		
+		this.open = true;
 	}
 
 	/**
@@ -112,15 +121,6 @@ public class AuctionItem {
 	 */
 	public long getId() {
 		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public AuctionItem setId(long id) {
-		this.id = id;
-		return this;
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class AuctionItem {
 	/**
 	 * @return the purchasePrice
 	 */
-	public double getPurchasePrice() {
+	public float getPurchasePrice() {
 		return purchasePrice;
 	}
 

@@ -28,7 +28,8 @@ public class OrderMgmtImplTest extends JPATestBase {
 	 */
 	@Test
 	public void testCreateAccount() {
-		BidAccount ba1 = orderManager.createAccount("dan", "ddutrow", "passwdd");
+		BidAccount ba1 = orderManager
+				.createAccount("dan", "ddutrow", "passwdd");
 		BidAccount ba2 = orderManager.getAccount("dan");
 		Assert.assertEquals(ba1.getSalesAccount(), ba2.getSalesAccount());
 		Assert.assertEquals(ba1.getSalesPassword(), ba2.getSalesPassword());
@@ -49,7 +50,8 @@ public class OrderMgmtImplTest extends JPATestBase {
 		boolean ended = orderManager.endOrder(bidOrder.getBidOrderId());
 		// Assert.assertTrue("Order not ended", ended);
 		log.info("getOrderStatus - did user win or not.");
-		boolean orderStatus = orderManager.getOrderStatus(bidOrder.getBidOrderId());
+		boolean orderStatus = orderManager.getOrderStatus(bidOrder
+				.getBidOrderId());
 		// Assert.assertTrue("Bidder should have won", orderStatus);
 	}
 	
@@ -66,11 +68,13 @@ public class OrderMgmtImplTest extends JPATestBase {
 		Assert.assertTrue("Create Order", orderManager.createOrder(bo1));
 		BidOrder bo2 = orderManager.getOrder(bo1.getBidOrderId());
 		Assert.assertNotNull("returned BidOrder is null", bo2);
-		Assert.assertEquals("Auction Id Test", bo1.getAuctionId(), bo2.getAuctionId());
-		Assert.assertEquals("Bidder Sales Account Test", bo1.getBidder().getSalesAccount(), bo2.getBidder().getSalesAccount());
-		Assert.assertEquals("Start Bid Test", 0, Double.compare(bo1.getStartBid(), bo2.getStartBid()));
+		Assert.assertEquals("Auction Id Test", bo1.getAuctionId(),
+				bo2.getAuctionId());
+		Assert.assertEquals("Bidder Sales Account Test", bo1.getBidder()
+				.getSalesAccount(), bo2.getBidder().getSalesAccount());
+		Assert.assertEquals("Start Bid Test", 0,
+				Double.compare(bo1.getStartBid(), bo2.getStartBid()));
 		Assert.assertEquals("Result Test", bo1.getResult(), bo2.getResult());
-		
 		
 	}
 
@@ -85,8 +89,7 @@ public class OrderMgmtImplTest extends JPATestBase {
 		Assert.assertTrue("Create Order", orderManager.createOrder(bo));
 
 		boolean endorder = orderManager.endOrder(bo.getBidOrderId());
-		// TODO implement end order and test
-		//Assert.assertFalse(endorder);
+		Assert.assertTrue("Order not properly ended.", endorder);
 	}
 
 	/**
@@ -100,7 +103,6 @@ public class OrderMgmtImplTest extends JPATestBase {
 		orderManager.createOrder(bo);
 		boolean orderStatus = orderManager.getOrderStatus(bo.getBidOrderId());
 		Assert.assertFalse(orderStatus);
-		// TODO implement something that changes order status
 	}
 
 	/**

@@ -33,7 +33,7 @@ public class BidOrder implements Serializable {
 	float startBid;
 	float maxBid;
 	boolean complete;
-	boolean result;
+	boolean result; // did the bidder win or not
 	float finalBid;
 
 	@ManyToOne(optional = false, cascade=CascadeType.PERSIST)

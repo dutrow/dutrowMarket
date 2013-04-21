@@ -68,10 +68,15 @@ public class AccountMgmtImplTest extends JPATestBase {
 		log.info("testUpdateAccount");
 		Account retrieved = accountManager.getAccount("dutrow");
 		Assert.assertNotNull("Could not retrieve account", retrieved);
+		String middleName = retrieved.getMiddleName();
+		
 		if (retrieved != null)
 			retrieved.setMiddleName("Allan Lundahl");
 		log.info("testAccountManager::updateAccount");
 		Assert.assertTrue("Could not update account", accountManager.updateAccount(retrieved));
+		
+		Account updated = accountManager.getAccount("dutrow");
+		Assert.assertNotSame("Update unsuccessful", middleName, updated.getMiddleName());
 		
 	}
 

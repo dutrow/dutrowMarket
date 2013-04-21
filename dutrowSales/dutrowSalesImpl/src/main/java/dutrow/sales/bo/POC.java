@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class POC {
 	@Id 
 	String userId;
-	
+	@Column(nullable=false)
 	String email;
 	
 	@OneToMany (mappedBy="seller")

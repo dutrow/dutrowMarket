@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -30,9 +31,12 @@ public class Account implements Serializable {
 	 */
 	@Id //@Column(name="USER_ID")
 	String userId;
+	@Column(nullable=false)
 	String firstName;
 	String middleName;
+	@Column(nullable=false)
 	String lastName;
+	@Column(nullable=false)
 	Date startDate;
 	Date endDate;
 	
@@ -40,8 +44,8 @@ public class Account implements Serializable {
 	@JoinTable(name = "DUTROW_SALES_ACCT_ADDRESS_LINK")//, joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ADDRESS_ID"))
 	Map<String, Address> addresses;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-	@JoinColumn
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, optional=false)
+	@JoinColumn(nullable=false)
 	POC poc;
 
 	// JPA Requires no-arg constructor
@@ -80,7 +84,7 @@ public class Account implements Serializable {
 		this.startDate = newInfo.startDate;
 		this.endDate = newInfo.endDate;
 		this.addresses = newInfo.addresses;
-		this.poc = newInfo.poc;
+		this.poc.email = newInfo.poc.email;
 	}
 
 	/**
@@ -226,4 +230,5 @@ public class Account implements Serializable {
 				.append(this.poc);
 		return builder.toString();
 	}
+
 }

@@ -12,7 +12,7 @@ import dutrow.sales.bo.Account;
  *
  */
 public interface AccountDAO {
-	Account createAccount(Account accountDetails);
+	String createAccount(Account accountDetails);
 	Account getAccountByUser(String userId);
 	Account getAccountByEmail(String email);
 	boolean updateAccount(Account accountDetails);

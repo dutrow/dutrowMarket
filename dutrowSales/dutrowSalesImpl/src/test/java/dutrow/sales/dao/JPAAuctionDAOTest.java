@@ -68,8 +68,7 @@ public class JPAAuctionDAOTest extends JPATestBase{
 		Account seller = testSupport.createSellerExample();
 		accountDao.createAccount(seller);
 		
-		AuctionItem ai = testSupport.createAuctionItemExample(seller);
-		auctionDao.createAuction(ai);
+		AuctionItem ai = testSupport.persistAuctionItemExample(seller);
 		
 		ai.setAskingPrice(40)
 			.setStartTime(testSupport.createTime(0))
@@ -98,7 +97,7 @@ public class JPAAuctionDAOTest extends JPATestBase{
 		Account seller = testSupport.createSellerExample();
 		accountDao.createAccount(seller);
 		
-		AuctionItem ai = testSupport.createAuctionItemExample(seller);
+		AuctionItem ai = testSupport.persistAuctionItemExample(seller);
 		assertNotNull(auctionDao.getAuctionById(ai.getId()));
 	}
 
@@ -111,7 +110,7 @@ public class JPAAuctionDAOTest extends JPATestBase{
 		Account seller = testSupport.createSellerExample();
 		accountDao.createAccount(seller);
 		
-		AuctionItem ai = testSupport.createAuctionItemExample(seller);
+		AuctionItem ai = testSupport.persistAuctionItemExample(seller);
 		assertNotNull(auctionDao.getAuctionById(ai.getId()));
 		auctionDao.removeAuction(ai.getId());
 		assertNull(auctionDao.getAuctionById(ai.getId()));
