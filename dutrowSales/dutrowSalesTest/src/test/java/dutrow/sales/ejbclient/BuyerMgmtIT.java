@@ -30,7 +30,7 @@ import dutrow.sales.ejb.BuyerMgmtRemote;
  * 
  */
 public class BuyerMgmtIT extends Support {
-	private static final Log log = LogFactory.getLog(AccountMgmtIT.class);
+	private static final Log log = LogFactory.getLog(BuyerMgmtIT.class);
 
 	private static final String registrarJNDI = System
 			.getProperty("jndi.name.registrar",
@@ -77,6 +77,7 @@ public class BuyerMgmtIT extends Support {
 		log.debug("bidder.userId: " + bidder.userId + " seller.userId: "
 				+ seller.userId + " auction.id: " + auction.id);
 
+		Assert.assertNotSame("Auction not created", 0, auction.id);
 	}
 
 	@Test

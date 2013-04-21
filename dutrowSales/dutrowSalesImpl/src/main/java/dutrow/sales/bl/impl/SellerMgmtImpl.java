@@ -37,7 +37,7 @@ public class SellerMgmtImpl implements SellerMgmt {
 	 * @see dutrow.sales.bl.SellerMgmt#createAuction(dutrow.sales.bo.AuctionItem)
 	 */
 	@Override
-	public AuctionItem createAuction(AuctionItem auctionDetails) {
+	public long createAuction(AuctionItem auctionDetails) {
 		return auctions.createAuction(auctionDetails);
 	}
 

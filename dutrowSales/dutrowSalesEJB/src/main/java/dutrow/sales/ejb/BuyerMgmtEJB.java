@@ -10,6 +10,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
@@ -31,6 +33,7 @@ import dutrow.sales.dto.ImageDTO;
  * 
  */
 @Stateless
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote {
 	private static final Log log = LogFactory.getLog(BuyerMgmtEJB.class);
 
@@ -96,7 +99,8 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote {
 		log.debug("*** getAuctionImages() ***");
 		Collection<ImageDTO> imageBytes = new ArrayList<ImageDTO>();
 
-		Collection<Image> images = buyerMgmt.getAuctionImages(auctionId);
+		AuctionItem ai = buyerMgmt.getAuction(auctionId);
+		Collection<Image> images = ai.getImages();
 
 		for (Image i : images) {
 			imageBytes.add(new ImageDTO(i.getImage()));

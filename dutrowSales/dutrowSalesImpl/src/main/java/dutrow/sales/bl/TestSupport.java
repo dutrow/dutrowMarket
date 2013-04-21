@@ -74,7 +74,7 @@ public interface TestSupport {
 	/**
 	 * @return
 	 */
-	AuctionItem persistAuctionItemExample(Account seller);
+	long persistAuctionItemExample(Account seller);
 	
 	/**
 	 * @param secondsOffset

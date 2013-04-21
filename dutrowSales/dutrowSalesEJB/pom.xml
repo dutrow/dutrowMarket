@@ -17,6 +17,14 @@
     </description>
 
 	<dependencies>
+		<!-- DUTROW TEST -->
+		<dependency>
+			<groupId>ejava.javaee.projects.eMarket</groupId>
+			<artifactId>eSalesTestUtil</artifactId>
+			<version>3.0.2013.1</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- core dependencies -->
 		<dependency>
 			<groupId>commons-logging</groupId>
@@ -34,6 +42,7 @@
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
+
 	</dependencies>
 
 	<build>

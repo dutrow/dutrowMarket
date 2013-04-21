@@ -18,7 +18,6 @@ public interface BuyerMgmt {
 	Collection<AuctionItem> getOpenAuctions();
 	AuctionItem getAuction(long auctionId);
 	BidResult placeBid(String userId, long auctionId, float amount);
-	Collection<Image> getAuctionImages(long auctionId);
 	Collection<Bid> listBids(String userId);
 	Collection<Bid> listOpenBids(String userId);
 }

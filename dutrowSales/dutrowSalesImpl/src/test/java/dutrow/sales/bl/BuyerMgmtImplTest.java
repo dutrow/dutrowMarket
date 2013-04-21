@@ -22,8 +22,8 @@ import dutrow.sales.dao.JPATestBase;
 public class BuyerMgmtImplTest extends JPATestBase {
 
 	private Account seller;
-	private Account bidder;
-	private AuctionItem auction;
+	private Account buyer1;
+	private long auctionId;
 	
 	/* (non-Javadoc)
 	 * @see dutrow.sales.dao.JPATestBase#setUp()
@@ -33,12 +33,11 @@ public class BuyerMgmtImplTest extends JPATestBase {
 		super.setUp();
 		seller = testSupport.createSellerExample();
 		this.accountDao.createAccount(seller);
-		bidder = testSupport.createDan();
-		this.accountDao.createAccount(bidder);
-		auction = testSupport.persistAuctionItemExample(seller);
-		
-		this.auctionDao.createAuction(auction);
+		buyer1 = testSupport.createDan();
+		this.accountDao.createAccount(buyer1);
+		auctionId = testSupport.persistAuctionItemExample(seller);
 	}
+	
 
 	/**
 	 * Test method for {@link dutrow.sales.bl.impl.BuyerMgmtImpl#getOpenAuctions()}.
@@ -56,7 +55,7 @@ public class BuyerMgmtImplTest extends JPATestBase {
 	 */
 	@Test
 	public void testGetAuction() {
-		AuctionItem theOpenAuction = buyerManager.getAuction(auction.getId());
+		AuctionItem theOpenAuction = buyerManager.getAuction(auctionId);
 		Assert.assertNotNull("The Open Auction is null", theOpenAuction);
 	}
 
@@ -66,9 +65,9 @@ public class BuyerMgmtImplTest extends JPATestBase {
 	 */
 	@Test
 	public void testPlaceBid() {
-		BidResult one = buyerManager.placeBid(bidder.getPoc().getUserId(), auction.getId(), 2.00f);
-		BidResult two = buyerManager.placeBid(bidder.getPoc().getUserId(), auction.getId(), 1.00f);
-		BidResult three = buyerManager.placeBid(bidder.getPoc().getUserId(), auction.getId(), 3.00f);
+		BidResult one = buyerManager.placeBid(buyer1.getPoc().getUserId(), auctionId, 2.00f);
+		BidResult two = buyerManager.placeBid(buyer1.getPoc().getUserId(), auctionId, 1.00f);
+		BidResult three = buyerManager.placeBid(buyer1.getPoc().getUserId(), auctionId, 3.00f);
 		
 		Assert.assertNotNull("First Bid invalid: " + one.getResult(), one.getBid());
 		Assert.assertNull("Second Bid should have been rejected: " + two.getResult(), two.getBid());

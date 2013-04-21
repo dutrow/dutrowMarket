@@ -11,7 +11,7 @@
 	</parent>
 
 	<properties>
-		<ejava.version>3.0.2012.2-SNAPSHOT</ejava.version>
+		<ejava.version>3.0.2013.1-SNAPSHOT</ejava.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<project.version>2.1-SNAPSHOT</project.version>
@@ -92,6 +92,14 @@
 				<version>${ejava.version}</version>
 				<type>pom</type>
 			</dependency>
+
+			<dependency>
+				<groupId>ejava.common</groupId>
+				<artifactId>ejava-util</artifactId>
+				<version>${ejava.version}</version>
+				<scope>test</scope>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 

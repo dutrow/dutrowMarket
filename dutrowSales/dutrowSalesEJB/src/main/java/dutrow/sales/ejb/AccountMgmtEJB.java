@@ -7,6 +7,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
@@ -22,6 +24,7 @@ import dutrow.sales.dto.AccountDTO;
  * 
  */
 @Stateless
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	private static final Log log = LogFactory.getLog(AccountMgmtEJB.class);
 	

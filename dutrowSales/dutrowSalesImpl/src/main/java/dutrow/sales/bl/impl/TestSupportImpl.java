@@ -63,7 +63,7 @@ public class TestSupportImpl implements TestSupport {
 	}
 	
 	private void deleteByJPA(EntityManager em) throws DAOException {
-		log.info("Delete By JPA");
+		log.debug("Delete By JPA");
 
 		boolean useCascades = true;
 		
@@ -114,7 +114,7 @@ public class TestSupportImpl implements TestSupport {
 	@SuppressWarnings("unused")
 	private void deleteByQuery(EntityManager em) throws RuntimeException {
 
-		log.info("Delete By Query");
+		log.debug("Delete By Query");
 		
 		int rows = 0;
 		Query query;
@@ -144,7 +144,7 @@ public class TestSupportImpl implements TestSupport {
 		
 		
 		em.getTransaction().commit();
-		log.info("removed " + rows + " rows");
+		log.debug("removed " + rows + " rows");
 	}
 	
 	/**
@@ -262,7 +262,7 @@ public class TestSupportImpl implements TestSupport {
 		return sellerPOC;
 	}
 	@Override
-	public AuctionItem persistAuctionItemExample(Account seller){
+	public long persistAuctionItemExample(Account seller){
 		return auctionDao.createAuction(createAuctionItem("fashionable gear", seller));
 	}
 

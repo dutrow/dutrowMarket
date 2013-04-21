@@ -43,7 +43,7 @@ public class AccountMgmtIT extends Support {
 			log.warn(ne.getMessage());
 			log.warn(ne.getExplanation());
 		}
-		log.debug("buyerManager=" + accountManager);
+		log.debug("accountManager=" + accountManager);
 	}
 
 	/**

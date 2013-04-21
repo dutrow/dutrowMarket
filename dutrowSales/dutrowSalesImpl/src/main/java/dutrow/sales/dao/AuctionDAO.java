@@ -12,7 +12,7 @@ import dutrow.sales.bo.AuctionItem;
  *
  */
 public interface AuctionDAO {
-	AuctionItem createAuction(AuctionItem auctionDetails);
+	long createAuction(AuctionItem auctionDetails);
 	AuctionItem getAuctionById(long id);
 	boolean updateAuction(AuctionItem ai);
 	boolean removeAuction(long id);

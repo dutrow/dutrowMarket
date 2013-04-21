@@ -69,14 +69,14 @@ public class AccountMgmtImpl implements AccountMgmt {
 
 		Account account = accountDAO.getAccountByUser(userString);
 		if (account != null) {
-			log.info("Found User: " + account.getUserId());
+			log.debug("Found User: " + account.getUserId());
 			return account;
 		}
 
 		account = accountDAO.getAccountByEmail(userString);
 
 		if (account != null) {
-			log.info("Found User: " + account.getUserId());
+			log.debug("Found User: " + account.getUserId());
 			return account;
 		}
 

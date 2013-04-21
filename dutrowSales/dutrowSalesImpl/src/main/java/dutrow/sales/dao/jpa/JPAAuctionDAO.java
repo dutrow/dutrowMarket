@@ -52,7 +52,7 @@ public class JPAAuctionDAO implements AuctionDAO {
 	 * dutrow.sales.dao.AuctionDAO#createAuction(dutrow.sales.bo.AuctionItem)
 	 */
 	@Override
-	public AuctionItem createAuction(AuctionItem auctionDetails) {
+	public long createAuction(AuctionItem auctionDetails) {
 
 		try {
 			AuctionItem existingAuction = em.find(AuctionItem.class,
@@ -60,14 +60,14 @@ public class JPAAuctionDAO implements AuctionDAO {
 			if (existingAuction != null) {
 				log.warn("AuctionItem already exists with id: "
 						+ auctionDetails.getId());
-				return existingAuction;
+				return existingAuction.getId();
 			}
 
 			em.persist(auctionDetails);
 		} catch (RuntimeException ex) {
 			throw new DAOException("troubles: " + ex.toString(), ex);
 		}
-		return auctionDetails;
+		return auctionDetails.getId();
 	}
 
 	/*

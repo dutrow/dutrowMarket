@@ -102,15 +102,7 @@ public class BuyerMgmtImpl implements BuyerMgmt {
 		return new BidResult(successfulBid, "bid was successful");
 	}
 
-	/* (non-Javadoc)
-	 * @see dutrow.sales.bl.BuyerMgmt#getAuctionImages(long)
-	 */
-	@Override
-	public Collection<Image> getAuctionImages(long auctionId) {
-		AuctionItem a = auctions.getAuctionById(auctionId);
-		
-		return a.getImages();
-	}
+
 
 	/* (non-Javadoc)
 	 * @see dutrow.sales.bl.BuyerMgmt#listBids(java.lang.String)

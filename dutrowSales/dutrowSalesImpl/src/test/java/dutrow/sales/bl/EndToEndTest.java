@@ -109,7 +109,7 @@ public class EndToEndTest extends JPATestBase{
 		img.setImage(byteArray);
 		auctionDetails.getImages().add(img);
 		log.info("Create Auction");
-		long auctionId = sellerManager.createAuction(auctionDetails).getId();
+		long auctionId = sellerManager.createAuction(auctionDetails);
 		log.info("Auction ID: " + auctionId);
 		
 		// * get auctions for seller

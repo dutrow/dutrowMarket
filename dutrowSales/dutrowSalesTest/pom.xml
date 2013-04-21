@@ -38,6 +38,17 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>ejava.common</groupId>
+			<artifactId>ejava-util</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ejava.javaee.projects.eMarket</groupId>
+			<artifactId>eSalesTestUtil</artifactId>
+			<version>3.0.2013.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>dutrowSalesEAR</artifactId>
 			<type>ear</type>
@@ -64,7 +75,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<plugins>
 			<!-- adds IT integration tests to the build -->

@@ -12,7 +12,7 @@ import dutrow.sales.bo.AuctionItem;
  *
  */
 public interface SellerMgmt {
-	AuctionItem createAuction(AuctionItem auctionDetails);
+	long createAuction(AuctionItem auctionDetails);
 	Collection<AuctionItem> getUserAuctions(String userId);
 	Collection<AuctionItem> getOpenUserAuctions(String userId);
 	AuctionItem getAuction(long l);

@@ -3,30 +3,38 @@
  */
 package dutrow.sales.ejb;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJBException;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import dutrow.sales.bl.SellerMgmt;
+import dutrow.sales.bo.AuctionItem;
+import dutrow.sales.bo.Image;
 import dutrow.sales.dto.AuctionDTO;
 import dutrow.sales.dto.ImageDTO;
 
 /**
  * @author dutroda1
- *
+ * 
  */
+@Stateless
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 	private static final Log log = LogFactory.getLog(SellerMgmtEJB.class);
-	
+
 	@Inject
 	SellerMgmt sellerMgmt;
-	
+
 	@PostConstruct
 	public void init() {
 		try {
@@ -43,66 +51,118 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 		log.debug("*** close() ***");
 	}
 
-	/* (non-Javadoc)
-	 * @see dutrow.sales.ejb.SellerMgmtRemote#createAuction(dutrow.sales.dto.AuctionDTO)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * dutrow.sales.ejb.SellerMgmtRemote#createAuction(dutrow.sales.dto.AuctionDTO
+	 * )
 	 */
 	@Override
 	public long createAuction(AuctionDTO auction) {
-		// TODO Auto-generated method stub
-		return 0;
+		log.debug("createAuction");
+		return sellerMgmt.createAuction(DTOConversionUtil
+				.convertAuctionDTO(auction));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see dutrow.sales.ejb.SellerMgmtRemote#listMyAuctions(java.lang.String)
 	 */
 	@Override
 	public Collection<AuctionDTO> listMyAuctions(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		Collection<AuctionItem> allauctions = sellerMgmt
+				.getUserAuctions(userId);
+		Collection<AuctionDTO> auctions = new ArrayList<AuctionDTO>();
+		for (AuctionItem ai : allauctions) {
+			auctions.add(DTOConversionUtil.convertAuctionItem(ai));
+		}
+		return auctions;
 	}
 
-	/* (non-Javadoc)
-	 * @see dutrow.sales.ejb.SellerMgmtRemote#listMyOpenAuctions(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * dutrow.sales.ejb.SellerMgmtRemote#listMyOpenAuctions(java.lang.String)
 	 */
 	@Override
 	public Collection<AuctionDTO> listMyOpenAuctions(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		Collection<AuctionItem> allauctions = sellerMgmt
+				.getOpenUserAuctions(userId);
+		Collection<AuctionDTO> auctions = new ArrayList<AuctionDTO>();
+		for (AuctionItem ai : allauctions) {
+			auctions.add(DTOConversionUtil.convertAuctionItem(ai));
+		}
+		return auctions;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see dutrow.sales.ejb.SellerMgmtRemote#getAuction(long)
 	 */
 	@Override
 	public AuctionDTO getAuction(long auctionId) {
-		// TODO Auto-generated method stub
-		return null;
+		AuctionItem ai = sellerMgmt.getAuction(auctionId);
+		return DTOConversionUtil.convertAuctionItem(ai);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see dutrow.sales.ejb.SellerMgmtRemote#getAuctionImages(long)
 	 */
 	@Override
 	public Collection<ImageDTO> getAuctionImages(long auctionId) {
-		// TODO Auto-generated method stub
-		return null;
+		log.debug("*** getAuctionImages() ***");
+		Collection<ImageDTO> imageBytes = new ArrayList<ImageDTO>();
+
+		AuctionItem a = sellerMgmt.getAuction(auctionId);
+
+		Collection<Image> images = a.getImages();
+
+		for (Image i : images) {
+			imageBytes.add(new ImageDTO(i.getImage()));
+		}
+
+		return imageBytes;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see dutrow.sales.ejb.SellerMgmtLocal#getUserAuctions(java.lang.String)
 	 */
 	@Override
 	public Collection<AuctionDTO> getUserAuctions(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		Collection<AuctionItem> auctions = sellerMgmt.getUserAuctions(userId);
+
+		Collection<AuctionDTO> auctionDTOs = new ArrayList<AuctionDTO>();
+		for (AuctionItem oa : auctions) {
+			auctionDTOs.add(DTOConversionUtil.convertAuctionItem(oa));
+		}
+		return auctionDTOs;
+
 	}
 
-	/* (non-Javadoc)
-	 * @see dutrow.sales.ejb.SellerMgmtLocal#getOpenUserAuctions(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * dutrow.sales.ejb.SellerMgmtLocal#getOpenUserAuctions(java.lang.String)
 	 */
 	@Override
 	public Collection<AuctionDTO> getOpenUserAuctions(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		Collection<AuctionItem> auctions = sellerMgmt
+				.getOpenUserAuctions(userId);
+
+		Collection<AuctionDTO> openAuctions = new ArrayList<AuctionDTO>();
+		for (AuctionItem oa : auctions) {
+			openAuctions.add(DTOConversionUtil.convertAuctionItem(oa));
+		}
+		return openAuctions;
 	}
 }
