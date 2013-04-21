@@ -3,17 +3,11 @@
  */
 package dutrow.sales.ejb;
 
-import java.util.Calendar;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,11 +15,7 @@ import org.apache.commons.logging.LogFactory;
 import dutrow.sales.bl.AccountMgmt;
 import dutrow.sales.bl.AccountMgmtException;
 import dutrow.sales.bo.Account;
-import dutrow.sales.bo.Address;
-import dutrow.sales.bo.POC;
-import dutrow.sales.cdi.DutrowEntityManager;
 import dutrow.sales.dto.AccountDTO;
-import dutrow.sales.dto.AddressDTO;
 
 /**
  * @author dutroda1

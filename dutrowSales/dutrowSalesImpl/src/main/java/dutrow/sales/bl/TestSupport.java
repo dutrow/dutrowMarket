@@ -90,6 +90,11 @@ public interface TestSupport {
 	 * @return 
 	 */
 	long persistAuction(AuctionItem convertAuctionDTO);
+	/**
+	 * @param id
+	 * @return
+	 */
+	Account getAccount(String id);
 
 	
 }

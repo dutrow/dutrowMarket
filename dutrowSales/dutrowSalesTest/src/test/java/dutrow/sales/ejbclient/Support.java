@@ -4,9 +4,6 @@
 package dutrow.sales.ejbclient;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
-import java.util.Collection;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -14,9 +11,7 @@ import javax.naming.NamingException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
-import org.junit.Test;
 
-import dutrow.sales.dto.AccountDTO;
 import dutrow.sales.ejb.TestSupportRemote;
 
 /**

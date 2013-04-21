@@ -10,6 +10,10 @@ import java.io.Serializable;
  *
  */
 public class ImageDTO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6585226487346965706L;
 	byte [] bytes;
 
 	/**

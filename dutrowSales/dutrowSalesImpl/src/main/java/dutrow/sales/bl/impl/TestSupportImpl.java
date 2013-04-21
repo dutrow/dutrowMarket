@@ -313,6 +313,13 @@ public class TestSupportImpl implements TestSupport {
 		auctionDao.createAuction(auction);
 		return auction.getId();
 	}
+	/* (non-Javadoc)
+	 * @see dutrow.sales.bl.TestSupport#getAccount(java.lang.String)
+	 */
+	@Override
+	public Account getAccount(String id) {
+		return accountDao.getAccountByUser(id);
+	}
 
 	
 

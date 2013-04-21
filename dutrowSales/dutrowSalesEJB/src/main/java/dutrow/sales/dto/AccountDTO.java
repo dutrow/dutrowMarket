@@ -4,7 +4,6 @@
 package dutrow.sales.dto;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -54,8 +53,6 @@ public class AccountDTO implements Serializable{
 	@Override
 	public String toString() {
 
-		SimpleDateFormat dateFormatter = new SimpleDateFormat(
-				"E, y-M-d 'at' h:m:s a z");
 		StringBuilder builder = new StringBuilder();
 		builder.append("id=")
 				.append(this.userId)

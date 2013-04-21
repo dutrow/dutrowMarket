@@ -5,7 +5,6 @@ package dutrow.sales.ejbclient;
 
 import static org.junit.Assert.assertNotNull;
 
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import junit.framework.Assert;
@@ -18,8 +17,6 @@ import org.junit.Test;
 import dutrow.sales.bl.AccountMgmtException;
 import dutrow.sales.dto.AccountDTO;
 import dutrow.sales.ejb.AccountMgmtRemote;
-import dutrow.sales.ejb.BuyerMgmtRemote;
-import dutrow.sales.ejb.TestSupportRemote;
 
 /**
  * @author dutroda1
@@ -33,12 +30,10 @@ public class AccountMgmtIT extends Support {
 					"jndi.name.registrar",
 					"dutrowSalesEAR/dutrowSalesEJB/AccountMgmtEJB!dutrow.sales.ejb.AccountMgmtRemote");
 	private AccountMgmtRemote accountManager;
-	
 
 	AccountDTO dan;
 
-	
-	public void configureJndi(){
+	public void configureJndi() {
 		assertNotNull("jndi.name.registrar not supplied", registrarJNDI);
 
 		log.debug("jndi name:" + registrarJNDI);
@@ -50,14 +45,14 @@ public class AccountMgmtIT extends Support {
 		}
 		log.debug("buyerManager=" + accountManager);
 	}
-	
+
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		
+
 		log.debug("Set up for AccountMgmtIT");
 
 		configureJndi();

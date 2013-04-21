@@ -118,4 +118,22 @@ public class TestSupportEJB implements TestSupportRemote {
 		log.info("createAuction");
 		return testUtil.persistAuction(DTOConversionUtil.convertAuctionDTO(auction));
 	}
+
+	/* (non-Javadoc)
+	 * @see dutrow.sales.ejb.TestSupportRemote#getAccount(long)
+	 */
+	@Override
+	public AccountDTO getAccount(String id) {
+		Account a = testUtil.getAccount(id);
+		return DTOConversionUtil.convertAccount(a);
+	}
+
+	/* (non-Javadoc)
+	 * @see dutrow.sales.ejb.TestSupportRemote#getAuction(long)
+	 */
+	@Override
+	public AuctionDTO getAuction(long id) {
+		AuctionItem ai = testUtil.getAuctionDao().getAuctionById(id);
+		return DTOConversionUtil.convertAuctionItem(ai);
+	}
 }

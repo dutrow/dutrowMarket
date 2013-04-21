@@ -15,16 +15,17 @@ import dutrow.sales.dto.ImageDTO;
 
 /**
  * @author dutroda1
- *
+ * 
  */
 @Remote
 public interface BuyerMgmtRemote {
 	Collection<AuctionDTO> listOpenAuctions();
+
 	AuctionDTO getAuctionDTO(long auction) throws BuyerMgmtException;
 	Collection<ImageDTO> getAuctionImages(long auctionId);
-	
+	Collection<BidDTO> listMyBids(String userId);
+	Collection<BidDTO> listMyOpenBids(String userId);
+
 	BidResultDTO placeBid(String userId, long auctionId, float bidValue);
-	
-	
-	
+
 }

@@ -11,6 +11,10 @@ import java.io.Serializable;
  */
 public class AddressDTO implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3972271824040162154L;
 	public String name;
 	public String to;
 	public String street;

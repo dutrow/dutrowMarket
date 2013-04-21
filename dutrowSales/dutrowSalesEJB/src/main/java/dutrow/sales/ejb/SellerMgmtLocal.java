@@ -3,7 +3,11 @@
  */
 package dutrow.sales.ejb;
 
+import java.util.Collection;
+
 import javax.ejb.Local;
+
+import dutrow.sales.dto.AuctionDTO;
 
 /**
  * @author dutroda1
@@ -11,5 +15,6 @@ import javax.ejb.Local;
  */
 @Local
 public interface SellerMgmtLocal {
-
+	Collection<AuctionDTO> getUserAuctions(String userId);
+	Collection<AuctionDTO> getOpenUserAuctions(String userId);
 }

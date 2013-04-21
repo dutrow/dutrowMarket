@@ -122,6 +122,8 @@ public final class DTOConversionUtil {
 		adto.askingPrice = ai.getAskingPrice();
 		adto.purchasePrice = ai.getPurchasePrice();
 		adto.shipTo = DTOConversionUtil.convertAddress(ai.getShipTo());
+		adto.isOpen = ai.isOpen();
+		adto.isExpired = ai.isExpired();
 		adto.bids = new ArrayList<BidDTO>();
 		for (Bid b : ai.getBids()) {
 			BidDTO biddto = DTOConversionUtil.convertBid(b);
@@ -148,18 +150,7 @@ public final class DTOConversionUtil {
 		ai.setAskingPrice(auction.askingPrice);
 		ai.setPurchasePrice(auction.purchasePrice);
 		ai.setShipTo(DTOConversionUtil.convertAddressDTO(auction.shipTo));
-		
-		boolean isOpen;
-		Calendar now = Calendar.getInstance();
-		if (auction.startTime == null) {
-			isOpen = false;
-		} else if (auction.endTime == null) {
-			isOpen = now.getTime().after(auction.startTime);
-		} else {
-			isOpen = now.after(auction.startTime)
-					&& now.before(auction.endTime);
-		}
-		ai.setOpen(isOpen);
+		ai.setOpen(auction.isOpen);
 
 		if (auction.bids != null)
 			for (BidDTO bd : auction.bids)

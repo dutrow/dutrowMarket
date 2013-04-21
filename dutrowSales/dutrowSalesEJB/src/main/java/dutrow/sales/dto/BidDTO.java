@@ -11,6 +11,10 @@ import java.util.Date;
  *
  */
 public class BidDTO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7442043374154805375L;
 	public float amount;
 	public Date timestamp;
 	public String poc;

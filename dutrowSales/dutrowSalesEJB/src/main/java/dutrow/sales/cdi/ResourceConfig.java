@@ -52,7 +52,6 @@ public class ResourceConfig {
 		return new AccountMgmtImpl(accountDao);
 	}
 
-	private SellerMgmtImpl sellerMgmt;
 
 	@Produces
 	public SellerMgmt getSellerManager(final AuctionDAO auctionDao) {
@@ -72,12 +71,9 @@ public class ResourceConfig {
 
 	}
 
-	private JPAAccountDAO accountDao;
-
 	@Produces
 	public AccountDAO getAccountDAO(
 			@DutrowEntityManager final EntityManager emgr) {
-
 		return new JPAAccountDAO(emgr);
 	}
 }

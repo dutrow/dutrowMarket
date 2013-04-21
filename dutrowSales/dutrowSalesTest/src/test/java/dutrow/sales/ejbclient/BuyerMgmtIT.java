@@ -20,8 +20,9 @@ import org.junit.Test;
 import dutrow.sales.bl.BuyerMgmtException;
 import dutrow.sales.dto.AccountDTO;
 import dutrow.sales.dto.AuctionDTO;
+import dutrow.sales.dto.BidDTO;
 import dutrow.sales.dto.BidResultDTO;
-import dutrow.sales.ejb.AccountMgmtRemote;
+import dutrow.sales.dto.ImageDTO;
 import dutrow.sales.ejb.BuyerMgmtRemote;
 
 /**
@@ -41,7 +42,7 @@ public class BuyerMgmtIT extends Support {
 	private AuctionDTO auction;
 	long auctionId;
 
-	public void configureJndi(){
+	public void configureJndi() {
 		assertNotNull("jndi.name.registrar not supplied", registrarJNDI);
 
 		log.debug("jndi name:" + registrarJNDI);
@@ -53,13 +54,13 @@ public class BuyerMgmtIT extends Support {
 		}
 		log.debug("buyerManager=" + buyerManager);
 	}
-	
+
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		
+
 		configureJndi();
-		
+
 		log.debug("*** Set up for BuyerMgmtIT ***");
 		log.debug("testSupport=" + testSupport);
 		seller = new AccountDTO("seller", "John", "s", "Hopkins",
@@ -70,11 +71,12 @@ public class BuyerMgmtIT extends Support {
 		testSupport.createAccount(bidder);
 		auction = new AuctionDTO("VT Fuse", "Science & Toys",
 				"detonates an explosive device automatically", Calendar
-						.getInstance().getTime(), 18.00f, seller);
+						.getInstance().getTime(), 18.00f, seller, true);
 		auction.id = testSupport.createAuction(auction);
-		
-		log.debug("bidder.userId: " + bidder.userId + " seller.userId: " + seller.userId + " auction.id: " + auction.id);
-		
+
+		log.debug("bidder.userId: " + bidder.userId + " seller.userId: "
+				+ seller.userId + " auction.id: " + auction.id);
+
 	}
 
 	@Test
@@ -86,12 +88,6 @@ public class BuyerMgmtIT extends Support {
 		Assert.assertNotNull("An Open Auction is null", anOpenAuction);
 	}
 
-	/**
-	 * Test method for
-	 * {@link dutrow.sales.bl.impl.BuyerMgmtImpl#getAuction(long)}.
-	 * 
-	 * @throws BuyerMgmtException
-	 */
 	@Test
 	public void testGetAuction() throws BuyerMgmtException {
 		log.debug("*** testGetAuction() *** ");
@@ -99,11 +95,38 @@ public class BuyerMgmtIT extends Support {
 		Assert.assertNotNull("The Open Auction is null", theOpenAuction);
 	}
 
-	/**
-	 * Test method for
-	 * {@link dutrow.sales.bl.impl.BuyerMgmtImpl#placeBid(dutrow.sales.bo.POC, long, float)}
-	 * .
-	 */
+	@Test
+	public void testGetAuctionImages() {
+		log.debug("*** testGetAuctionImages() *** ");
+		// TODO: add an image to an auction
+		Collection<ImageDTO> images = buyerManager.getAuctionImages(auction.id);
+		Assert.assertNotNull("Failure to getAuctionImages for auction: "
+				+ auctionId, images);
+
+	}
+
+	@Test
+	public void testListMyBids(){
+		log.info("*** testListMyBids() *** ");
+		Collection<BidDTO> bids = buyerManager.listMyBids(bidder.userId);
+		Assert.assertNotNull("listMyBids returned null", bids);
+		for (BidDTO bidDTO : bids) {
+			log.info(bidDTO);
+		}		
+	}
+
+	@Test
+	public void testListMyOpenBids() {
+		log.debug("*** testListMyOpenBids() *** ");
+		Collection<BidDTO> bids = buyerManager.listMyOpenBids(bidder.userId);
+		Assert.assertNotNull("listMyBids returned null", bids);
+		for (BidDTO bidDTO : bids) {
+			log.info(bidDTO);
+			AuctionDTO a = testSupport.getAuction(bidDTO.auctionItem);
+			Assert.assertTrue("Bid must be open", a.isOpen);
+		}	
+	}
+
 	@Test
 	public void testPlaceBid() {
 		log.debug("*** testPlaceBid() *** ");
