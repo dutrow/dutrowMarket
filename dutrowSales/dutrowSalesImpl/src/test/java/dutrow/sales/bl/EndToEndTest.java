@@ -19,7 +19,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import dutrow.sales.bl.impl.Ingestor;
+import dutrow.sales.bl.impl.IngestorImpl;
 import dutrow.sales.bo.Account;
 import dutrow.sales.bo.AuctionItem;
 import dutrow.sales.bo.Bid;
@@ -71,7 +71,7 @@ public class EndToEndTest extends JPATestBase{
 		String fileName = "xml/eSales-1.xml";
 		InputStream is = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream(fileName);
-		Ingestor ingestor = new Ingestor(is, accountDao, auctionDao); // ingest
+		Ingestor ingestor = new IngestorImpl(is, accountDao, auctionDao); // ingest
 																		// data
 		try {
 			ingestor.ingest();

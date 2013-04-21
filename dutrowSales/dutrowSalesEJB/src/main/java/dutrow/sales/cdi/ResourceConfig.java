@@ -9,10 +9,12 @@ import javax.persistence.PersistenceContext;
 
 import dutrow.sales.bl.AccountMgmt;
 import dutrow.sales.bl.BuyerMgmt;
+import dutrow.sales.bl.Ingestor;
 import dutrow.sales.bl.SellerMgmt;
 import dutrow.sales.bl.TestSupport;
 import dutrow.sales.bl.impl.AccountMgmtImpl;
 import dutrow.sales.bl.impl.BuyerMgmtImpl;
+import dutrow.sales.bl.impl.IngestorImpl;
 import dutrow.sales.bl.impl.SellerMgmtImpl;
 import dutrow.sales.bl.impl.TestSupportImpl;
 import dutrow.sales.dao.AccountDAO;
@@ -75,5 +77,12 @@ public class ResourceConfig {
 	public AccountDAO getAccountDAO(
 			@DutrowEntityManager final EntityManager emgr) {
 		return new JPAAccountDAO(emgr);
+	}
+	
+	// INGESTOR
+	@Produces
+	public Ingestor getIngestor(final AccountDAO accountDao,
+			final AuctionDAO auctionDao) {
+		return new IngestorImpl(accountDao, auctionDao);
 	}
 }

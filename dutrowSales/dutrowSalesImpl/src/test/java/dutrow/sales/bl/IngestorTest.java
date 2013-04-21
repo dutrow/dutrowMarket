@@ -3,7 +3,8 @@
  */
 package dutrow.sales.bl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.InputStream;
 
@@ -13,7 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import dutrow.sales.bl.impl.Ingestor;
+import dutrow.sales.bl.impl.IngestorImpl;
 import dutrow.sales.dao.JPATestBase;
 
 /**
@@ -52,7 +53,7 @@ public class IngestorTest extends JPATestBase {
 				.getResourceAsStream(fileName);
 		assertNotNull(fileName + " not found", is);
 
-		Ingestor ingestor = new Ingestor(is, accountDao, auctionDao);
+		Ingestor ingestor = new IngestorImpl(is, accountDao, auctionDao);
 		ingestor.ingest();
 
 		// verify we have the expected number of accounts
@@ -70,7 +71,7 @@ public class IngestorTest extends JPATestBase {
 		                       .getResourceAsStream(fileName);
 		assertNotNull(fileName + " not found", is);
 		
-		Ingestor ingestor = new Ingestor(is, accountDao, auctionDao);
+		Ingestor ingestor = new IngestorImpl(is, accountDao, auctionDao);
 		ingestor.ingest();
 		
 		//verify we have the expected number of accounts		
@@ -88,7 +89,7 @@ public class IngestorTest extends JPATestBase {
 		                       .getResourceAsStream(fileName);
 		assertNotNull(fileName + " not found", is);
 		
-		Ingestor ingestor = new Ingestor(is, accountDao, auctionDao);
+		Ingestor ingestor = new IngestorImpl(is, accountDao, auctionDao);
 		ingestor.ingest();
 		
 		//verify we have the expected number of accounts		
@@ -106,7 +107,7 @@ public class IngestorTest extends JPATestBase {
 		                       .getResourceAsStream(fileName);
 		assertNotNull(fileName + " not found", is);
 		
-		Ingestor ingestor = new Ingestor(is, accountDao, auctionDao);
+		Ingestor ingestor = new IngestorImpl(is, accountDao, auctionDao);
 		ingestor.ingest();
 		
 		
