@@ -28,7 +28,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!--  DUTROW TEST  -->
+		<!-- DUTROW TEST -->
 		<dependency>
 			<groupId>ejava.javaee.projects.eMarket</groupId>
 			<artifactId>eSalesTestUtil</artifactId>

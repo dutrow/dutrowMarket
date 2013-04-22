@@ -25,7 +25,6 @@
 	</modules>
 
 <properties>
-		<ejava.version>3.0.2012.2-SNAPSHOT</ejava.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<cargo-maven2-plugin.version>1.2.3</cargo-maven2-plugin.version>

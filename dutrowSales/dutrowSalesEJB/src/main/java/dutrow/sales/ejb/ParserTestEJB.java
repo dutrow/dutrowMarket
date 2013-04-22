@@ -19,6 +19,7 @@ import ejava.projects.esales.dto.Address;
 import ejava.projects.esales.dto.Auction;
 import ejava.projects.esales.dto.Bid;
 import ejava.projects.esales.dto.ESales;
+import ejava.projects.esales.dto.Image;
 import ejava.projects.esales.xml.ESalesParser;
 
 @Stateless
@@ -57,11 +58,11 @@ public class ParserTestEJB implements ParserTestRemote {
 			Object object = null;
 			do {
 				object = parser.getObject("Address", "Account", "Auction",
-						"Bid");
+						"Bid", "Image");
 				if (object instanceof Address) {
 					log.debug("found address");
 					Address in = (Address) object;
-					// ignore
+					// ignore: this will be parsed with the account
 					
 				} else if (object instanceof Account) {
 					log.debug("found Account");
@@ -74,7 +75,12 @@ public class ParserTestEJB implements ParserTestRemote {
 				} else if (object instanceof Bid) {
 					log.debug("found Bid");
 					Bid in = (Bid) object;
-					// ignore
+					// ignore: this will be parsed with the auction
+					
+				} else if (object instanceof Image) { 
+					log.debug("found Image");
+					Image in = (Image) object;
+					ingestor.createImage(in);
 					
 				} else if (object != null) {
 					log.warn("object of unknown type:" + object);

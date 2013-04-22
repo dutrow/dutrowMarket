@@ -138,7 +138,7 @@ public class BuyerMgmtIT extends Support {
 		try {
 			two = buyerManager.placeBid(bidder.userId, auction.id, 1.00f);
 		} catch (EJBException e) {
-			log.info("Expected EJB Exception: ", e);
+			log.info("Expected EJB Exception: " + e.getMessage());
 		}
 		BidResultDTO three = buyerManager.placeBid(bidder.userId, auction.id,
 				3.00f);

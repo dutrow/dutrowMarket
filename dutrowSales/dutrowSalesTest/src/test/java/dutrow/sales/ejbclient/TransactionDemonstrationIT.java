@@ -92,7 +92,7 @@ public class TransactionDemonstrationIT extends Support {
 			boolean result = buyerManager.placeMultiBid(bidder.userId,
 					auction.id, bidarray);
 		} catch (EJBException expected) {
-			log.info("encountered expected exception:" + expected);
+			log.info("encountered expected exception:" + expected.getMessage());
 		}
 		// ROLLBACK check
 		try {

@@ -28,6 +28,7 @@
 
 	<logger name="dutrow">
 		<level value="debug" />
+		<appender-ref ref="CONSOLE" />
 	</logger>
 	<root>
 		<priority value="info" />
