@@ -2,23 +2,26 @@
             "http://www.w3.org/TR/html4/strict.dtd">
             
 <jsp:directive.page errorPage="/WEB-INF/content/ErrorPage.jsp"/>
-<jsp:directive.page import="ejava.examples.ejbsessionbank.bo.*"/>
+<jsp:directive.page import="dutrow.sales.bo.*"/>
 <html>
-    <title>Account Display</title>
+    <title>Auction Display</title>
     <body>
-        <h2>Account Display</h2>
+        <h2>Auction Display</h2>
         
         <jsp:scriptlet>
-            Account account = (Account)request.getAttribute("account");
-            String acctNum = account.getAccountNumber();
+            AuctionItem auction = (AuctionItem)request.getAttribute("auction");
+            long id = auction.getId();
+            String title = auction.getTitle();
+            String details = auction.toString();
         </jsp:scriptlet>
         
-        Id: <%= account.getId() %><p/>
-        Account Number: <%= acctNum %><p/>
-        Balance: <%= account.getBalance() %><p/>
+        Id: <%= id %><p/>
+        Title: <%= title %><p/>
+        Details: <%= details %><p/>
+        
         
         <form method="GET" 
-            action="<%=request.getContextPath()%>/model/admin/handler">
+            action="<%=request.getContextPath()%>/model/anon/handler">
             Amount $: <input type="text" name="amount" size="25"/><p/>   
             <input type="hidden" name="accountNumber" value="<%= acctNum %>"/>
             <input type="submit" name="command" value="Deposit"/>

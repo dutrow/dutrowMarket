@@ -3,30 +3,29 @@
             
 <jsp:directive.page errorPage="/WEB-INF/content/ErrorPage.jsp"/>
 <jsp:directive.page import="java.util.*"/>
-<jsp:directive.page import="ejava.examples.ejbsessionbank.bo.*"/>
+<jsp:directive.page import="dutrow.sales.bo.*"/>
 <html>
     <title>Accounts Display</title>
     <body>
         <h2>Accounts Display</h2>
         
         <jsp:scriptlet>
-            List accounts = (List)request.getAttribute("accounts");
+            Collection accounts = (Collection)request.getAttribute("accounts");
             int index = ((Integer)request.getAttribute("index")).intValue();
             int count = ((Integer)request.getAttribute("count")).intValue();
             int nextIndex = ((Integer)request.getAttribute("nextIndex")).intValue();
-            String handler = request.getContextPath() + "/model/handlerAdmin";
         </jsp:scriptlet>
         
         <ul>
             <jsp:scriptlet>
                 for(Object o: accounts) {
                     Account a = (Account)o;
-                    String acctNum = a.getAccountNumber();
-                    double bal = a.getBalance();
-                    String url = "?accountNumber=" + acctNum + 
+                    String userId = a.getUserId();
+                    String email = a.getPoc().getEmail();
+                    String url = "?userId=" + userId + 
                         "&command=Get%20Account";
             </jsp:scriptlet>
-            <li><a href="<%= url %>"><%= acctNum %>, $<%= bal %></a></li>
+            <li><a href="<%= url %>"><%= userId %>, &lt;<%= email %>&gt;</a></li>
             <jsp:scriptlet>
                 }
             </jsp:scriptlet>            

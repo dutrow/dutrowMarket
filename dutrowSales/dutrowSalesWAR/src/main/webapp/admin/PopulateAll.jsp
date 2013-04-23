@@ -1,14 +1,14 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
             "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-    <title>Create Accounts</title>
+    <title>Populate Tables</title>
 <body>
-    <h2>Create Accounts</h2>    
+    <h2>Populate Tables</h2>    
     
     <form method="GET" 
         action="<%=request.getContextPath()%>/model/admin/handler">
-        Number of Accounts: <input type="text" name="count" value="100"/><p/>   
-        <input type="submit" name="command" value="Create Accounts"/>
+        <input type="submit" name="command" value="Populate"/>
     </form>
+    
 </body>
 </html>
