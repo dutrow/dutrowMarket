@@ -3,6 +3,7 @@
 	version="3.0">
 
 	<display-name>Dutrow Sales Web Application</display-name>
+	<!-- 
 	<servlet>
 		<servlet-name>AccountHandler</servlet-name>
 		<servlet-class>dutrow.sales.web.AccountMgmtServlet</servlet-class>
@@ -11,20 +12,25 @@
 		<servlet-name>AccountHandler</servlet-name>
 		<url-pattern>/model/account/handler</url-pattern>
 	</servlet-mapping>
+	 -->
 
 	<!-- servlet> <servlet-name>SupportHandler</servlet-name> <servlet-class>dutrow.sales.web.SupportServlet</servlet-class> 
 		</servlet> <servlet-mapping> <servlet-name>SupportHandler</servlet-name> 
 		<url-pattern>/model/support/handler</url-pattern> </servlet-mapping -->
 
 
-	<filter>
-		<filter-name>JPAFilter</filter-name>
-		<filter-class>dutrow.sales.web.JPAFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>JPAFilter</filter-name>
-		<url-pattern>/model/admin/handler</url-pattern>
-		<url-pattern>/model/handler</url-pattern>
-	</filter-mapping>
+	<servlet>
+        <servlet-name>BuyerHandler</servlet-name>
+        <servlet-class>dutrow.sales.web.BuyerMgmtServlet
+        </servlet-class>
+        <init-param>      
+            <param-name>type</param-name>
+            <param-value>admin</param-value>
+        </init-param>
+    </servlet>
+	<servlet-mapping>
+        <servlet-name>BuyerHandler</servlet-name>
+        <url-pattern>/model/admin/handler</url-pattern>
+    </servlet-mapping>
 
 </web-app>

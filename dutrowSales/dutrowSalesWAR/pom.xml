@@ -12,30 +12,6 @@
 	<packaging>war</packaging>
 	<name>dutrowSalesWAR</name>
 
-	<properties>
-		<jetty.reload>automatic</jetty.reload>
-		<jetty.scanIntervalSeconds>10</jetty.scanIntervalSeconds>
-		<jetty.port>9080</jetty.port>
-	</properties>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>webdev</id>
-			<name>ejava webdev repository</name>
-			<url>http://webdev.apl.jhu.edu/~jcs/maven2</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>webdev-snapshot</id>
-			<name>ejava webdev snapshot repository</name>
-			<url>http://webdev.apl.jhu.edu/~jcs/maven2-snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</pluginRepository>
-	</pluginRepositories>
 
 	<dependencies>
 		<dependency>
@@ -65,70 +41,14 @@
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>ejava.common</groupId>
+			<artifactId>ejava-util</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>dutrowSalesWAR</finalName>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.mortbay.jetty</groupId>
-					<artifactId>maven-jetty-plugin</artifactId>
-					<version>${maven-jetty-plugin.version}</version>
-					<configuration>
-						<jetty.reload>${jetty.reload}</jetty.reload>
-						<scanIntervalSeconds>${jetty.scanIntervalSeconds}</scanIntervalSeconds>
-						<overrideWebXml>${basedir}/src/test/webapp/WEB-INF/web.xml</overrideWebXml>
-						<useTestClasspath>true</useTestClasspath>
-						<systemProperties>
-							<systemProperty>
-								<name>slf4j</name>
-								<value>true</value>
-							</systemProperty>
-							<systemProperty>
-								<name>log4j.configuration</name>
-								<value>file:./target/test-classes/log4j.xml</value>
-							</systemProperty>
-						</systemProperties>
-						<connectors>
-							<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-								<port>${jetty.port}</port>
-								<maxIdleTime>60000</maxIdleTime>
-							</connector>
-						</connectors>
-					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>${project.groupId}</groupId>
-							<artifactId>dutrowSalesEJB</artifactId>
-							<version>${project.version}</version>
-							<type>ejb-client</type>
-						</dependency>
-						<dependency>
-							<groupId>${project.groupId}</groupId>
-							<artifactId>dutrowSalesImpl</artifactId>
-							<version>${project.version}</version>
-						</dependency>
-						<dependency>
-							<groupId>commons-logging</groupId>
-							<artifactId>commons-logging</artifactId>
-							<version>${commons-logging.version}</version>
-						</dependency>
-						<dependency>
-							<groupId>log4j</groupId>
-							<artifactId>log4j</artifactId>
-							<version>${log4j.version}</version>
-						</dependency>
-						<dependency>
-							<groupId>ejava.common</groupId>
-							<artifactId>jboss-rmi-client</artifactId>
-							<version>${ejava.version}</version>
-							<type>pom</type>
-						</dependency>
-
-					</dependencies>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 		<!-- filter test/resource files for profile-specific valies -->
 		<testResources>
 			<testResource>
@@ -136,6 +56,73 @@
 				<filtering>true</filtering>
 			</testResource>
 		</testResources>
+		<plugins>
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<configuration>
+					<scanIntervalSeconds>10</scanIntervalSeconds>
+					<contextPath>/</contextPath>
+					<useTestClasspath>true</useTestClasspath>
+					<systemProperties>
+						<systemProperty>
+							<name>slf4j</name>
+							<value>true</value>
+						</systemProperty>
+						<systemProperty>
+							<name>log4j.configuration</name>
+							<value>file:./target/test-classes/log4j.xml</value>
+						</systemProperty>
+					</systemProperties>
+					<connectors>
+						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+							<port>9090</port>
+							<maxIdleTime>60000</maxIdleTime>
+						</connector>
+					</connectors>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>${project.groupId}</groupId>
+						<artifactId>dutrowSalesEJB</artifactId>
+						<version>${project.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>${project.groupId}</groupId>
+						<artifactId>dutrowSalesImpl</artifactId>
+						<version>${project.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>ejava.common</groupId>
+						<artifactId>ejava-util</artifactId>
+						<version>${ejava.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>ejava.common</groupId>
+						<artifactId>jboss-rmi-client</artifactId>
+						<version>${ejava.version}</version>
+						<type>pom</type>
+					</dependency>
+					<dependency>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+						<version>${commons-logging.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+						<version>${log4j.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-log4j12</artifactId>
+						<version>${slf4j.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+
+
 	</build>
 	<description>Webapp</description>
 

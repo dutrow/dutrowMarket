@@ -24,6 +24,8 @@ import dutrow.sales.ejb.AccountMgmtRemote;
 public class AccountMgmtServlet extends HttpServlet {
 	private static final Log log = LogFactory.getLog(AccountMgmtServlet.class);
 	
+	/*
+	
 	// DUTROW
 	private static final String servletType = "accountMgmt";
 	
@@ -53,11 +55,11 @@ public class AccountMgmtServlet extends HttpServlet {
             //build a list of handlers for individual commands
             String handlerType = config.getInitParameter(HANDLER_TYPE_KEY);
             if (ADMIN_TYPE.equals(handlerType)) {
-            	/* DUTROW
-                handlers.put(GET_ALL_PEOPLE_COMMAND, new GetAllPeople());
-                handlers.put(GET_PERSON_COMMAND, new GetPerson());
-                handlers.put(CHANGE_ADDRESS_COMMAND, new ChangeAddress());
-                */
+            	
+                //handlers.put(GET_ALL_PEOPLE_COMMAND, new GetAllPeople());
+                //handlers.put(GET_PERSON_COMMAND, new GetPerson());
+                //handlers.put(CHANGE_ADDRESS_COMMAND, new ChangeAddress());
+                
             } 
             else if (ANONYMOUS_TYPE.equals(handlerType)) {
             	// DUTROW
@@ -178,7 +180,7 @@ public class AccountMgmtServlet extends HttpServlet {
                 throws ServletException, IOException, Exception;
     }
 
-    /*
+    
     private class Ping extends Handler {
         public void doHandle(HttpServletRequest request, 
                 HttpServletResponse response) 
