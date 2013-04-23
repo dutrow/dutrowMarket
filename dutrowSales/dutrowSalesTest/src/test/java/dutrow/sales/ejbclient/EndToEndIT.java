@@ -25,7 +25,7 @@ import dutrow.sales.dto.BidDTO;
 import dutrow.sales.dto.BidResultDTO;
 import dutrow.sales.ejb.AccountMgmtRemote;
 import dutrow.sales.ejb.BuyerMgmtRemote;
-import dutrow.sales.ejb.ParserTestRemote;
+import dutrow.sales.ejb.ParserRemote;
 import dutrow.sales.ejb.SellerMgmtRemote;
 import ejava.util.ejb.EJBClient;
 
@@ -54,9 +54,9 @@ public class EndToEndIT extends Support {
 
 	public static final String parserJNDI = System.getProperty("jndi.name",
 			EJBClient.getRemoteLookupName("dutrowSalesEAR", "dutrowSalesEJB",
-					"ParserTestEJB", ParserTestRemote.class.getName()));
+					"ParserEJB", ParserRemote.class.getName()));
 
-	private static ParserTestRemote parser;
+	private static ParserRemote parser;
 
 	public void configureJndi() {
 		assertNotNull("jndi.name.registrar not supplied", sellerJNDI);
@@ -72,7 +72,7 @@ public class EndToEndIT extends Support {
 			sellerManager = (SellerMgmtRemote) jndi.lookup(sellerJNDI);
 			accountManager = (AccountMgmtRemote) jndi.lookup(accountJNDI);
 			buyerManager = (BuyerMgmtRemote) jndi.lookup(buyerJNDI);
-			parser = (ParserTestRemote) jndi.lookup(parserJNDI);
+			parser = (ParserRemote) jndi.lookup(parserJNDI);
 		} catch (NamingException ne) {
 			log.warn(ne.getMessage());
 			log.warn(ne.getExplanation());

@@ -47,11 +47,6 @@ public class BidbotTestUtilImpl implements BidbotTestUtil {
 		return resetAll();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see dutrow.sales.bl.TestSupport#resetAll()
-	 */
 	public boolean resetAll() {
 		boolean cleanReset = true;
 		try {

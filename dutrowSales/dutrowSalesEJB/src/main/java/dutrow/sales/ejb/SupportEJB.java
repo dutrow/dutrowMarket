@@ -30,8 +30,8 @@ import dutrow.sales.ejb.DTOConversionUtil;
  */
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class TestSupportEJB implements TestSupportRemote {
-	private static final Log log = LogFactory.getLog(TestSupportEJB.class);
+public class SupportEJB implements SupportRemote {
+	private static final Log log = LogFactory.getLog(SupportEJB.class);
 	
 	@Inject
 	TestSupport testUtil;
@@ -52,9 +52,6 @@ public class TestSupportEJB implements TestSupportRemote {
 		log.debug("*** close() ***");
 	}
 
-	/* (non-Javadoc)
-	 * @see dutrow.sales.ejb.TestSupportRemote#getAccounts()
-	 */
 	@Override
 	public Collection<AccountDTO> getAccounts() {
 		Collection<Account> allaccounts = testUtil.getAccounts();
@@ -67,17 +64,11 @@ public class TestSupportEJB implements TestSupportRemote {
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see dutrow.sales.ejb.TestSupportRemote#removeAccount()
-	 */
 	@Override
 	public boolean removeAccount(String userId) {
 		return testUtil.removeAccount(userId);
 	}
 
-	/* (non-Javadoc)
-	 * @see dutrow.sales.ejb.TestSupportRemote#getAuctions()
-	 */
 	@Override
 	public Collection<AuctionDTO> getAuctions() {
 		Collection<AuctionItem> allauctions = testUtil.getAuctions();
@@ -88,52 +79,34 @@ public class TestSupportEJB implements TestSupportRemote {
 		return auctions;
 	}
 
-	/* (non-Javadoc)
-	 * @see dutrow.sales.ejb.TestSupportRemote#removeAuction()
-	 */
 	@Override
 	public boolean removeAuction(long auctionId) {
 		return testUtil.removeAuction(auctionId);
 	}
 
-	/* (non-Javadoc)
-	 * @see dutrow.sales.ejb.TestSupportRemote#resetAll()
-	 */
 	@Override
 	public boolean resetAll() {
 		return testUtil.resetAll();
 	}
 
-	/* (non-Javadoc)
-	 * @see dutrow.sales.ejb.TestSupportRemote#createAccount(dutrow.sales.dto.AccountDTO)
-	 */
 	@Override
 	public void createAccount(AccountDTO seller) {
 		
 		testUtil.persistAccount(DTOConversionUtil.convertAccountDTO(seller));
 	}
 
-	/* (non-Javadoc)
-	 * @see dutrow.sales.ejb.TestSupportRemote#createAuction(dutrow.sales.dto.AuctionDTO)
-	 */
 	@Override
 	public long createAuction(AuctionDTO auction) {
 		log.info("createAuction");
 		return testUtil.persistAuction(DTOConversionUtil.convertAuctionDTO(auction));
 	}
 
-	/* (non-Javadoc)
-	 * @see dutrow.sales.ejb.TestSupportRemote#getAccount(long)
-	 */
 	@Override
 	public AccountDTO getAccount(String id) {
 		Account a = testUtil.getAccount(id);
 		return DTOConversionUtil.convertAccount(a);
 	}
 
-	/* (non-Javadoc)
-	 * @see dutrow.sales.ejb.TestSupportRemote#getAuction(long)
-	 */
 	@Override
 	public AuctionDTO getAuction(long id) {
 		AuctionItem ai = testUtil.getAuctionDao().getAuctionById(id);

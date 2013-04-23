@@ -15,7 +15,7 @@ import dutrow.sales.dto.AuctionDTO;
  *
  */
 @Remote
-public interface TestSupportRemote {
+public interface SupportRemote {
 
 	Collection<AccountDTO> getAccounts();
 	AccountDTO getAccount(String id);

@@ -13,7 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 
-import dutrow.sales.ejb.TestSupportRemote;
+import dutrow.sales.ejb.SupportRemote;
 
 /**
  * @author dutroda1
@@ -26,8 +26,8 @@ public class Support {
 	private static final String testJNDI = System
 			.getProperty(
 					"jndi.name.registrar",
-					"dutrowSalesEAR/dutrowSalesEJB/TestSupportEJB!dutrow.sales.ejb.TestSupportRemote");
-	protected TestSupportRemote testSupport;
+					"dutrowSalesEAR/dutrowSalesEJB/SupportEJB!dutrow.sales.ejb.SupportRemote");
+	protected SupportRemote testSupport;
 
 	/**
 	 * @throws java.lang.Exception
@@ -45,7 +45,7 @@ public class Support {
 
 		log.debug("jndi name:" + testJNDI);
 		try {
-			testSupport = (TestSupportRemote) jndi.lookup(testJNDI);
+			testSupport = (SupportRemote) jndi.lookup(testJNDI);
 		} catch (NamingException ne) {
 			log.warn(ne.getMessage());
 			log.warn(ne.getExplanation());

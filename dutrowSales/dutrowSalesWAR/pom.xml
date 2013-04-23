@@ -98,6 +98,17 @@
 					</configuration>
 					<dependencies>
 						<dependency>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>dutrowSalesEJB</artifactId>
+							<version>${project.version}</version>
+							<type>ejb-client</type>
+						</dependency>
+						<dependency>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>dutrowSalesImpl</artifactId>
+							<version>${project.version}</version>
+						</dependency>
+						<dependency>
 							<groupId>commons-logging</groupId>
 							<artifactId>commons-logging</artifactId>
 							<version>${commons-logging.version}</version>
@@ -113,6 +124,7 @@
 							<version>${ejava.version}</version>
 							<type>pom</type>
 						</dependency>
+
 					</dependencies>
 				</plugin>
 			</plugins>

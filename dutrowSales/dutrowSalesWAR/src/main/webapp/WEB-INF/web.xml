@@ -4,12 +4,23 @@
 
 	<display-name>Dutrow Sales Web Application</display-name>
 	<servlet>
-		<servlet-name>AdminHandler</servlet-name>
-		<servlet-class>dutrow.sales.web.RegistrarHandlerServlet</servlet-class>
+		<servlet-name>AccountHandler</servlet-name>
+		<servlet-class>dutrow.sales.web.AccountMgmtServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>AdminHandler</servlet-name>
-		<url-pattern>/model/admin/handler</url-pattern>
+		<servlet-name>AccountHandler</servlet-name>
+		<url-pattern>/model/account/handler</url-pattern>
 	</servlet-mapping>
+
+	<!-- servlet>
+		<servlet-name>SupportHandler</servlet-name>
+		<servlet-class>dutrow.sales.web.SupportServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SupportHandler</servlet-name>
+		<url-pattern>/model/support/handler</url-pattern>
+	</servlet-mapping-->
+
+
 
 </web-app>

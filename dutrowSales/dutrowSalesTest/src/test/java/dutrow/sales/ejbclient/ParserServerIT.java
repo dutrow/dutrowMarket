@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import dutrow.sales.ejb.ParserTestRemote;
+import dutrow.sales.ejb.ParserRemote;
 
 
 import ejava.util.ejb.EJBClient;
@@ -19,9 +19,9 @@ public class ParserServerIT {
 
     public static final String jndiName = System.getProperty("jndi.name",
     		EJBClient.getRemoteLookupName("dutrowSalesEAR", "dutrowSalesEJB", 
-    				"ParserTestEJB", ParserTestRemote.class.getName()));
+    				"ParserEJB", ParserRemote.class.getName()));
     
-    private static ParserTestRemote parser;
+    private static ParserRemote parser;
     private InitialContext jndi;
 
     @BeforeClass
@@ -32,7 +32,7 @@ public class ParserServerIT {
     @Before
     public void setUp() throws Exception {
         jndi = new InitialContext();
-        parser = (ParserTestRemote)jndi.lookup(jndiName);
+        parser = (ParserRemote)jndi.lookup(jndiName);
     }
     
     @After

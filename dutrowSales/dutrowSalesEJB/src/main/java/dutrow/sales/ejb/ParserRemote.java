@@ -3,6 +3,6 @@ package dutrow.sales.ejb;
 import javax.ejb.Remote;
 
 @Remote
-public interface ParserTestRemote {
+public interface ParserRemote {
    void ingest() throws Exception;
 }

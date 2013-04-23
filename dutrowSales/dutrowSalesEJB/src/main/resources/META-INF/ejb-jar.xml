@@ -7,7 +7,7 @@
 
     <enterprise-beans>
         <session>
-            <ejb-name>ParserTestEJB</ejb-name>
+            <ejb-name>ParserEJB</ejb-name>
             <env-entry>
                 <env-entry-name>vals/xmlFile</env-entry-name>
                 <env-entry-type>java.lang.String</env-entry-type>

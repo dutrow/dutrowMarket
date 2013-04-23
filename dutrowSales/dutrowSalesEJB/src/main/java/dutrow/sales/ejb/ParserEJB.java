@@ -12,8 +12,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import dutrow.sales.bl.Ingestor;
-import dutrow.sales.dao.AccountDAO;
-import dutrow.sales.dao.AuctionDAO;
 import ejava.projects.esales.dto.Account;
 import ejava.projects.esales.dto.Address;
 import ejava.projects.esales.dto.Auction;
@@ -23,18 +21,18 @@ import ejava.projects.esales.dto.Image;
 import ejava.projects.esales.xml.ESalesParser;
 
 @Stateless
-public class ParserTestEJB implements ParserTestRemote {
+public class ParserEJB implements ParserRemote {
 	@Resource(name = "vals/xmlFile")
 	private static String xmlFile;
 
-	private static final Log log = LogFactory.getLog(ParserTestEJB.class);
+	private static final Log log = LogFactory.getLog(ParserEJB.class);
 
 	@Inject
 	Ingestor ingestor;
 	
 	@PostConstruct
 	public void init() {
-		log.debug("*** ParserTestEJB ***");
+		log.debug("*** ParserEJB ***");
 		log.debug("xmlFile=" + xmlFile);
 	}
 
