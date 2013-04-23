@@ -14,5 +14,7 @@
         <li><a href="model/support/handler">invoke support servlet</a></li>
         <li><a href="model/support/handler">invoke support servlet</a></li>
         -->
+        
+        <li><a href="admin/admin_menu.jsp">Admin</a></li>
 </body>
 </html>

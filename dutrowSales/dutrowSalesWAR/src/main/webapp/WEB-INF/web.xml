@@ -12,15 +12,19 @@
 		<url-pattern>/model/account/handler</url-pattern>
 	</servlet-mapping>
 
-	<!-- servlet>
-		<servlet-name>SupportHandler</servlet-name>
-		<servlet-class>dutrow.sales.web.SupportServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>SupportHandler</servlet-name>
-		<url-pattern>/model/support/handler</url-pattern>
-	</servlet-mapping-->
+	<!-- servlet> <servlet-name>SupportHandler</servlet-name> <servlet-class>dutrow.sales.web.SupportServlet</servlet-class> 
+		</servlet> <servlet-mapping> <servlet-name>SupportHandler</servlet-name> 
+		<url-pattern>/model/support/handler</url-pattern> </servlet-mapping -->
 
 
+	<filter>
+		<filter-name>JPAFilter</filter-name>
+		<filter-class>dutrow.sales.web.JPAFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>JPAFilter</filter-name>
+		<url-pattern>/model/admin/handler</url-pattern>
+		<url-pattern>/model/handler</url-pattern>
+	</filter-mapping>
 
 </web-app>
