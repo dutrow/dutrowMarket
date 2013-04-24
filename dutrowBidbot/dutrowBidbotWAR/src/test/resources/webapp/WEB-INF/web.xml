@@ -1,0 +1,32 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+
+
+	<!-- place elements specific to development/test here -->
+	<context-param>
+		<param-name>java.naming.factory.initial</param-name>
+		<param-value>org.jboss.naming.remote.client.InitialContextFactory</param-value>
+	</context-param>
+	<context-param>
+        <param-name>dutrow.accountmgmt.remote</param-name> 
+        <param-value>dutrowSalesEAR/dutrowSalesEJB/AccountMgmtEJB!dutrow.sales.ejb.AccountMgmtRemote</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dutrow.buyermgmt.remote</param-name> 
+        <param-value>dutrowSalesEAR/dutrowSalesEJB/BuyerMgmtEJB!dutrow.sales.ejb.BuyerMgmtRemote</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dutrow.sellermgmt.remote</param-name> 
+        <param-value>dutrowSalesEAR/dutrowSalesEJB/SellerMgmtEJB!dutrow.sales.ejb.SellerMgmtRemote</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dutrow.support.remote</param-name> 
+        <param-value>dutrowSalesEAR/dutrowSalesEJB/SupportEJB!dutrow.sales.ejb.SupportRemote</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dutrow.parser.remote</param-name> 
+        <param-value>dutrowSalesEAR/dutrowSalesEJB/ParserEJB!dutrow.sales.ejb.ParserRemote</param-value>
+    </context-param>
+
+</web-app>

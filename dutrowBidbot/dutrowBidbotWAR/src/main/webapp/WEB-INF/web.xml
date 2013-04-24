@@ -1,0 +1,51 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+
+	<display-name>Dutrow Sales Web Application</display-name>
+	
+	<servlet>
+        <servlet-name>AdminHandler</servlet-name>
+        <servlet-class>dutrow.bidbot.web.BidServlet
+        </servlet-class>
+        <init-param>      
+            <param-name>type</param-name>
+            <param-value>admin</param-value>
+        </init-param>
+    </servlet>
+	<servlet-mapping>
+        <servlet-name>AdminHandler</servlet-name>
+        <url-pattern>/model/admin/handler</url-pattern>
+    </servlet-mapping>
+    
+    <!-- 
+    <servlet>
+        <servlet-name>UserHandler</servlet-name>
+        <servlet-class>dutrow.sales.web.MgmtServlet
+        </servlet-class>
+        <init-param>      
+            <param-name>type</param-name>
+            <param-value>user</param-value>
+        </init-param>
+    </servlet>
+	<servlet-mapping>
+        <servlet-name>UserHandler</servlet-name>
+        <url-pattern>/model/user/handler</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>AnonHandler</servlet-name>
+        <servlet-class>dutrow.sales.web.MgmtServlet
+        </servlet-class>
+        <init-param>      
+            <param-name>type</param-name>
+            <param-value>anon</param-value>
+        </init-param>
+    </servlet>
+	<servlet-mapping>
+        <servlet-name>AnonHandler</servlet-name>
+        <url-pattern>/model/anon/handler</url-pattern>
+    </servlet-mapping>
+ -->
+
+</web-app>

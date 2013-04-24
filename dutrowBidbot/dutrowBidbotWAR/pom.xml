@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>dutrowBidbot</artifactId>
+		<groupId>dutrow.dutrowBidbot</groupId>
+		<version>2.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>dutrowBidbotWAR</artifactId>
+
+	<name>dutrowBidbotWAR</name>
+	<description>
+        This is the implementation of the dutrowBidbot application
+        "For eBidbot, you have the option of ... migrating the existing Impl project to be a WAR project"
+        All eBidbot BO's, EJB's, and WAR contents are in this single module
+    </description>
+
+	<dependencies>
+		<!-- integrate external EJB client module -->
+		<dependency>
+			<groupId>dutrow.dutrowSales</groupId>
+			<artifactId>dutrowSalesEJB</artifactId>
+			<version>${project.version}</version>
+			<type>ejb-client</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- core project testing dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Needs to go last in classpath so provider versions used first -->
+		<dependency>
+			<groupId>javax.ejb</groupId>
+			<artifactId>ejb-api</artifactId>
+			<version>3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<version>1.0-SP4</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<finalName>dutrowBidbotWAR</finalName>
+		<!--tell the resource plugin to perform filtering on resources to fill 
+			in JDBC URL, etc. -->
+		<resources>
+
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
+		<plugins>
+			<!-- deploy this artifact to server -->
+			<plugin>
+				<groupId>org.codehaus.cargo</groupId>
+				<artifactId>cargo-maven2-plugin</artifactId>
+			</plugin>
+			<!-- run IT tests within this module -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<systemProperties>
+						<cargo.startstop>${cargo-startstop}</cargo.startstop>
+					</systemProperties>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>hibernate3-maven-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<configuration>
+					<hibernatetool destdir="target/classes/ddl">
+						<classpath>
+							<path location="${project.build.directory}/test-classes" />
+						</classpath>
+						<jpaconfiguration persistenceunit="dutrowSalesDAO-test" />
+					</hibernatetool>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<!-- This profile and plugin is used to setup the DB in a known state prior 
+			to running any of the tests within the DAO test cases. Note that this can 
+			only run before the first test case and after the last test case. To run 
+			in between test cases and testMethods, you will need to write a helper class 
+			to read these DDL files and issue against the DB yourself. -->
+		<profile>
+			<id>gen-db</id>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>sql-maven-plugin</artifactId>
+
+						<dependencies>
+							<dependency>
+								<groupId>com.h2database</groupId>
+								<artifactId>h2</artifactId>
+								<version>${h2db.version}</version>
+							</dependency>
+						</dependencies>
+
+						<configuration>
+							<username>${jdbc.user}</username>
+							<password>${jdbc.password}</password>
+							<driver>${jdbc.driver}</driver>
+							<url>${jdbc.url}</url>
+						</configuration>
+
+						<executions>
+							<execution>
+								<id>drop-db-before-test</id>
+								<phase>process-test-resources</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<autocommit>true</autocommit>
+									<fileset>
+										<basedir>${basedir}/target</basedir>
+										<includes>
+											<include>classes/ddl/*drop.ddl</include>
+										</includes>
+									</fileset>
+									<!-- the tables may not exist when tests are run -->
+									<onError>continue</onError>
+								</configuration>
+							</execution>
+
+							<execution>
+								<id>create-db-before-test</id>
+								<phase>process-test-resources</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<autocommit>true</autocommit>
+									<fileset>
+										<basedir>${basedir}/target</basedir>
+										<includes>
+											<include>classes/ddl/*create.ddl</include>
+										</includes>
+									</fileset>
+									<print>true</print>
+								</configuration>
+							</execution>
+
+							<execution>
+								<id>populate-db-before-test</id>
+								<phase>process-test-resources</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<autocommit>true</autocommit>
+									<fileset>
+										<basedir>${basedir}/target</basedir>
+										<includes>
+											<include>test-classes/ddl/*populate*.ddl</include>
+										</includes>
+									</fileset>
+								</configuration>
+							</execution>
+
+							<!-- leave residue for post-test analysis <execution> <id>drop-db-after-test</id> 
+								<phase>test</phase> <goals> <goal>execute</goal> </goals> <configuration> 
+								<autocommit>true</autocommit> <fileset> <basedir>${basedir}/target</basedir> 
+								<includes> <include>classes/ddl/*drop.ddl</include> </includes> </fileset> 
+								</configuration> </execution> -->
+						</executions>
+					</plugin>
+
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	<packaging>war</packaging>
+</project>
