@@ -35,7 +35,7 @@ public class ResourceConfig {
 	// this is a second option for an EntityManager to create an ambiguity
 	// when selecting on type alone
 	@Produces
-	@DutrowEntityManager
+	@SalesEntityManager
 	public EntityManager getEntityManager() {
 		return em;
 	}
@@ -43,7 +43,7 @@ public class ResourceConfig {
 	// TEST UTIL
 	@Produces
 	public TestSupport getTestUtil(
-			@DutrowEntityManager final EntityManager emgr,
+			@SalesEntityManager final EntityManager emgr,
 			final AccountDAO accountDao, final AuctionDAO auctionDao) {
 		return new TestSupportImpl(emgr, accountDao, auctionDao);
 	}
@@ -68,14 +68,14 @@ public class ResourceConfig {
 
 	@Produces
 	public AuctionDAO getAuctionDAO(
-			@DutrowEntityManager final EntityManager emgr) {
+			@SalesEntityManager final EntityManager emgr) {
 		return new JPAAuctionDAO(emgr);
 
 	}
 
 	@Produces
 	public AccountDAO getAccountDAO(
-			@DutrowEntityManager final EntityManager emgr) {
+			@SalesEntityManager final EntityManager emgr) {
 		return new JPAAccountDAO(emgr);
 	}
 	

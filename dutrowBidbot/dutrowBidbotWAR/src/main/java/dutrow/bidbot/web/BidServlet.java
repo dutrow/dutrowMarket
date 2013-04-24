@@ -3,9 +3,14 @@ package dutrow.bidbot.web;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import javax.inject.Inject;
+import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import dutrow.bidbot.ejb.BidbotUtilRemote;
 import dutrow.bidbot.ejb.OrderMgmtRemote;
 
 @SuppressWarnings("serial")
@@ -26,8 +32,11 @@ public class BidServlet extends HttpServlet {
 	 * This will get automatically inject when running within the application
 	 * server.
 	 */
-	@Inject
+	//TODO: DUTROW @Inject
 	private OrderMgmtRemote injectedOrderMgmt;
+
+	//TODO: DUTROW @Inject
+	private BidbotUtilRemote injectedBidbotUtil;
 
 	/**
 	 * Init verify the reference to the EJB logic is in place and initializes
@@ -36,38 +45,27 @@ public class BidServlet extends HttpServlet {
 	 */
 	public void init() throws ServletException {
 		log.debug("init() called; injectedBuyerMgmt=" + injectedOrderMgmt);
+		log.debug("init() called; injectedBidbotUtil=" + injectedBidbotUtil);
 
-		/*
 		try {
 			ServletConfig config = getServletConfig();
 			// build a list of handlers for individual commands
-			log.info("HANDLER_TYPE " + config
-					.getInitParameter(Strings.HANDLER_TYPE_KEY));
-			
+			log.info("HANDLER_TYPE "
+					+ config.getInitParameter(Strings.HANDLER_TYPE_KEY));
+
 			if (Strings.ADMIN_TYPE.equals(config
 					.getInitParameter(Strings.HANDLER_TYPE_KEY))) {
-				handlers.put(Strings.RESET_ALL, new ResetAll());
-				handlers.put(Strings.POPULATE, new Populate());
-				handlers.put(Strings.GET_ACCOUNTS, new GetAccounts());
-				handlers.put(Strings.GET_ACCOUNT, new GetAccount());
+				handlers.put(Strings.CREATE_ACCOUNT, new CreateBidAccount());
+
 			} else if (Strings.USER_TYPE.equals(config
 					.getInitParameter(Strings.HANDLER_TYPE_KEY))) {
-				handlers.put(Strings.CREATE_AUCTION, new CreateAuction());
-				handlers.put(Strings.GET_USER_AUCTIONS, new GetUserAuctions());
-				handlers.put(Strings.GET_AUCTION, new GetAuction());
-				handlers.put(Strings.PLACE_BID, new PlaceBid());
-			} else if (Strings.ANON_TYPE.equals(config
-					.getInitParameter(Strings.HANDLER_TYPE_KEY))) {
-				handlers.put(Strings.LIST_OPEN_AUCTIONS, new ListOpenAuctions());
-				handlers.put(Strings.GET_AUCTION, new GetAuction());
-				handlers.put(Strings.CREATE_ACCOUNT, new CreateAccount());
-				handlers.put(Strings.GET_ACCOUNT, new GetAccount());
+				handlers.put(Strings.PLACE_ORDER, new PlaceOrder());
 			}
 		} catch (Exception ex) {
 			log.fatal("error initializing handler", ex);
 			throw new ServletException("error initializing handler", ex);
 		}
-		*/
+
 	}
 
 	/**
@@ -82,13 +80,12 @@ public class BidServlet extends HttpServlet {
 		log.debug("command=" + command);
 
 		InitialContext jndi = null;
-		OrderMgmtRemote orderMgmt = injectedOrderMgmt; 
+		OrderMgmtRemote orderMgmt = injectedOrderMgmt;
+		BidbotUtilRemote util = injectedBidbotUtil;
 
-		/*
 		try {
-			if (buyerMgmt == null || accountMgmt == null || sellerMgmt == null
-					|| parser == null || support == null) { // not injected --
-															// manually lookup
+			if (orderMgmt == null || util == null ) {
+				 // not injected -- manually lookup
 				ServletConfig config = getServletConfig();
 				String ctxFactory = config.getServletContext()
 						.getInitParameter(Context.INITIAL_CONTEXT_FACTORY);
@@ -104,36 +101,21 @@ public class BidServlet extends HttpServlet {
 				String jndiName;
 
 				jndiName = config.getServletContext().getInitParameter(
-						"dutrow.buyermgmt.remote");
+						"dutrow.ordermgmt.remote");
 				log.info("JNDI Name: " + jndiName);
-				buyerMgmt = (BuyerMgmtRemote) jndi.lookup(jndiName);
+				orderMgmt = (OrderMgmtRemote) jndi.lookup(jndiName);
 
 				jndiName = config.getServletContext().getInitParameter(
-						"dutrow.accountmgmt.remote");
+						"dutrow.bidbotutil.remote");
 				log.info("JNDI Name: " + jndiName);
-				accountMgmt = (AccountMgmtRemote) jndi.lookup(jndiName);
-
-				jndiName = config.getServletContext().getInitParameter(
-						"dutrow.sellermgmt.remote");
-				log.info("JNDI Name: " + jndiName);
-				sellerMgmt = (SellerMgmtRemote) jndi.lookup(jndiName);
-
-				jndiName = config.getServletContext().getInitParameter(
-						"dutrow.parser.remote");
-				log.info("JNDI Name: " + jndiName);
-				parser = (ParserRemote) jndi.lookup(jndiName);
-
-				jndiName = config.getServletContext().getInitParameter(
-						"dutrow.support.remote");
-				log.info("JNDI Name: " + jndiName);
-				support = (SupportRemote) jndi.lookup(jndiName);
+				util = (BidbotUtilRemote) jndi.lookup(jndiName);
 
 			}
 			if (command != null) {
 				Handler handler = handlers.get(command);
 				if (handler != null) {
 					handler.handle(request, response, getServletContext(),
-							buyerMgmt, accountMgmt, sellerMgmt, parser, support);
+							orderMgmt, util);
 				} else {
 					RequestDispatcher rd = getServletContext()
 							.getRequestDispatcher(Strings.UNKNOWN_COMMAND_URL);
@@ -164,7 +146,7 @@ public class BidServlet extends HttpServlet {
 				}
 			}
 		}
-		*/
+		
 	}
 
 	/**

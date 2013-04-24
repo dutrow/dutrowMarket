@@ -3,7 +3,7 @@
             
 <jsp:directive.page errorPage="/WEB-INF/content/ErrorPage.jsp"/>
 <jsp:directive.page import="java.util.*"/>
-<jsp:directive.page import="dutrow.sales.dto.*"/>
+<jsp:directive.page import="dutrow.bidbot.bo.*"/>
 <html>
     <title>Account Display</title>
     <body>
@@ -16,22 +16,14 @@
         <ul>
             <jsp:scriptlet>
                 if(o != null) {
-                    AccountDTO a = (AccountDTO)o;
-                    String userId = a.userId;
-                    String email = a.email;
-                    String url = "?id=" + userId + 
-                        "&command=Get%20Account";
+                    BidAccount a = (BidAccount)o;
+                    String acct = a.getSalesAccount();
+                    String uid = a.getUserId();
+                    String passwd = a.getSalesPassword();
             </jsp:scriptlet>
-            <li><a href="<%= url %>"><%= userId %>, &lt;<%= email %>&gt;</a></li>
-            <li><%= a.firstName %> <%= a.middleName %> <%= a.lastName %></li>
-            <li><%= a.email %></li>
-            <jsp:scriptlet>
-            if (a.addresses != null) for (AddressDTO d : a.addresses){
-            </jsp:scriptlet>
-            <li><%= d.name %>: <%= d.to %> <%= d.street %> <%= d.city %> <%= d.state %> <%= d.zip %> </li>
-            <jsp:scriptlet>
-            }
-            </jsp:scriptlet>
+            <li>Account: <%= acct %></li>
+            <li>User Id: <%= uid %></li>
+            <li>Password: <%= passwd %></li>
             <jsp:scriptlet>
                 }
             </jsp:scriptlet>                      

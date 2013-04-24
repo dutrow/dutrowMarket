@@ -6,17 +6,17 @@
 
 	<persistence-unit name="dutrowSales">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-
+		<jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source>
 		<class>dutrow.bidbot.bo.BidAccount</class>
 		<class>dutrow.bidbot.bo.BidOrder</class>
 		<properties>
 			<!-- properties have been moved to hibernate.properties resource file 
 				in test tree -->
-			
-				<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
-				<property name="hibernate.show_sql" value="false" />
-				<property name="hibernate.hbm2ddl.auto" value="create" />
-			
+
+			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+			<property name="hibernate.show_sql" value="false" />
+			<property name="hibernate.hbm2ddl.auto" value="create" />
+
 		</properties>
 	</persistence-unit>
 

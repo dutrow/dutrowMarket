@@ -81,6 +81,14 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- brings in JBoss RMI client dependencies -->
+		<dependency>
+			<groupId>ejava.common</groupId>
+			<artifactId>jboss-rmi-client</artifactId>
+			<type>pom</type>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>

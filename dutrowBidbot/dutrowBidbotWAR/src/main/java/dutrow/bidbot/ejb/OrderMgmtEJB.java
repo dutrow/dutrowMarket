@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import dutrow.bidbot.bl.OrderMgmt;
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
+import dutrow.bidbot.cdi.BidbotOrderManager;
 import dutrow.bidbot.dao.BidAccountDAO;
 
 import dutrow.bidbot.dao.BidAccountDAO;
@@ -21,11 +22,12 @@ import dutrow.bidbot.dao.BidAccountDAO;
  */
 @Stateless
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-public class OrderMgmtEJB implements OrderMgmtRemote, OrderMgmt{
+public class OrderMgmtEJB implements OrderMgmtRemote{
 	@Inject
 	private BidAccountDAO dao;
 
-	@Inject
+	@Inject 
+	@BidbotOrderManager
 	private OrderMgmt orderMgmt;
 
 	public boolean createOrder(BidOrder order) {

@@ -12,5 +12,10 @@
         <param-name>dutrow.ordermgmt.remote</param-name> 
         <param-value>dutrowBidbotWAR/OrderMgmtEJB!dutrow.bidbot.ejb.OrderMgmtRemote</param-value>
     </context-param>
+    	<context-param>
+        <param-name>dutrow.bidbotutil.remote</param-name> 
+        <param-value>dutrowBidbotWAR/BidbotUtilEJB!dutrow.bidbot.ejb.BidbotUtilRemote</param-value>
+    </context-param>
+    
 
 </web-app>

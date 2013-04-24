@@ -21,35 +21,37 @@ import dutrow.bidbot.jpa.JPABidAccountDAO;
 public class ResourceConfig {
 
 	// ENTITY MANAGER
-	@PersistenceContext(unitName = "dutrowBidbot")
+	@PersistenceContext(unitName = "dutrowSales")
 	public EntityManager em;
 
 	// this is a second option for an EntityManager to create an ambiguity
 	// when selecting on type alone
 	@Produces
-	@DutrowEntityManager
+	@BidbotEntityManager
 	public EntityManager getEntityManager() {
 		return em;
 	}
 
 	// TEST UTIL
 	@Produces
+	@BidbotTest
 	public BidbotTestUtil getTestUtil(
-			@DutrowEntityManager final EntityManager emgr,
+			@BidbotEntityManager final EntityManager emgr,
 			final BidAccountDAO accountDao) {
 		return new BidbotTestUtilImpl(emgr, accountDao);
 	}
 
 	// MANAGERS
 	@Produces
-	public OrderMgmt getAccountManager(final BidAccountDAO accountDao) {
+	@BidbotOrderManager
+	public OrderMgmt getOrderManager(final BidAccountDAO accountDao) {
 		return new OrderMgmtImpl(accountDao);
 	}
 
 	@Produces
 	public BidAccountDAO getAccountDAO(
-			@DutrowEntityManager final EntityManager emgr) {
+			@BidbotEntityManager final EntityManager emgr) {
 		return new JPABidAccountDAO(emgr);
 	}
-	
+
 }

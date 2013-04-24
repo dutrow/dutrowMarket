@@ -6,46 +6,20 @@
     <h2>Dutrow Sales Main Menu</h2>
     
     <!-- 
-    Anonymous User
-	List open auctions
-	Get details for specific auction.
-	createAccount (using AccountMgmtEJB)
-	Test Admin
-	reset All tables
-	populate tables (using Ingestor)
-	Seller
-	createAuction (using SellerMgmtEJB)
-	getUserAuctions (using SellerMgmtEJB)
-	getAuction (using SellerMgmtEJB)
-	Buyer
-	Place bid (using BuyerMgmtEJB)
-    
+    Admin
+		createAccount (using OrderMgmtEJB)
+	Bidder
+		placeOrder (using OrderMgmtEJB)
      -->
     
-    <h2>Anonymous User</h2>
+    <h2>Admin User</h2>
     <ul>
-    	<li><a href="anon/ListOpenAuctions.jsp">List Open Auctions</a></li>
-    	<li><a href="anon/GetAuction.jsp">Get Auction</a></li>
-    	<li><a href="anon/CreateAccount.jsp">Create Account</a></li>
+    	<li><a href="anon/CreateBidAccount.jsp">Create Bid Account</a></li>
     </ul>
     
-    <h2>Test Admin</h2>
+    <h2>Bidder</h2>
     <ul>
-    	<li><a href="admin/ResetAll.jsp">Reset All Tables</a></li>
-    	<li><a href="admin/PopulateAll.jsp">Populate Tables</a></li>
-    	<li><a href="admin/GetAccounts.jsp">Display Accounts</a></li>
-    </ul>
-    
-    <h2>Seller</h2>
-    <ul>
-    	<li><a href="user/CreateAuction.jsp">Create Auction</a></li>
-    	<li><a href="user/GetUserAuctions.jsp">Get User Auctions</a></li>
-    	<li><a href="user/GetAuction.jsp">Get Auction Details</a></li>
-    </ul>
-    
-    <h2>Buyer</h2>
-    <ul>
-    	<li><a href="user/PlaceBid.jsp">Place Bid</a></li>
+    	<li><a href="user/PlaceOrder.jsp">Place Order</a></li>
     </ul>
     
     

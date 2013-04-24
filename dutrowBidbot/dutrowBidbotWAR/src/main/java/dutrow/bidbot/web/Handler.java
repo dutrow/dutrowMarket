@@ -9,17 +9,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dutrow.sales.ejb.AccountMgmtRemote;
-import dutrow.sales.ejb.BuyerMgmtRemote;
-import dutrow.sales.ejb.ParserRemote;
-import dutrow.sales.ejb.SellerMgmtRemote;
-import dutrow.sales.ejb.SupportRemote;
+import dutrow.bidbot.ejb.BidbotUtilRemote;
+import dutrow.bidbot.ejb.OrderMgmtRemote;
 
 public abstract class Handler {
 
 	public abstract void handle(HttpServletRequest request,
 			HttpServletResponse response, ServletContext context,
-			BuyerMgmtRemote buyerMgmt, AccountMgmtRemote accountMgmt,
-			SellerMgmtRemote sellerMgmt, ParserRemote parser,
-			SupportRemote support) throws ServletException, IOException;
+			OrderMgmtRemote orderMgmt, BidbotUtilRemote support) throws ServletException, IOException;
 }
