@@ -59,7 +59,7 @@ public class EndToEndTest extends JPATestBase{
 	}
 
 	@Test
-	public void endToEnd() throws InterruptedException {
+	public void endToEnd() throws InterruptedException, AccountMgmtException {
 		log.info("Run End-to-End Test");
 		Assert.assertNotNull("Account Manager Does Not Exist", accountManager);
 		Assert.assertNotNull("Buyer Manager Does Not Exist", buyerManager);

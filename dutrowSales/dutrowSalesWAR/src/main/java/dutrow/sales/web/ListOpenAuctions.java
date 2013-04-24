@@ -4,13 +4,19 @@
 package dutrow.sales.web;
 
 import java.io.IOException;
+import java.util.Collection;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dutrow.sales.bl.AccountMgmt;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import dutrow.sales.dto.AuctionDTO;
+import dutrow.sales.ejb.AccountMgmtRemote;
 import dutrow.sales.ejb.BuyerMgmtRemote;
 import dutrow.sales.ejb.ParserRemote;
 import dutrow.sales.ejb.SellerMgmtRemote;
@@ -21,7 +27,8 @@ import dutrow.sales.ejb.SupportRemote;
  * 
  */
 public class ListOpenAuctions extends Handler {
-
+	private static final Log log = LogFactory.getLog(ListOpenAuctions.class);
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -34,10 +41,24 @@ public class ListOpenAuctions extends Handler {
 	@Override
 	public void handle(HttpServletRequest request,
 			HttpServletResponse response, ServletContext context,
-			BuyerMgmtRemote buyerMgmt, AccountMgmt accountMgmt,
+			BuyerMgmtRemote buyerMgmt, AccountMgmtRemote accountMgmt,
 			SellerMgmtRemote sellerMgmt, ParserRemote parser,
 			SupportRemote support) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+
+		try{
+			Collection<AuctionDTO> openAuctions = buyerMgmt.getOpenAuctions();
+			request.setAttribute(Strings.AUCTIONS_PARAM, openAuctions);
+			
+			RequestDispatcher rd = context
+					.getRequestDispatcher(Strings.DISPLAY_AUCTIONS_URL);
+			rd.forward(request, response);
+		} catch (Exception ex) {
+			log.fatal("error getting auctions:" + ex, ex);
+			request.setAttribute(Strings.EXCEPTION_PARAM, ex);
+			RequestDispatcher rd = context.getRequestDispatcher(
+					Strings.DISPLAY_EXCEPTION);
+			rd.forward(request, response);
+		}
 
 	}
 

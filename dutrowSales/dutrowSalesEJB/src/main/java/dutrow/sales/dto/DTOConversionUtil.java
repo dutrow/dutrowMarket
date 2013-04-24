@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dutrow.sales.ejb;
+package dutrow.sales.dto;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,11 +16,6 @@ import dutrow.sales.bo.Bid;
 import dutrow.sales.bo.BidResult;
 import dutrow.sales.bo.Category;
 import dutrow.sales.bo.POC;
-import dutrow.sales.dto.AccountDTO;
-import dutrow.sales.dto.AddressDTO;
-import dutrow.sales.dto.AuctionDTO;
-import dutrow.sales.dto.BidDTO;
-import dutrow.sales.dto.BidResultDTO;
 
 /**
  * @author dutroda1
@@ -116,10 +111,16 @@ public final class DTOConversionUtil {
 		AuctionDTO adto = new AuctionDTO();
 		adto.id = ai.getId();
 		adto.title = ai.getTitle();
-		adto.category = ai.getCategory().toString();
+		adto.category = ai.getCategory().prettyName;
 		adto.description = ai.getDescription();
 		adto.startTime = ai.getStartTime();
 		adto.endTime = ai.getEndTime();
+		adto.seller = ai.getSeller().getUserId();
+		adto.seller_email = ai.getSeller().getEmail();
+		if (ai.getBuyer() != null) {
+			adto.buyer = ai.getBuyer().getUserId();
+			adto.buyer_email = ai.getBuyer().getEmail();
+		}
 		adto.askingPrice = ai.getAskingPrice();
 		adto.purchasePrice = ai.getPurchasePrice();
 		adto.shipTo = DTOConversionUtil.convertAddress(ai.getShipTo());
@@ -130,6 +131,7 @@ public final class DTOConversionUtil {
 			BidDTO biddto = DTOConversionUtil.convertBid(b);
 			adto.bids.add(biddto);
 		}
+
 		return adto;
 	}
 
@@ -142,7 +144,9 @@ public final class DTOConversionUtil {
 			return null;
 
 		AuctionItem ai = new AuctionItem();
-		ai.setSeller(new POC(auction.seller.userId, auction.seller.email));
+		ai.setSeller(new POC(auction.seller, auction.seller_email));
+		if (auction.buyer != null && !auction.buyer.isEmpty())
+			ai.setBuyer(new POC(auction.buyer, auction.buyer_email));
 		ai.setTitle(auction.title);
 		ai.setCategory(Category.getCategory(auction.category));
 		ai.setDescription(auction.description);

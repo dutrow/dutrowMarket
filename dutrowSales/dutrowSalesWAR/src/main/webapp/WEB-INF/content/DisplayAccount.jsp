@@ -5,20 +5,17 @@
 <jsp:directive.page import="java.util.*"/>
 <jsp:directive.page import="dutrow.sales.dto.*"/>
 <html>
-    <title>Accounts Display</title>
+    <title>Account Display</title>
     <body>
-        <h2>Accounts Display</h2>
+        <h2>Account Display</h2>
         
         <jsp:scriptlet>
-            Collection accounts = (Collection)request.getAttribute("accounts");
-            int index = ((Integer)request.getAttribute("index")).intValue();
-            int count = ((Integer)request.getAttribute("count")).intValue();
-            int nextIndex = ((Integer)request.getAttribute("nextIndex")).intValue();
+            Object o = request.getAttribute("account");
         </jsp:scriptlet>
         
         <ul>
             <jsp:scriptlet>
-                for(Object o: accounts) {
+                if(o != null) {
                     AccountDTO a = (AccountDTO)o;
                     String userId = a.userId;
                     String email = a.email;
@@ -26,20 +23,19 @@
                         "&command=Get%20Account";
             </jsp:scriptlet>
             <li><a href="<%= url %>"><%= userId %>, &lt;<%= email %>&gt;</a></li>
+            <li><%= a.firstName %> <%= a.middleName %> <%= a.lastName %></li>
+            <li><%= a.email %></li>
+            <jsp:scriptlet>
+            if (a.addresses != null) for (AddressDTO d : a.addresses){
+            </jsp:scriptlet>
+            <li><%= d.name %>: <%= d.to %> <%= d.street %> <%= d.city %> <%= d.state %> <%= d.zip %> </li>
+            <jsp:scriptlet>
+            }
+            </jsp:scriptlet>
             <jsp:scriptlet>
                 }
-            </jsp:scriptlet>   
-            <li>...</li>         
+            </jsp:scriptlet>                      
         </ul>
-        
-        <form method="GET" 
-            action="<%=request.getContextPath()%>/model/admin/handler">
-            Index: <%= index %><p/>
-            Count: <%= count %><p/>
-            <input type="hidden" name="index" value="<%= nextIndex %>"/>
-            <input type="hidden" name="count" value="<%= count %>"/>
-            <input type="submit" name="command" value="Get Accounts"/>
-        </form>
         
         <p/><a href="<%=request.getContextPath()%>/index.jsp">Go to Main Page</a>        
     </body>

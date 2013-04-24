@@ -100,19 +100,19 @@ public class EndToEndIT extends Support {
 		// reset databases
 		boolean isReset = testSupport.resetAll();
 		Assert.assertTrue(isReset);
-		
+
 		// ingest data
 		try {
 			parser.ingest();
 		} catch (Exception e) {
 			Assert.fail("Parser ingest failed");
 		}
-		
+
 		// createAccount for seller, buyer1, and buyer2 in eSales
 		AccountDTO seller = new AccountDTO("seller", "John", "s", "Hopkins",
 				"seller@jhu.edu");
-		AccountDTO buyer1 = new AccountDTO("buyer1", "Alexander", "X", "Kossiakoff",
-				"kossi@jhuapl.edu");
+		AccountDTO buyer1 = new AccountDTO("buyer1", "Alexander", "X",
+				"Kossiakoff", "kossi@jhuapl.edu");
 		AccountDTO buyer2 = new AccountDTO("buyer2", "Ralph", "D.", "Semmel",
 				"Ralph.Semmel@jhuapl.edu");
 		try {
@@ -122,21 +122,24 @@ public class EndToEndIT extends Support {
 		} catch (AccountMgmtException e) {
 			Assert.fail("Create accounts failed");
 		}
-		
+
 		// createAccount for buyer2 in eBidbot
 		// TODO: orderManager.createAccountDTO(buyer2);
-		
+
 		// createAuction for seller
 		AuctionDTO auction = new AuctionDTO("VT Fuse", "Science & Toys",
 				"detonates an explosive device automatically", Calendar
-						.getInstance().getTime(), 18.00f, seller, true);
+						.getInstance().getTime(), 18.00f, seller.userId,
+				seller.email, true);
 		auction.id = sellerManager.createAuction(auction);
 
 		// getUserAuctions for seller
-		Collection<AuctionDTO> userAuctions = sellerManager.getUserAuctions(seller.userId);
+		Collection<AuctionDTO> userAuctions = sellerManager
+				.getUserAuctions(seller.userId);
 		Assert.assertNotNull("User auctions came back null", userAuctions);
-		Assert.assertEquals("There should have been one auction", 1, userAuctions.size());
-		
+		Assert.assertEquals("There should have been one auction", 1,
+				userAuctions.size());
+
 		// getAuction for the one created in earlier step
 		AuctionDTO gotAuction = null;
 		try {
@@ -144,29 +147,34 @@ public class EndToEndIT extends Support {
 		} catch (BuyerMgmtException e) {
 			Assert.fail("Buyer manager threw exception on getAuctionDTO");
 		}
-		Assert.assertEquals("requested " + auction.id + " and retreived " + gotAuction.id + " auction id was different", auction.id, gotAuction.id);
-		
+		Assert.assertEquals("requested " + auction.id + " and retreived "
+				+ gotAuction.id + " auction id was different", auction.id,
+				gotAuction.id);
+
 		// getOpenAuctions
 		Collection<AuctionDTO> gotOpenAuctions = buyerManager.getOpenAuctions();
-		Assert.assertNotSame("Auctions not open", 0, gotOpenAuctions.size() ); 
+		Assert.assertNotSame("Auctions not open", 0, gotOpenAuctions.size());
 		// placeBid for buyer1
-		BidResultDTO bidResult = buyerManager.placeBid(buyer1.userId, gotAuction.id, 1f);
+		BidResultDTO bidResult = buyerManager.placeBid(buyer1.userId,
+				gotAuction.id, 1f);
 		Assert.assertNotNull("Bid invalid: " + bidResult.result, bidResult.bid);
-		
+
 		// getAuctions for buyer1
-		// :: NOTE :: This isn't a defined interface in the buyerManager, 
-		// so I'm going to assume that this meant to get bids for buyer1 
+		// :: NOTE :: This isn't a defined interface in the buyerManager,
+		// so I'm going to assume that this meant to get bids for buyer1
 		Collection<BidDTO> gotBids = buyerManager.listMyOpenBids(buyer1.userId);
 		Assert.assertNotNull("Bids came back null", gotBids);
-		
+
 		// placeOrder for buyer2 in eBidbot (stimulate a bid)
 		// TODO: orderManager.placeOrder(buyer2.userId)
-		
+
 		// getAuction to verify bids were placed for buyer1 and buyer2
 		gotAuction = sellerManager.getAuction(auction.id);
 		Assert.assertNotNull("Auction item came back null", gotAuction);
-		Assert.assertTrue("Buyer1's bid not entered", gotAuction.bids.size() >= 1);
-		// TODO: Assert.assertTrue("Buyer2's bids not entered", gotAuction.bids.size() >= 2);
-		
+		Assert.assertTrue("Buyer1's bid not entered",
+				gotAuction.bids.size() >= 1);
+		// TODO: Assert.assertTrue("Buyer2's bids not entered",
+		// gotAuction.bids.size() >= 2);
+
 	}
 }

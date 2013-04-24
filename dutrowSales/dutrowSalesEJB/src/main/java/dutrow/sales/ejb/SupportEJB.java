@@ -22,7 +22,7 @@ import dutrow.sales.bo.Account;
 import dutrow.sales.bo.AuctionItem;
 import dutrow.sales.dto.AccountDTO;
 import dutrow.sales.dto.AuctionDTO;
-import dutrow.sales.ejb.DTOConversionUtil;
+import dutrow.sales.dto.DTOConversionUtil;
 
 /**
  * @author dutroda1

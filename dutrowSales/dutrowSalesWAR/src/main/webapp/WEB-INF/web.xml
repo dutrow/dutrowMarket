@@ -38,12 +38,12 @@
         </servlet-class>
         <init-param>      
             <param-name>type</param-name>
-            <param-value></param-value>
+            <param-value>anon</param-value>
         </init-param>
     </servlet>
 	<servlet-mapping>
         <servlet-name>AnonHandler</servlet-name>
-        <url-pattern>/model/user/handler</url-pattern>
+        <url-pattern>/model/anon/handler</url-pattern>
     </servlet-mapping>
 
 </web-app>

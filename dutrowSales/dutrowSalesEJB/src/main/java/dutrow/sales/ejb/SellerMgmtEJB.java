@@ -21,6 +21,7 @@ import dutrow.sales.bl.SellerMgmt;
 import dutrow.sales.bo.AuctionItem;
 import dutrow.sales.bo.Image;
 import dutrow.sales.dto.AuctionDTO;
+import dutrow.sales.dto.DTOConversionUtil;
 import dutrow.sales.dto.ImageDTO;
 
 /**

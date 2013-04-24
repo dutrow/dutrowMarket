@@ -15,4 +15,4 @@ Notes:
 		but it reduces code bloat for what are just simple structs.
 		
 		
-	7c. Create a demonstration of transactions and the capability of rollback by implementing a scenario that adds something to the database and then a *follow-on* rollback causes the changes to be undone. [dutrowSalesTest::TransactionDemonstrationIT::transactionDemonstration] [Multiple bids placed in BuyerSupportEJB::multiBid()] [EJBException thrown in BuyerMgmtEJB::placeBid]
+	7c. Create a demonstration of transactions and the capability of rollback by implementing a scenario that adds something to the database and then a *follow-on* rollback causes the changes to be undone. [dutrowSalesTest::TransactionDemonstrationIT::transactionDemonstration] [Multiple bids placed in BuyerSupportEJB::placeMultiBid()] [EJBException thrown in BuyerMgmtEJB::placeBid]	

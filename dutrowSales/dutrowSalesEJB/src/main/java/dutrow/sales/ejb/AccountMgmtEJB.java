@@ -3,6 +3,9 @@
  */
 package dutrow.sales.ejb;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJBException;
@@ -18,6 +21,7 @@ import dutrow.sales.bl.AccountMgmt;
 import dutrow.sales.bl.AccountMgmtException;
 import dutrow.sales.bo.Account;
 import dutrow.sales.dto.AccountDTO;
+import dutrow.sales.dto.DTOConversionUtil;
 
 /**
  * @author dutroda1
@@ -181,5 +185,32 @@ public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	public boolean closeAccountDTO(String userId) throws AccountMgmtException {
 		return this.closeAccount(userId);
 	}
+
+	/* (non-Javadoc)
+	 * @see dutrow.sales.ejb.AccountMgmtRemote#getAccounts(int, int)
+	 */
+	@Override
+	public Collection<AccountDTO> getAccounts(int index, int count)
+			throws AccountMgmtException {
+		log.debug("*** getAccounts() *** ");
+
+		Collection<AccountDTO> returnedDTOs = new ArrayList<AccountDTO>(count);
+		
+		try {
+			Collection<Account> accounts = accountManager.getAccounts(index, count);
+			
+			for (Account account : accounts) {
+				returnedDTOs.add(DTOConversionUtil.convertAccount(account));
+			}
+			
+		} catch (Throwable ex) {
+			log.error(ex);
+			throw new AccountMgmtException(ex.toString());
+		}
+		
+		return returnedDTOs;
+	}
+	
+	
 
 }

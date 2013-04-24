@@ -74,7 +74,8 @@ public class TransactionDemonstrationIT extends Support {
 		testSupport.createAccount(bidder);
 		auction = new AuctionDTO("VT Fuse", "Science & Toys",
 				"detonates an explosive device automatically", Calendar
-						.getInstance().getTime(), 18.00f, seller, true);
+						.getInstance().getTime(), 18.00f, seller.userId,
+				seller.email, true);
 		auction.id = testSupport.createAuction(auction);
 
 		log.debug("bidder.userId: " + bidder.userId + " seller.userId: "
@@ -88,7 +89,7 @@ public class TransactionDemonstrationIT extends Support {
 		log.debug("*** transactionDemonstration() *** ");
 
 		try {
-			float [] bidarray = {1.0f, 2.0f, 0.30f};
+			float[] bidarray = { 1.0f, 2.0f, 0.30f };
 			boolean result = buyerManager.placeMultiBid(bidder.userId,
 					auction.id, bidarray);
 		} catch (EJBException expected) {
@@ -96,7 +97,7 @@ public class TransactionDemonstrationIT extends Support {
 		}
 		// ROLLBACK check
 		try {
-			
+
 			AuctionDTO rolledBackAuction = buyerManager
 					.getAuctionDTO(auction.id);
 			if (rolledBackAuction.bids.size() == 0) {

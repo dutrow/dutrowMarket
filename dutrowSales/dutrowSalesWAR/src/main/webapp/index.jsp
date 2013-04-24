@@ -33,6 +33,7 @@
     <ul>
     	<li><a href="admin/ResetAll.jsp">Reset All Tables</a></li>
     	<li><a href="admin/PopulateAll.jsp">Populate Tables</a></li>
+    	<li><a href="admin/GetAccounts.jsp">Display Accounts</a></li>
     </ul>
     
     <h2>Seller</h2>

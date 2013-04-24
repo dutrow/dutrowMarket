@@ -1,14 +1,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
             "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-    <title>Get Account</title>
+    <title>List Open Auctions</title>
 <body>
-    <h2>Get Account</h2>    
+    <h2>List Open Auctions</h2>    
     
     <form method="GET" 
         action="<%=request.getContextPath()%>/model/anon/handler">
-        Auction Number: <input type="text" name="id" size="25"/><p/>   
-        <input type="submit" name="command" value="Get Auction"/>
+        <input type="submit" name="command" value="List Open Auctions"/>
     </form>
     
 </body>

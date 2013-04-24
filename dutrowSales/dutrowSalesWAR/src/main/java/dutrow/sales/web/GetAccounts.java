@@ -26,17 +26,18 @@ import dutrow.sales.ejb.SupportRemote;
  * @author dutroda1
  * 
  */
-public class Populate extends Handler {
-	private static final Log log = LogFactory.getLog(Populate.class);
-
+public class GetAccounts extends Handler {
+	private static final Log log = LogFactory.getLog(GetAccounts.class);
+	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * dutrow.sales.web.Handler#handle(javax.servlet.http.HttpServletRequest,
-	 * javax.servlet.http.HttpServletResponse, dutrow.sales.ejb.BuyerMgmtRemote,
-	 * dutrow.sales.ejb.AccountMgmtRemote, dutrow.sales.ejb.SellerMgmtRemote,
-	 * dutrow.sales.ejb.ParserRemote, dutrow.sales.ejb.SupportRemote)
+	 * javax.servlet.http.HttpServletResponse, javax.servlet.ServletContext,
+	 * dutrow.sales.ejb.BuyerMgmtRemote, dutrow.sales.ejb.AccountMgmtRemote,
+	 * dutrow.sales.ejb.SellerMgmtRemote, dutrow.sales.ejb.ParserRemote,
+	 * dutrow.sales.ejb.SupportRemote)
 	 */
 	@Override
 	public void handle(HttpServletRequest request,
@@ -46,24 +47,24 @@ public class Populate extends Handler {
 			SupportRemote support) throws ServletException, IOException {
 
 		try {
-			parser.ingest();
-			
-            int index = 0;
-            int count = 25;
+			String indexStr = (String) request.getParameter(Strings.INDEX_PARAM);
+			String countStr = (String) request.getParameter(Strings.COUNT_PARAM);
+			int index = Integer.parseInt(indexStr);
+			int count = Integer.parseInt(countStr);
+
 			Collection<AccountDTO> accounts = accountMgmt.getAccounts(index, count);
-            
-            int nextIndex = (accounts.size()==0) ? 
-                    index : index + accounts.size();
-            
-            request.setAttribute(Strings.ACCOUNTS_PARAM, accounts);
-            request.setAttribute(Strings.INDEX_PARAM, index);
-            request.setAttribute(Strings.COUNT_PARAM, count);
-            request.setAttribute(Strings.NEXT_INDEX_PARAM, nextIndex);
+
+			int nextIndex = (accounts.size() == 0) ? index : index
+					+ accounts.size();
+
+			request.setAttribute(Strings.ACCOUNTS_PARAM, accounts);
+			request.setAttribute(Strings.INDEX_PARAM, index);
+			request.setAttribute(Strings.COUNT_PARAM, count);
+			request.setAttribute(Strings.NEXT_INDEX_PARAM, nextIndex);
 
 			RequestDispatcher rd = context
 					.getRequestDispatcher(Strings.DISPLAY_ACCOUNTS_URL);
 			rd.forward(request, response);
-			
 		} catch (Exception ex) {
 			log.fatal("error getting accounts:" + ex, ex);
 			request.setAttribute(Strings.EXCEPTION_PARAM, ex);
@@ -71,6 +72,7 @@ public class Populate extends Handler {
 					Strings.DISPLAY_EXCEPTION);
 			rd.forward(request, response);
 		}
+
 	}
 
 }

@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import dutrow.sales.bl.AccountMgmt;
+import dutrow.sales.bl.AccountMgmtException;
 import dutrow.sales.bo.Account;
 import dutrow.sales.dao.AccountDAO;
 
@@ -42,14 +43,15 @@ public class AccountMgmtImpl implements AccountMgmt {
 	 * @see dutrow.sales.bl.AccountMgmt#createAccount(dutrow.sales.bo.Account)
 	 */
 	@Override
-	public String createAccount(Account accountDetails) {
+	public String createAccount(Account accountDetails) throws AccountMgmtException {
 
 		// Do not create if a user with that user id already exists
 		Account existingAccount = accountDAO.getAccountByUser(accountDetails
 				.getUserId());
 		if (existingAccount != null) {
-			log.warn("User Already Exists: " + accountDetails.getUserId());
-			return null;
+			String error = "User Already Exists: " + accountDetails.getUserId();
+			log.warn(error);
+			throw new AccountMgmtException(error);
 		}
 
 		// Create a new user

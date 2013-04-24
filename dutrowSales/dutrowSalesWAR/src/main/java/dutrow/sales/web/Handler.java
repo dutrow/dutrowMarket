@@ -7,7 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dutrow.sales.bl.AccountMgmt;
 import dutrow.sales.ejb.AccountMgmtRemote;
 import dutrow.sales.ejb.BuyerMgmtRemote;
 import dutrow.sales.ejb.ParserRemote;
@@ -18,7 +17,7 @@ public abstract class Handler {
 
 	public abstract void handle(HttpServletRequest request,
 			HttpServletResponse response, ServletContext context,
-			BuyerMgmtRemote buyerMgmt, AccountMgmt accountMgmt,
+			BuyerMgmtRemote buyerMgmt, AccountMgmtRemote accountMgmt,
 			SellerMgmtRemote sellerMgmt, ParserRemote parser,
 			SupportRemote support) throws ServletException, IOException;
 }

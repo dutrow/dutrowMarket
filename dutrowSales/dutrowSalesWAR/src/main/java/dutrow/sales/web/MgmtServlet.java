@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import dutrow.sales.bl.AccountMgmt;
 import dutrow.sales.ejb.AccountMgmtRemote;
 import dutrow.sales.ejb.BuyerMgmtRemote;
 import dutrow.sales.ejb.ParserRemote;
@@ -39,7 +38,7 @@ public class MgmtServlet extends HttpServlet {
 	@Inject
 	private BuyerMgmtRemote injectedBuyerMgmt;
 	@Inject
-	private AccountMgmt injectedAccountMgmt;
+	private AccountMgmtRemote injectedAccountMgmt;
 	@Inject
 	private SellerMgmtRemote injectedSellerMgmt;
 	@Inject
@@ -62,17 +61,27 @@ public class MgmtServlet extends HttpServlet {
 		try {
 			ServletConfig config = getServletConfig();
 			// build a list of handlers for individual commands
+			log.info("HANDLER_TYPE " + config
+					.getInitParameter(Strings.HANDLER_TYPE_KEY));
+			
 			if (Strings.ADMIN_TYPE.equals(config
 					.getInitParameter(Strings.HANDLER_TYPE_KEY))) {
-
+				handlers.put(Strings.RESET_ALL, new ResetAll());
+				handlers.put(Strings.POPULATE, new Populate());
+				handlers.put(Strings.GET_ACCOUNTS, new GetAccounts());
+				handlers.put(Strings.GET_ACCOUNT, new GetAccount());
+			} else if (Strings.USER_TYPE.equals(config
+					.getInitParameter(Strings.HANDLER_TYPE_KEY))) {
+				handlers.put(Strings.CREATE_AUCTION, new CreateAuction());
+				handlers.put(Strings.GET_USER_AUCTIONS, new GetUserAuctions());
+				handlers.put(Strings.GET_AUCTION, new GetAuction());
+				handlers.put(Strings.PLACE_BID, new PlaceBid());
+			} else if (Strings.ANON_TYPE.equals(config
+					.getInitParameter(Strings.HANDLER_TYPE_KEY))) {
 				handlers.put(Strings.LIST_OPEN_AUCTIONS, new ListOpenAuctions());
 				handlers.put(Strings.GET_AUCTION, new GetAuction());
 				handlers.put(Strings.CREATE_ACCOUNT, new CreateAccount());
-				handlers.put(Strings.RESET_ALL, new ResetAll());
-				handlers.put(Strings.POPULATE, new Populate());
-				handlers.put(Strings.CREATE_AUCTION, new CreateAuction());
-				handlers.put(Strings.GET_USER_AUCTIONS, new GetUserAuctions());
-				handlers.put(Strings.PLACE_BID, new PlaceBid());
+				handlers.put(Strings.GET_ACCOUNT, new GetAccount());
 			}
 		} catch (Exception ex) {
 			log.fatal("error initializing handler", ex);
@@ -94,7 +103,7 @@ public class MgmtServlet extends HttpServlet {
 		InitialContext jndi = null;
 		BuyerMgmtRemote buyerMgmt = injectedBuyerMgmt; // assign to what was
 														// injected
-		AccountMgmt accountMgmt = injectedAccountMgmt;
+		AccountMgmtRemote accountMgmt = injectedAccountMgmt;
 		SellerMgmtRemote sellerMgmt = injectedSellerMgmt;
 		ParserRemote parser = injectedParser;
 		SupportRemote support = injectedSupport;
@@ -104,17 +113,16 @@ public class MgmtServlet extends HttpServlet {
 					|| parser == null || support == null) { // not injected --
 															// manually lookup
 				ServletConfig config = getServletConfig();
-	            String ctxFactory = config.getServletContext()
-	                                      .getInitParameter(Context.INITIAL_CONTEXT_FACTORY);
-	            log.debug(Context.INITIAL_CONTEXT_FACTORY + "=" + ctxFactory);
-	            if (ctxFactory!=null) {
-	                    Properties env = new Properties();
-	                    env.put(Context.INITIAL_CONTEXT_FACTORY, ctxFactory);
-	                    jndi = new InitialContext(env);
-	            }
-	            else {
-	                    jndi = new InitialContext();
-	            }
+				String ctxFactory = config.getServletContext()
+						.getInitParameter(Context.INITIAL_CONTEXT_FACTORY);
+				log.debug(Context.INITIAL_CONTEXT_FACTORY + "=" + ctxFactory);
+				if (ctxFactory != null) {
+					Properties env = new Properties();
+					env.put(Context.INITIAL_CONTEXT_FACTORY, ctxFactory);
+					jndi = new InitialContext(env);
+				} else {
+					jndi = new InitialContext();
+				}
 
 				String jndiName;
 
@@ -126,7 +134,7 @@ public class MgmtServlet extends HttpServlet {
 				jndiName = config.getServletContext().getInitParameter(
 						"dutrow.accountmgmt.remote");
 				log.info("JNDI Name: " + jndiName);
-				accountMgmt = (AccountMgmt) jndi.lookup(jndiName);
+				accountMgmt = (AccountMgmtRemote) jndi.lookup(jndiName);
 
 				jndiName = config.getServletContext().getInitParameter(
 						"dutrow.sellermgmt.remote");

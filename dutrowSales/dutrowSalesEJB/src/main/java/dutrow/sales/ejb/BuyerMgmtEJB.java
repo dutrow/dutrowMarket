@@ -29,6 +29,7 @@ import dutrow.sales.bo.Image;
 import dutrow.sales.dto.AuctionDTO;
 import dutrow.sales.dto.BidDTO;
 import dutrow.sales.dto.BidResultDTO;
+import dutrow.sales.dto.DTOConversionUtil;
 import dutrow.sales.dto.ImageDTO;
 
 /**

@@ -6,8 +6,12 @@
     <h2>Create Account</h2>    
     
     <form method="GET" 
-        action="<%=request.getContextPath()%>/model/admin/handler">
-        Account Number: <input type="text" name="accountNumber" size="25"/><p/>   
+        action="<%=request.getContextPath()%>/model/anon/handler">
+        User ID: <input type="text" name="id" size="25"/><p/>
+        First Name: <input type="text" name="first" size="25"/><p/>
+        Middle Name: <input type="text" name="middle" size="25"/><p/>
+        Last Name: <input type="text" name="last" size="25"/><p/>
+        E-mail: <input type="text" name="email" size="25"/><p/>   
         <input type="submit" name="command" value="Create Account"/>
     </form>
 </body>

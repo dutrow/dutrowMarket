@@ -69,7 +69,7 @@ public class SellerMgmtIT extends Support {
 		testSupport.createAccount(bidder);
 		auction = new AuctionDTO("VT Fuse", "Science & Toys",
 				"detonates an explosive device automatically", Calendar
-						.getInstance().getTime(), 18.00f, seller, true);
+						.getInstance().getTime(), 18.00f, seller.userId, seller.email, true);
 		auction.id = testSupport.createAuction(auction);
 
 		log.debug("bidder.userId: " + bidder.userId + " seller.userId: "
@@ -90,7 +90,7 @@ public class SellerMgmtIT extends Support {
 	public void testCreateAuction() {
 		auction = new AuctionDTO("VT Fuse", "Science & Toys",
 				"detonates an explosive device automatically", Calendar
-						.getInstance().getTime(), 18.00f, seller, true);
+						.getInstance().getTime(), 18.00f, seller.userId, seller.email, true);
 		auction.id = sellerManager.createAuction(auction);
 
 		Assert.assertNotSame("Auction not created", 0, auction.id);

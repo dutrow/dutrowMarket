@@ -21,7 +21,10 @@ public class AuctionDTO implements Serializable{
 	public String description;
 	public Date startTime;
 	public Date endTime;
-	public AccountDTO seller;
+	public String seller;
+	public String seller_email;
+	public String buyer;
+	public String buyer_email;
 	public float askingPrice;
 	public float purchasePrice;
 	public boolean isOpen;
@@ -30,7 +33,7 @@ public class AuctionDTO implements Serializable{
 	
 	public Collection<BidDTO> bids;
 	
-	Collection<ImageDTO> images;
+	public Collection<ImageDTO> images;
 	public boolean isExpired;
 
 	/**
@@ -40,17 +43,19 @@ public class AuctionDTO implements Serializable{
 		super();
 	}
 	
-	public AuctionDTO(String titleIn, String categoryIn, String descriptionIn, Date startTimeIn, float askingPriceIn, AccountDTO sellerIn, boolean isOpen){
+	public AuctionDTO(String titleIn, String categoryIn, String descriptionIn, Date startTimeIn, float askingPriceIn, String sellerIn, String sellerEmailIn, boolean isOpen){
 		this.title = titleIn;
 		this.category = categoryIn;
 		this.description = descriptionIn;
 		this.startTime = startTimeIn;
 		this.askingPrice = askingPriceIn;
 		this.seller = sellerIn;
+		this.seller_email = sellerEmailIn;
 		this.isOpen = isOpen;
 		this.images = new ArrayList<ImageDTO>();
 		this.bids = new ArrayList<BidDTO>();
 		this.isExpired = false;
+		
 		
 	}
 

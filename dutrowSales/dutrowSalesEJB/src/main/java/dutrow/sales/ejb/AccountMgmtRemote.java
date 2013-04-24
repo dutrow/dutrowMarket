@@ -1,5 +1,7 @@
 package dutrow.sales.ejb;
 
+import java.util.Collection;
+
 import javax.ejb.Remote;
 
 import dutrow.sales.bl.AccountMgmtException;
@@ -15,5 +17,6 @@ public interface AccountMgmtRemote {
 	AccountDTO getAccountDTO(String userString) throws AccountMgmtException;
     boolean updateAccountDTO(AccountDTO accountDetails) throws AccountMgmtException;
 	boolean closeAccountDTO(String userId) throws AccountMgmtException;
+	Collection<AccountDTO> getAccounts(int index, int count) throws AccountMgmtException;
     
 }
