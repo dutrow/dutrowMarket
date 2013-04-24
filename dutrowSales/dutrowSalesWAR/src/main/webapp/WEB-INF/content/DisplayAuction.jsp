@@ -14,10 +14,9 @@
 	<ul>
 		<jsp:scriptlet>if (o != null) {
 				AuctionDTO a = (AuctionDTO) o;
-
-				String url = "?id=" + a.id + "&command=Get%20Auction";</jsp:scriptlet>
-		<li>title <%=a.title%> <a href="<%=url%>">[<%=a.id%>]
-		</a></li>
+				String url = "?id=" + a.id + "&command=Get%20Auction";
+		</jsp:scriptlet>
+		<li>title <%=a.title%> <a href="<%=url%>">[<%=a.id%>]</a></li>
 		<li>category <%=a.category%></li>
 		<li>description <%=a.description%></li>
 		<li>startTime <%=a.startTime%></li>
@@ -29,26 +28,42 @@
 		<li>askingPrice <%=a.askingPrice%></li>
 		<li>purchasePrice <%=a.purchasePrice%></li>
 		<li>isOpen <%=a.isOpen%></li>
-		<jsp:scriptlet>if (a.shipTo != null) {</jsp:scriptlet>
+		<jsp:scriptlet>
+		if (a.shipTo != null) {
+		</jsp:scriptlet>
 		<li>shipTo <%=a.shipTo.to%> <%=a.shipTo.name%> <%=a.shipTo.street%>
 			<%=a.shipTo.city%> <%=a.shipTo.state%> <%=a.shipTo.zip%></li>
-		<jsp:scriptlet>}
-				if (a.bids != null) {
-					for (BidDTO bid : a.bids) {</jsp:scriptlet>
-		<li>bid: <%=bid.amount%></li>
-		<jsp:scriptlet>}
-				}
-				if (a.images != null) {</jsp:scriptlet>
-		<li>#images : <%=a.images.size()%></li>
-		<jsp:scriptlet>for (ImageDTO image : a.images) {</jsp:scriptlet>
-		<li>image <img src="data:image/gif;base64,<%=image%>" />
-		</li>
-		<jsp:scriptlet>}
-				}</jsp:scriptlet>
+		<jsp:scriptlet>
+		}
+		if (a.images != null) {
+		</jsp:scriptlet>
+			<li>#images : <%=a.images.size()%></li>
+			<jsp:scriptlet>for (ImageDTO image : a.images) {</jsp:scriptlet>
+			<li>image <img src="data:image/gif;base64,<%=image%>" /></li>
+		<jsp:scriptlet>
+			}
+		}
+		</jsp:scriptlet>
 		<li>isExpired <%=a.isExpired%></li>
-		<jsp:scriptlet>}</jsp:scriptlet>
 	</ul>
+	<h3>Bids:</h3>
+	<ul>
+		<jsp:scriptlet>
+				if (a.bids != null) {
+					for (BidDTO bid : a.bids) {
+		</jsp:scriptlet>
+						<li>bid: <%=bid.amount%></li>
+		<jsp:scriptlet>
+					}
+				}
+		</jsp:scriptlet>
+	</ul>
+	<jsp:scriptlet>
+		}			
+	</jsp:scriptlet>
+
 	<p />
+	
 	<a href="<%=request.getContextPath()%>/index.jsp">Go to Main Page</a>
 </body>
 </html>

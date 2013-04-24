@@ -16,7 +16,7 @@
 				AuctionDTO a = (AuctionDTO) o;
 
 				String url = "?id=" + a.id + "&command=Get%20Auction";</jsp:scriptlet>
-		<li><%=a.title%><a href="<%=url%>">[<%=a.id%>]
+		<li><%=a.title%> <a href="<%=url%>">[<%=a.id%>]
 		</a></li>
 		<jsp:scriptlet>}</jsp:scriptlet>
 	</ul>

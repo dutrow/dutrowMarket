@@ -6,6 +6,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
@@ -21,6 +23,7 @@ import ejava.projects.esales.dto.Image;
 import ejava.projects.esales.xml.ESalesParser;
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ParserEJB implements ParserRemote {
 	@Resource(name = "vals/xmlFile")
 	private static String xmlFile;
