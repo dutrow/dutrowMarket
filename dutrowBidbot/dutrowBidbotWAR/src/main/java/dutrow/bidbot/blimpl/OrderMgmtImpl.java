@@ -3,22 +3,27 @@
  */
 package dutrow.bidbot.blimpl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import dutrow.bidbot.bl.OrderMgmt;
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
 import dutrow.bidbot.dao.BidAccountDAO;
+import dutrow.bidbot.web.CreateBidAccount;
 
 /**
  * @author dutroda1
  * 
  */
 public class OrderMgmtImpl implements OrderMgmt {
+	private static final Log log = LogFactory.getLog(OrderMgmtImpl.class);
 
 	private BidAccountDAO accountDAO;
 
 	public void setAccountDAO(BidAccountDAO accountDAO) {
 		this.accountDAO = accountDAO;
-		;
+
 	}
 
 	@SuppressWarnings("unused")
@@ -37,17 +42,31 @@ public class OrderMgmtImpl implements OrderMgmt {
 	 */
 	@Override
 	public BidAccount createAccount(String userId, String accountId,
-			String passwd) {
+			String passwd) throws IllegalArgumentException {
 
-		BidAccount ba = new BidAccount();
-		ba.setUserId(userId);
-		ba.setSalesAccount(accountId);
-		ba.setSalesPassword(passwd);
+		log.debug("createAccount: " + userId + "-" + accountId + "-" + passwd);
 
-		if (accountDAO.getAccountById(userId) == null) {
-			return accountDAO.createAccount(ba);
-		} else
-			return null;
+		if (userId == null) {
+			throw new IllegalArgumentException("No user id");
+		}
+		if (accountId == null) {
+			throw new IllegalArgumentException("No account id");
+		}
+		if (passwd == null) {
+			throw new IllegalArgumentException("No password");
+		}
+
+		BidAccount ba = accountDAO.getAccountById(userId);
+		if (ba != null) {
+			throw new IllegalArgumentException("Account already exists");
+		}
+
+		BidAccount newba = new BidAccount(userId, accountId, passwd);
+		String aid = accountDAO.createAccount(newba);
+		if (aid != null)
+			return newba;
+
+		return null;
 
 	}
 

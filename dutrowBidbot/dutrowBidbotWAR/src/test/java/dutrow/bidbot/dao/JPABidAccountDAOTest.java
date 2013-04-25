@@ -97,8 +97,9 @@ public class JPABidAccountDAOTest extends JPATestBase {
 	@Test
 	public void testCreateOrder() {
 		log.info("testCreateOrder");
-		BidOrder bo = testSupport.createOrder();
-		accountDao.createAccount(bo.getBidder());
+		BidAccount bidder = testSupport.createBidder();
+		accountDao.createAccount(bidder);
+		BidOrder bo = testSupport.createOrder(bidder);
 		Assert.assertTrue("Order creation", accountDao.createOrder(bo));
 		log.info("Order created: " + bo);
 	}
@@ -109,8 +110,9 @@ public class JPABidAccountDAOTest extends JPATestBase {
 	@Test
 	public void testGetBidOrders() {
 		log.info("testGetBidOrders");
-		BidOrder bo = testSupport.createOrder();
-		accountDao.createAccount(bo.getBidder());
+		BidAccount bidder = testSupport.createBidder();
+		accountDao.createAccount(bidder);
+		BidOrder bo = testSupport.createOrder(bidder);
 		accountDao.createOrder(bo);
 		Collection<BidOrder> orders = accountDao.getBidOrders();
 
@@ -127,8 +129,9 @@ public class JPABidAccountDAOTest extends JPATestBase {
 	@Test
 	public void testGetOrderById() {
 		log.info("testGetOrderById");
-		BidOrder bo = testSupport.createOrder();
-		accountDao.createAccount(bo.getBidder());
+		BidAccount bidder = testSupport.createBidder();
+		accountDao.createAccount(bidder);
+		BidOrder bo = testSupport.createOrder(bidder);
 		Assert.assertTrue("Order creation", accountDao.createOrder(bo));
 		BidOrder bid = accountDao.getOrderById(bo.getBidOrderId());
 		Assert.assertNotNull("Order retrieval", bid);

@@ -7,10 +7,13 @@
     
     <form method="GET" 
         action="<%=request.getContextPath()%>/model/user/handler">
-        userId: <input type="text" name="userId" size="25" value="1"/><p/>   
-        accountId : <input type="text" name="account" size="25" value="buyer1"/><p/>
-        password : <input type="number" name="password" size="25" value="2.0"/><p/>         
-        <input type="submit" name="command" value="Create Account"/>
+        userId: <input type="text" name="userId" size="25" value="bidbotboy"/><p/>   
+        auctionId : <input type="text" name="auctionId" size="25" value="1"/><p/>
+        startBid : <input type="text" name="start" size="25" value="1.00"/><p/>
+        maxBid : <input type="text" name="max" size="25" value="1.00"/><p/>
+        
+                 
+        <input type="submit" name="command" value="Place Order"/>
     </form>
 </body>
 </html>

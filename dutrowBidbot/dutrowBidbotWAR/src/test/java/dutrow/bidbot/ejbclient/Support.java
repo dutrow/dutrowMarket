@@ -28,7 +28,7 @@ public class Support {
 					"jndi.name.registrar",
 					"dutrowBidbotWAR/BidbotUtilEJB!dutrow.bidbot.ejb.BidbotUtilRemote");
 	
-	protected BidbotUtilRemote testUtil;
+	protected BidbotUtilRemote testSupport;
 
 	/**
 	 * @throws java.lang.Exception
@@ -46,14 +46,14 @@ public class Support {
 
 		log.debug("jndi name:" + utilJNDI);
 		try {
-			testUtil = (BidbotUtilRemote) jndi.lookup(utilJNDI);
+			testSupport = (BidbotUtilRemote) jndi.lookup(utilJNDI);
 		} catch (NamingException ne) {
 			log.warn(ne.getMessage());
 			log.warn(ne.getExplanation());
 		}
-		log.debug("testSupport=" + testUtil);
+		log.debug("testSupport=" + testSupport);
 
-		testUtil.reset();
+		testSupport.reset();
 		log.debug("reset complete");
 	}
 

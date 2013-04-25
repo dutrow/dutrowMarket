@@ -14,7 +14,7 @@
     
     <h2>Admin User</h2>
     <ul>
-    	<li><a href="anon/CreateBidAccount.jsp">Create Bid Account</a></li>
+    	<li><a href="admin/CreateBidAccount.jsp">Create Bid Account</a></li>
     </ul>
     
     <h2>Bidder</h2>

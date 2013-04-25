@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -25,17 +26,16 @@ import dutrow.bidbot.ejb.OrderMgmtRemote;
 @SuppressWarnings("serial")
 public class BidServlet extends HttpServlet {
 	private static final Log log = LogFactory.getLog(BidServlet.class);
-
 	private Map<String, Handler> handlers = new HashMap<String, Handler>();
 
 	/**
 	 * This will get automatically inject when running within the application
 	 * server.
 	 */
-	//TODO: DUTROW @Inject
+	@EJB
 	private OrderMgmtRemote injectedOrderMgmt;
 
-	//TODO: DUTROW @Inject
+	@EJB
 	private BidbotUtilRemote injectedBidbotUtil;
 
 	/**
@@ -76,8 +76,8 @@ public class BidServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		log.debug("doGet() called");
 
-		String command = ""; // TODO request.getParameter(Strings.COMMAND_PARAM);
-		log.debug("command=" + command);
+		String command = request.getParameter(Strings.COMMAND_PARAM);
+		log.info("command=" + command);
 
 		InitialContext jndi = null;
 		OrderMgmtRemote orderMgmt = injectedOrderMgmt;
@@ -111,7 +111,7 @@ public class BidServlet extends HttpServlet {
 				util = (BidbotUtilRemote) jndi.lookup(jndiName);
 
 			}
-			if (command != null) {
+			if (command != null) {	
 				Handler handler = handlers.get(command);
 				if (handler != null) {
 					handler.handle(request, response, getServletContext(),

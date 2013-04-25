@@ -22,7 +22,7 @@ import dutrow.bidbot.dao.BidAccountDAO;
  * 
  */
 @Stateless
-@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class BidbotUtilEJB implements BidbotUtilRemote {
 	
 	@Inject
@@ -50,8 +50,8 @@ public class BidbotUtilEJB implements BidbotUtilRemote {
 	 * @see dutrow.bidbot.ejb.BidbotUtilRemote#createOrder()
 	 */
 	@Override
-	public BidOrder createOrder() {
-		return testUtil.createOrder();
+	public BidOrder createOrder(BidAccount ba) {
+		return testUtil.createOrder(ba);
 	}
 
 	/*

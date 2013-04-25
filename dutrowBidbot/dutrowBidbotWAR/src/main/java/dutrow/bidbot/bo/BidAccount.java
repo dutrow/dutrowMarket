@@ -5,6 +5,7 @@ package dutrow.bidbot.bo;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -35,6 +36,26 @@ public class BidAccount implements Serializable {
 
 	@OneToMany(mappedBy = "bidder", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	List<BidOrder> orders;
+
+	
+	protected BidAccount() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @param userId
+	 * @param salesAccount
+	 * @param salesPassword
+	 */
+	public BidAccount(String userId, String salesAccount,
+			String salesPassword) {
+		super();
+		this.userId = userId;
+		this.salesAccount = salesAccount;
+		this.salesPassword = salesPassword;
+		this.orders = new ArrayList<BidOrder>();
+	}
 
 	@Override
 	public String toString() {

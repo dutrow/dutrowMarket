@@ -33,11 +33,11 @@ Technical Details:
 				getAuction (using SellerMgmtEJB) [dutrow.sales.web.GetAuction.java, main/webapp/user/GetAuction.jsp, main/WEB-INF/content/DisplayAuction.jsp]
 			Buyer
 				Place bid (using BuyerMgmtEJB) [dutrow.sales.web.PlaceBid.java, main/webapp/user/PlaceBid.jsp, main/WEB-INF/content/DisplayAuction.jsp]
-6.		Add a WebUI to the eBidbot application [INCOMPLETE]
+6.		Add a WebUI to the eBidbot application [http://localhost:8080/dutrowBidbotWAR]
 			Admin
-				createAccount (using OrderMgmtEJB) [INCOMPLETE]
+				createAccount (using OrderMgmtEJB) [http://localhost:8080/dutrowBidbotWAR/admin/CreateBidAccount.jsp]
 			Bidder
-				placeOrder (using OrderMgmtEJB) [INCOMPLETE]
+				placeOrder (using OrderMgmtEJB) [http://localhost:8080/dutrowBidbotWAR/user/PlaceOrder.jsp]
 7.		Add transaction properties to the EJBs.
 			Transaction Scope
 				[@Stateless @TransactionAttribute(TransactionAttributeType.REQUIRED) public class AccountMgmtEJB]

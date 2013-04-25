@@ -5,6 +5,7 @@ package dutrow.bidbot.bo;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -36,7 +37,7 @@ public class BidOrder implements Serializable {
 	boolean result; // did the bidder win or not
 	float finalBid;
 
-	@ManyToOne(optional = false, cascade=CascadeType.PERSIST)
+	@ManyToOne(optional = false, cascade=CascadeType.MERGE)
 	@JoinColumn
 	BidAccount bidder;
 
@@ -61,8 +62,6 @@ public class BidOrder implements Serializable {
 		this.complete = false;
 		this.result = false;
 		this.bidder = bidder;
-		this.bidder.getOrders().add(this);
-
 	}
 
 	@Override

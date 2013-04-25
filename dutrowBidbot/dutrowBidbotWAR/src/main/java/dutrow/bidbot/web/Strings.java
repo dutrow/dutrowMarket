@@ -16,16 +16,7 @@ public final class Strings {
 	public static final String ANON_TYPE = "anon";
 
 	// COMMANDS
-	public static final String GET_ACCOUNTS = "Get Accounts";
-	public static final String GET_ACCOUNT = "Get Account";
-	public static final String LIST_OPEN_AUCTIONS = "List Open Auctions";
-	public static final String GET_AUCTION = "Get Auction";
 	public static final String CREATE_ACCOUNT = "Create Account";
-	public static final String RESET_ALL = "Reset All";
-	public static final String POPULATE = "Populate";
-	public static final String CREATE_AUCTION = "Create Auction";
-	public static final String GET_USER_AUCTIONS = "Get User Auctions";
-	public static final String PLACE_BID = "Place Bid";
 	public static final String PLACE_ORDER = "Place Order";
 
 	public static final String UNKNOWN_COMMAND_URL = "/WEB-INF/content/UnknownCommand.jsp";

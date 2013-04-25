@@ -31,6 +31,8 @@ public class OrderMgmtImplTest extends JPATestBase {
 		BidAccount ba1 = orderManager
 				.createAccount("dan", "ddutrow", "passwdd");
 		BidAccount ba2 = orderManager.getAccount("dan");
+		Assert.assertNotNull("Created account null", ba1);
+		Assert.assertNotNull("Retrieved account null", ba2);
 		Assert.assertEquals(ba1.getSalesAccount(), ba2.getSalesAccount());
 		Assert.assertEquals(ba1.getSalesPassword(), ba2.getSalesPassword());
 	}
@@ -38,8 +40,10 @@ public class OrderMgmtImplTest extends JPATestBase {
 	@Test
 	public void testOrderManager() {
 		log.info("testOrderManager");
+		BidAccount ba = testSupport.createBidder();
+		orderManager.createAccount(ba);
 		log.info("createOrder - create a record within bidbot that indicates the sale and maximum bid. This may require some stubbing in project 1.");
-		BidOrder bidOrder = testSupport.createOrder();
+		BidOrder bidOrder = testSupport.createOrder(ba);
 		Assert.assertNotNull("Test Support created a null bidOrder", bidOrder);
 		orderManager.createAccount(bidOrder.getBidder());
 		orderManager.createOrder(bidOrder);
@@ -98,7 +102,9 @@ public class OrderMgmtImplTest extends JPATestBase {
 	 */
 	@Test
 	public void testGetOrderStatus() {
-		BidOrder bo = testSupport.createOrder();
+		BidAccount ba = testSupport.createBidder();
+		orderManager.createAccount(ba);
+		BidOrder bo = testSupport.createOrder(ba);
 		orderManager.createAccount(bo.getBidder());
 		orderManager.createOrder(bo);
 		boolean orderStatus = orderManager.getOrderStatus(bo.getBidOrderId());
@@ -112,7 +118,9 @@ public class OrderMgmtImplTest extends JPATestBase {
 	 */
 	@Test
 	public void testPlaceBid() {
-		BidOrder bo = testSupport.createOrder();
+		BidAccount ba = testSupport.createBidder();
+		orderManager.createAccount(ba);
+		BidOrder bo = testSupport.createOrder(ba);
 		orderManager.createAccount(bo.getBidder());
 		orderManager.createOrder(bo);
 		Assert.assertTrue(orderManager.placeBid(bo, 5f));

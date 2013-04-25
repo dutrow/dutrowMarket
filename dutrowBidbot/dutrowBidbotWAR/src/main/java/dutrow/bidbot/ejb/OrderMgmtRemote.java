@@ -14,7 +14,7 @@ import dutrow.bidbot.bo.BidOrder;
  */
 @Remote
 public interface OrderMgmtRemote {
-	boolean createOrder(BidOrder order);
+	long createOrder(BidOrder order);
 	BidOrder getOrder(long bidOrderId);
 	boolean placeBid(BidOrder order, float bid);
 	boolean endOrder(long bidOrderId); // complete order processing once auction has closed and note if won.

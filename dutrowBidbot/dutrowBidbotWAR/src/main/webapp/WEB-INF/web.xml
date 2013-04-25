@@ -18,10 +18,10 @@
         <url-pattern>/model/admin/handler</url-pattern>
     </servlet-mapping>
     
-    <!-- 
+ 
     <servlet>
         <servlet-name>UserHandler</servlet-name>
-        <servlet-class>dutrow.sales.web.MgmtServlet
+        <servlet-class>dutrow.bidbot.web.BidServlet
         </servlet-class>
         <init-param>      
             <param-name>type</param-name>
@@ -35,7 +35,8 @@
     
     <servlet>
         <servlet-name>AnonHandler</servlet-name>
-        <servlet-class>dutrow.sales.web.MgmtServlet
+        <servlet-class>dutrow.bidbot.web.BidServlet
+        
         </servlet-class>
         <init-param>      
             <param-name>type</param-name>
@@ -46,6 +47,6 @@
         <servlet-name>AnonHandler</servlet-name>
         <url-pattern>/model/anon/handler</url-pattern>
     </servlet-mapping>
- -->
+ 
 
 </web-app>

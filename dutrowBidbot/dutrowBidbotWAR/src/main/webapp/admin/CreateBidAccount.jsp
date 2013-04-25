@@ -6,11 +6,11 @@
     <h2>Create Bid Account</h2>    
     
     <form method="GET" 
-        action="<%=request.getContextPath()%>/model/user/handler">
-        userId: <input type="text" name="userId" size="25" value="1"/><p/>   
-        accountId : <input type="text" name="account" size="25" value="buyer1"/><p/>
-        password : <input type="number" name="password" size="25" value="2.0"/><p/>         
-        <input type="submit" name="command" value="Create Account"/>
+        action="<%=request.getContextPath()%>/model/admin/handler">
+		userId: <input type="text" name="userId" size="25" value="bidbotboy"/><p/>   
+        accountId : <input type="text" name="accountId" size="25" value="buyer1"/><p/>
+        password : <input type="password" name="password" size="25" value="P@$$W0rD"/><p/>
+		<input type="submit" name="command" value="Create Account"/>
     </form>
 </body>
 </html>

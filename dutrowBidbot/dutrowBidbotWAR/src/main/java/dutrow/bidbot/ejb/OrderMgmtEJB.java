@@ -8,6 +8,9 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import dutrow.bidbot.bl.OrderMgmt;
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
@@ -15,23 +18,27 @@ import dutrow.bidbot.cdi.BidbotOrderManager;
 import dutrow.bidbot.dao.BidAccountDAO;
 
 import dutrow.bidbot.dao.BidAccountDAO;
+import dutrow.bidbot.web.PlaceOrder;
 
 /**
  * @author dutroda1
  * 
  */
 @Stateless
-@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-public class OrderMgmtEJB implements OrderMgmtRemote{
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
+public class OrderMgmtEJB implements OrderMgmtRemote {
+	private static final Log log = LogFactory.getLog(OrderMgmtEJB.class);
+
 	@Inject
 	private BidAccountDAO dao;
 
-	@Inject 
+	@Inject
 	@BidbotOrderManager
 	private OrderMgmt orderMgmt;
 
-	public boolean createOrder(BidOrder order) {
-		return orderMgmt.createOrder(order);
+	public long createOrder(BidOrder order) {
+		boolean b = orderMgmt.createOrder(order);
+		return order.getBidOrderId();
 	}
 
 	public BidOrder getOrder(long bidOrderId) {
@@ -54,7 +61,8 @@ public class OrderMgmtEJB implements OrderMgmtRemote{
 		return orderMgmt.createAccount(ba);
 	}
 
-	public BidAccount createAccount(String userId, String accountId, String passwd) {
+	public BidAccount createAccount(String userId, String accountId,
+			String passwd) {
 		return orderMgmt.createAccount(userId, accountId, passwd);
 	}
 

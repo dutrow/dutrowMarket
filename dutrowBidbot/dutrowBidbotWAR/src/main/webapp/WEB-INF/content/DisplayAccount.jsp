@@ -17,12 +17,12 @@
             <jsp:scriptlet>
                 if(o != null) {
                     BidAccount a = (BidAccount)o;
-                    String acct = a.getSalesAccount();
                     String uid = a.getUserId();
+                    String acct = a.getSalesAccount();
                     String passwd = a.getSalesPassword();
             </jsp:scriptlet>
-            <li>Account: <%= acct %></li>
             <li>User Id: <%= uid %></li>
+            <li>Account Id: <%= acct %></li>
             <li>Password: <%= passwd %></li>
             <jsp:scriptlet>
                 }

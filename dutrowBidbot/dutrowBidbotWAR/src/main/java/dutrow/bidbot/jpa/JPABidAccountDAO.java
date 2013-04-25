@@ -35,13 +35,14 @@ public class JPABidAccountDAO extends JPADAO implements BidAccountDAO {
 	 * )
 	 */
 	@Override
-	public BidAccount createAccount(BidAccount accountDetails) {
+	public String createAccount(BidAccount accountDetails) {
 		try {
 			em.persist(accountDetails);
 		} catch (RuntimeException ex) {
+			log.warn("error creating account " + accountDetails, ex);
 			throw new DAOException("troubles: " + ex.toString(), ex);
 		}
-		return accountDetails;
+		return accountDetails.getUserId();
 	}
 
 	/*
@@ -54,6 +55,7 @@ public class JPABidAccountDAO extends JPADAO implements BidAccountDAO {
 		try {
 			return em.find(BidAccount.class, userId);
 		} catch (RuntimeException ex) {
+			log.warn("error on getAccountById: " + userId, ex);
 			throw new DAOException("troubles: " + ex.toString(), ex);
 		}
 
@@ -123,11 +125,13 @@ public class JPABidAccountDAO extends JPADAO implements BidAccountDAO {
 
 		try {
 
-			BidOrder existingOrder = em.find(BidOrder.class,
-					order.getBidOrderId());
-			if (existingOrder != null) {
-				log.warn("BidOrder already exists, not creating");
-				return false;
+			if (order.getBidOrderId() != 0){
+				BidOrder existingOrder = em.find(BidOrder.class,
+						order.getBidOrderId());
+				if (existingOrder != null) {
+					log.warn("BidOrder already exists, not creating");
+					return false;
+				}
 			}
 
 			BidAccount bidder = order.getBidder();
@@ -137,6 +141,7 @@ public class JPABidAccountDAO extends JPADAO implements BidAccountDAO {
 			}
 
 			em.persist(order);
+			log.info("BidOrder created id: " + order.getBidOrderId());
 
 		} catch (RuntimeException ex) {
 			throw new DAOException("troubles: " + ex.toString(), ex);

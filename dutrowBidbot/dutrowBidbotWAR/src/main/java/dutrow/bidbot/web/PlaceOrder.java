@@ -21,13 +21,18 @@ import dutrow.bidbot.ejb.OrderMgmtRemote;
 
 /**
  * @author dutroda1
- *
+ * 
  */
 public class PlaceOrder extends Handler {
 	private static final Log log = LogFactory.getLog(PlaceOrder.class);
-	
-	/* (non-Javadoc)
-	 * @see dutrow.bidbot.web.Handler#handle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, javax.servlet.ServletContext, dutrow.bidbot.ejb.OrderMgmtRemote, dutrow.bidbot.ejb.BidbotUtilRemote)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * dutrow.bidbot.web.Handler#handle(javax.servlet.http.HttpServletRequest,
+	 * javax.servlet.http.HttpServletResponse, javax.servlet.ServletContext,
+	 * dutrow.bidbot.ejb.OrderMgmtRemote, dutrow.bidbot.ejb.BidbotUtilRemote)
 	 */
 	@Override
 	public void handle(HttpServletRequest request,
@@ -35,8 +40,7 @@ public class PlaceOrder extends Handler {
 			OrderMgmtRemote orderMgmt, BidbotUtilRemote support)
 			throws ServletException, IOException {
 
-
-		try{
+		try {
 			String userId = request.getParameter("userId");
 			String auctionStr = request.getParameter("auctionId");
 			int auctionId = Integer.parseInt(auctionStr);
@@ -44,14 +48,24 @@ public class PlaceOrder extends Handler {
 			float startBid = Float.parseFloat(startStr);
 			String maxStr = request.getParameter("max");
 			float maxBid = Float.parseFloat(maxStr);
-			
+
 			BidAccount bidder = orderMgmt.getAccount(userId);
-			BidOrder order = new BidOrder( auctionId,  startBid,  maxBid,
-					bidder);
-			boolean success = orderMgmt.createOrder(order);
-			if (success){
-				request.setAttribute(Strings.ORDER_PARAM, order);
+
+			if (bidder == null) {
+				request.setAttribute(Strings.EXCEPTION_PARAM,
+						new IllegalArgumentException(
+								"Bid Account does not exist"));
+				RequestDispatcher rd = context
+						.getRequestDispatcher(Strings.DISPLAY_EXCEPTION);
+				rd.forward(request, response);
 			}
+
+			BidOrder order = new BidOrder(auctionId, startBid, maxBid, bidder);
+			order.setBidOrderId(orderMgmt.createOrder(order));
+			
+			log.info("bid order created id: " + order.getBidOrderId());
+			request.setAttribute(Strings.ORDER_PARAM, order);
+	
 			RequestDispatcher rd = context
 					.getRequestDispatcher(Strings.DISPLAY_ORDER_URL);
 			rd.forward(request, response);

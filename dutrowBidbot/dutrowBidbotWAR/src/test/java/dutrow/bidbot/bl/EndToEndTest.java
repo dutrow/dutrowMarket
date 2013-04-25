@@ -49,7 +49,7 @@ public class EndToEndTest extends JPATestBase{
 		Assert.assertNotNull("Account Creation: " + bidder);
 		
 		//createOrder - create a record within bidbot that indicates the sale and maximum bid. This may require some stubbing in project 1.
-		BidOrder bidOrder = testSupport.createOrder();
+		BidOrder bidOrder = testSupport.createOrder(bidder);
 		orderManager.createOrder(bidOrder);
 		//placeBid - place a bid that is higher than the current bid for an open auction but less than the order maximum. This will require some stubbing for project1.
 		float newBid = 10f;

@@ -28,7 +28,9 @@
 		<li>startBid <%=sb%></li>
 		<li>maxBid <%=mb%></li>
 		<li>finalBid <%=fb%></li>
-		
+		<jsp:scriptlet>
+		}
+		</jsp:scriptlet>
 	</ul>
 	<p />
 	

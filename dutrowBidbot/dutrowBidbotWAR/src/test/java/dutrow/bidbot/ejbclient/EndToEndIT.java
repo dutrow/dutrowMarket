@@ -37,7 +37,7 @@ public class EndToEndIT extends Support {
 		assertNotNull("jndi.name.registrar not supplied", orderJNDI);
 		assertNotNull("jndi.name.registrar not supplied", utilJNDI);
 
-		log.debug("order jndi name:" + testUtil);
+		log.debug("order jndi name:" + testSupport);
 	
 		try {
 			orderManager = (OrderMgmtRemote) jndi.lookup(orderJNDI);
@@ -56,14 +56,14 @@ public class EndToEndIT extends Support {
 
 		configureJndi();
 
-		log.debug("testSupport=" + testUtil);
+		log.debug("testSupport=" + testSupport);
 	}
 
 	@Test
 	public void endToEnd() {
 
 		// reset databases
-		boolean isReset = testUtil.reset();
+		boolean isReset = testSupport.reset();
 		Assert.assertTrue(isReset);
 		
 		/*
