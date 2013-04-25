@@ -78,6 +78,12 @@ public class OrderMgmtImpl implements OrderMgmt {
 	 */
 	@Override
 	public boolean createAccount(BidAccount ba) {
+		if (ba == null)
+			log.warn("BidAccount is null");
+		
+		if (accountDAO == null)
+			log.error("AccountDAO is null");
+		
 		if (accountDAO.getAccountById(ba.getUserId()) == null) {
 			accountDAO.createAccount(ba);
 			return true;

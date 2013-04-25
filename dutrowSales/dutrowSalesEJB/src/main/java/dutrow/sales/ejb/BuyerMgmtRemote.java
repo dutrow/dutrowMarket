@@ -22,14 +22,14 @@ import dutrow.sales.dto.ImageDTO;
 public interface BuyerMgmtRemote {
 	Collection<AuctionDTO> getOpenAuctions();
 
-	AuctionDTO getAuctionDTO(long auction) throws BuyerMgmtException;
-	Collection<ImageDTO> getAuctionImages(long auctionId) throws BuyerMgmtException;
-	Collection<BidDTO> listMyBids(String userId) throws BuyerMgmtException;
-	Collection<BidDTO> listMyOpenBids(String userId) throws BuyerMgmtException;
+	AuctionDTO getAuctionDTO(long auction) throws BuyerMgmtRemoteException;
+	Collection<ImageDTO> getAuctionImages(long auctionId) throws BuyerMgmtRemoteException;
+	Collection<BidDTO> listMyBids(String userId) throws BuyerMgmtRemoteException;
+	Collection<BidDTO> listMyOpenBids(String userId) throws BuyerMgmtRemoteException;
 
-	BidResultDTO placeBid(String userId, long auctionId, float bidValue) throws BuyerMgmtException;
-	boolean placeMultiBid(String userId, long auctionId, float [] bidValues) throws BuyerMgmtException;
+	BidResultDTO placeBid(String userId, long auctionId, float bidValue) throws BuyerMgmtRemoteException;
+	boolean placeMultiBid(String userId, long auctionId, float [] bidValues) throws BuyerMgmtRemoteException;
 	
-	AuctionItem getAuction(long auction) throws BuyerMgmtException;
+	AuctionItem getAuction(long auction) throws BuyerMgmtRemoteException;
 
 }

@@ -1,12 +1,14 @@
-package dutrow.bidbot.ejbclient;
 /**
  * 
  */
-
+package dutrow.bidbot.ejbclient;
 
 import static org.junit.Assert.assertNotNull;
 
-import javax.inject.Inject;
+import java.util.Calendar;
+import java.util.Collection;
+
+import javax.ejb.EJB;
 import javax.naming.NamingException;
 
 import junit.framework.Assert;
@@ -16,7 +18,16 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import dutrow.bidbot.ejb.OrderMgmtRemote;
+import dutrow.sales.dto.AccountDTO;
+import dutrow.sales.dto.AuctionDTO;
+import dutrow.sales.dto.BidDTO;
+import dutrow.sales.dto.BidResultDTO;
+import dutrow.sales.ejb.AccountMgmtRemote;
+import dutrow.sales.ejb.AccountMgmtRemoteException;
+import dutrow.sales.ejb.BuyerMgmtRemote;
+import dutrow.sales.ejb.BuyerMgmtRemoteException;
+import dutrow.sales.ejb.ParserRemote;
+import dutrow.sales.ejb.SellerMgmtRemote;
 
 /**
  * @author dutroda1
@@ -25,28 +36,52 @@ import dutrow.bidbot.ejb.OrderMgmtRemote;
 public class EndToEndIT extends Support {
 	private static final Log log = LogFactory.getLog(EndToEndIT.class);
 
-	private static final String orderJNDI = System
-			.getProperty(
-					"jndi.name.registrar",
-					"dutrowBidbotWAR/OrderMgmtEJB!dutrow.bidbot.ejb.OrderMgmtRemote");
 	
 	
-	private OrderMgmtRemote orderManager;
+/*	 
+				
+	@EJB(lookup="ejb:dutrowSalesEAR/dutrowSalesEJB/SellerMgmtEJB!dutrow.sales.ejb.SellerMgmtRemote")
+	private SellerMgmtRemote sellerManager;
+
+	private static final String buyerJNDI = 
+					"java:jboss/dutrowSalesEAR/dutrowSalesEJB/BuyerMgmtEJB!dutrow.sales.ejb.BuyerMgmtRemote";
+	@EJB
+	private BuyerMgmtRemote buyerManager;
+
+	private static final String accountJNDI = 
+					"java:jboss/dutrowSalesEAR/dutrowSalesEJB/AccountMgmtEJB!dutrow.sales.ejb.AccountMgmtRemote";
+	@EJB
+	private AccountMgmtRemote accountManager;
+
+	public static final String parserJNDI = 
+					"java:jboss/dutrowSalesEAR/dutrowSalesEJB/ParserEJB!dutrow.sales.ejb.ParserRemote";
+	@EJB
+	private static ParserRemote parser;
 
 	public void configureJndi() {
-		assertNotNull("jndi.name.registrar not supplied", orderJNDI);
-		assertNotNull("jndi.name.registrar not supplied", utilJNDI);
+		assertNotNull("jndi.name.registrar not supplied", sellerJNDI);
+		assertNotNull("jndi.name.registrar not supplied", buyerJNDI);
+		assertNotNull("jndi.name.registrar not supplied", accountJNDI);
 
-		log.debug("order jndi name:" + testSupport);
-	
+		log.debug("seller jndi name:" + sellerJNDI);
+		log.debug("account jndi name:" + accountJNDI);
+		log.debug("buyer jndi name:" + buyerJNDI);
+		log.debug("parser jndi name: " + parserJNDI);
+
 		try {
-			orderManager = (OrderMgmtRemote) jndi.lookup(orderJNDI);
-			
+			sellerManager = (SellerMgmtRemote) jndi.lookup(sellerJNDI);
+			accountManager = (AccountMgmtRemote) jndi.lookup(accountJNDI);
+			buyerManager = (BuyerMgmtRemote) jndi.lookup(buyerJNDI);
+			parser = (ParserRemote) jndi.lookup(parserJNDI);
 		} catch (NamingException ne) {
 			log.warn(ne.getMessage());
 			log.warn(ne.getExplanation());
 		}
-		log.debug("accountManager=" + orderManager);
+		log.debug("sellerManager=" + sellerManager);
+		log.debug("accountManager=" + accountManager);
+		log.debug("buyerManager=" + buyerManager);
+		log.debug("parser=" + parser);
+
 	}
 
 	@Before
@@ -60,13 +95,11 @@ public class EndToEndIT extends Support {
 	}
 
 	@Test
-	public void endToEnd() {
+	public void endToEnd() throws BuyerMgmtRemoteException {
 
 		// reset databases
 		boolean isReset = testSupport.reset();
 		Assert.assertTrue(isReset);
-		
-		/*
 
 		// ingest data
 		try {
@@ -83,10 +116,10 @@ public class EndToEndIT extends Support {
 		AccountDTO buyer2 = new AccountDTO("buyer2", "Ralph", "D.", "Semmel",
 				"Ralph.Semmel@jhuapl.edu");
 		try {
-			orderManager.createAccountDTO(seller);
-			orderManager.createAccountDTO(buyer1);
-			orderManager.createAccountDTO(buyer2);
-		} catch (AccountMgmtException e) {
+			accountManager.createAccountDTO(seller);
+			accountManager.createAccountDTO(buyer1);
+			accountManager.createAccountDTO(buyer2);
+		} catch (AccountMgmtRemoteException e) {
 			Assert.fail("Create accounts failed");
 		}
 
@@ -111,7 +144,7 @@ public class EndToEndIT extends Support {
 		AuctionDTO gotAuction = null;
 		try {
 			gotAuction = buyerManager.getAuctionDTO(auction.id);
-		} catch (BuyerMgmtException e) {
+		} catch (BuyerMgmtRemoteException e) {
 			Assert.fail("Buyer manager threw exception on getAuctionDTO");
 		}
 		Assert.assertEquals("requested " + auction.id + " and retreived "
@@ -142,6 +175,7 @@ public class EndToEndIT extends Support {
 				gotAuction.bids.size() >= 1);
 		// TODO: Assert.assertTrue("Buyer2's bids not entered",
 		// gotAuction.bids.size() >= 2);
-*/
+
 	}
+	*/
 }

@@ -64,10 +64,13 @@ public class OrderMgmtIT extends Support {
 	@Test
 	public void testCreateOrder() {
 		BidAccount ba = testSupport.createBidder();
+		Assert.assertNotNull("BidAccount is null", ba);
 		orderManager.createAccount(ba);
 		BidOrder bo1 = new BidOrder(3, 4.5f, 7.5f, ba);
-		Assert.assertNotSame("Create order problem", 0, orderManager.createOrder(bo1));
-		BidOrder bo2 = orderManager.getOrder(bo1.getBidOrderId());
+		bo1.setBidOrderId(orderManager.createOrder(bo1));
+		long bid1 = bo1.getBidOrderId();
+		Assert.assertNotSame("Create order problem", 0, bid1);
+		BidOrder bo2 = orderManager.getOrder(bid1);
 		Assert.assertNotNull("returned BidOrder is null", bo2);
 		Assert.assertEquals("Auction Id Test", bo1.getAuctionId(),
 				bo2.getAuctionId());
@@ -85,6 +88,7 @@ public class OrderMgmtIT extends Support {
 	@Test
 	public void testPlaceBid() {
 		BidAccount ba = testSupport.createBidder();
+		Assert.assertNotNull("BidAccount is null", ba);
 		orderManager.createAccount(ba);
 		BidOrder bo = testSupport.createOrder(ba);
 		orderManager.createAccount(bo.getBidder());
@@ -99,9 +103,11 @@ public class OrderMgmtIT extends Support {
 	@Test
 	public void testEndOrder() {
 		BidAccount ba = testSupport.createBidder();
+		Assert.assertNotNull("BidAccount is null", ba);
 		orderManager.createAccount(ba);
 		BidOrder bo = new BidOrder(3, 4.5f, 7.5f, ba);
-		Assert.assertNotSame("Create Order", 0, orderManager.createOrder(bo));
+		bo.setBidOrderId(orderManager.createOrder(bo));
+		Assert.assertNotSame("Create Order", 0, bo.getBidOrderId());
 
 		boolean endorder = orderManager.endOrder(bo.getBidOrderId());
 		Assert.assertTrue("Order not properly ended.", endorder);
@@ -113,10 +119,11 @@ public class OrderMgmtIT extends Support {
 	@Test
 	public void testGetOrderStatus() {
 		BidAccount ba = testSupport.createBidder();
+		Assert.assertNotNull("BidAccount is null", ba);
 		orderManager.createAccount(ba);
 		BidOrder bo = testSupport.createOrder(ba);
 		orderManager.createAccount(bo.getBidder());
-		orderManager.createOrder(bo);
+		bo.setBidOrderId(orderManager.createOrder(bo));
 		boolean orderStatus = orderManager.getOrderStatus(bo.getBidOrderId());
 		Assert.assertFalse(orderStatus);
 

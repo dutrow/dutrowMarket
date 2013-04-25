@@ -66,11 +66,11 @@ Testing:
 2.	Provide JUnit tests that verify the extra business logic functionality of eBidbot interfacing with eSales.
 		[INCOMPLETE]
 3.	Provide JUnit tests that verify the EJB functionality of eBidbot accessed through its remote interface.
-		[INCOMPLETE]
+		[dutrow.bidbot.ejbclient.OrderMgmtIT]
 4.	Perform an end-to-end use case to do the following. 
 		This must be demonstrated in an automated JUnit test 
 			[dutrowSalesTest/src/test/java/dutrow.sales.ejbclient.EndToEndIT]
-		Then be manually implementable using the Web UI.
+		Then be manually implementable using the Web UI. [ mvn pre-integration-test ]
 				
 
 

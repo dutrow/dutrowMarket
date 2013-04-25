@@ -21,7 +21,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import dutrow.sales.bl.BuyerMgmt;
-import dutrow.sales.bl.BuyerMgmtException;
 import dutrow.sales.bo.AuctionItem;
 import dutrow.sales.bo.Bid;
 import dutrow.sales.bo.BidResult;
@@ -114,7 +113,7 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	}
 
 	@Override
-	public AuctionItem getAuction(long auction) throws BuyerMgmtException {
+	public AuctionItem getAuction(long auction) throws BuyerMgmtRemoteException {
 		log.debug("*** getAccount() *** ");
 
 		try {
@@ -122,12 +121,12 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 		} catch (Throwable ex) {
 			log.error(ex);
 			ctx.setRollbackOnly();
-			throw new BuyerMgmtException(ex.toString());
+			throw new BuyerMgmtRemoteException(ex.toString());
 		}
 	}
 
 	@Override
-	public AuctionDTO getAuctionDTO(long auction) throws BuyerMgmtException {
+	public AuctionDTO getAuctionDTO(long auction) throws BuyerMgmtRemoteException {
 		log.debug("*** getAuctionDTO ***");
 		return DTOConversionUtil.convertAuctionItem(getAuction(auction));
 	}
@@ -227,7 +226,7 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	 */
 	@Override
 	public boolean placeMultiBid(String userId, long auctionId,
-			float[] bidValues) throws BuyerMgmtException {
+			float[] bidValues) throws BuyerMgmtRemoteException {
 		log.debug("*** placeMultiBid() ***");
 
 		for (float bidValue : bidValues) {

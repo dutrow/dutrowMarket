@@ -13,10 +13,10 @@ import dutrow.sales.dto.AccountDTO;
  */
 @Remote
 public interface AccountMgmtRemote {
-	boolean createAccountDTO(AccountDTO accountDetails) throws AccountMgmtException;
-	AccountDTO getAccountDTO(String userString) throws AccountMgmtException;
-    boolean updateAccountDTO(AccountDTO accountDetails) throws AccountMgmtException;
-	boolean closeAccountDTO(String userId) throws AccountMgmtException;
-	Collection<AccountDTO> getAccounts(int index, int count) throws AccountMgmtException;
+	boolean createAccountDTO(AccountDTO accountDetails) throws AccountMgmtRemoteException;
+	AccountDTO getAccountDTO(String userString) throws AccountMgmtRemoteException;
+    boolean updateAccountDTO(AccountDTO accountDetails) throws AccountMgmtRemoteException;
+	boolean closeAccountDTO(String userId) throws AccountMgmtRemoteException;
+	Collection<AccountDTO> getAccounts(int index, int count) throws AccountMgmtRemoteException;
     
 }

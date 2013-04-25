@@ -31,12 +31,12 @@ import dutrow.sales.dto.DTOConversionUtil;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	private static final Log log = LogFactory.getLog(AccountMgmtEJB.class);
-	
+
 	@Inject
 	private AccountMgmt accountManager;
 
 	@PostConstruct
-	 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public void init() {
 		try {
 			log.debug("**** init ****");
@@ -132,12 +132,16 @@ public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	 */
 	@Override
 	public boolean createAccountDTO(AccountDTO accountDetails)
-			throws AccountMgmtException {
+			throws AccountMgmtRemoteException {
 		log.debug("*** createAccountDTO() *** ");
-		
+
 		Account acct = DTOConversionUtil.convertAccountDTO(accountDetails);
-		
-		createAccount(acct);
+
+		try {
+			createAccount(acct);
+		} catch (AccountMgmtException e) {
+			throw new AccountMgmtRemoteException(e);
+		}
 
 		return true;
 	}
@@ -149,12 +153,17 @@ public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	 */
 	@Override
 	public AccountDTO getAccountDTO(String userString)
-			throws AccountMgmtException {
+			throws AccountMgmtRemoteException {
 		log.debug("*** getAccountDTO() *** ");
-		
-		Account acct = getAccount(userString);
+
+		Account acct;
+		try {
+			acct = getAccount(userString);
+		} catch (AccountMgmtException e) {
+			throw new AccountMgmtRemoteException(e);
+		}
 		AccountDTO adto = DTOConversionUtil.convertAccount(acct);
-		
+
 		return adto;
 	}
 
@@ -167,50 +176,61 @@ public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	 */
 	@Override
 	public boolean updateAccountDTO(AccountDTO accountDetails)
-			throws AccountMgmtException {
+			throws AccountMgmtRemoteException {
 		log.debug("*** updateAccountDTO() *** ");
 
 		Account acct = DTOConversionUtil.convertAccountDTO(accountDetails);
-				
-		
-		updateAccount(acct);
+
+		try {
+			updateAccount(acct);
+		} catch (AccountMgmtException e) {
+			throw new AccountMgmtRemoteException(e);
+		}
 
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see dutrow.sales.ejb.AccountMgmtRemote#closeAccountDTO(java.lang.String)
 	 */
 	@Override
-	public boolean closeAccountDTO(String userId) throws AccountMgmtException {
-		return this.closeAccount(userId);
+	public boolean closeAccountDTO(String userId)
+			throws AccountMgmtRemoteException {
+		try {
+			return this.closeAccount(userId);
+		} catch (AccountMgmtException e) {
+			throw new AccountMgmtRemoteException(e);
+		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see dutrow.sales.ejb.AccountMgmtRemote#getAccounts(int, int)
 	 */
 	@Override
 	public Collection<AccountDTO> getAccounts(int index, int count)
-			throws AccountMgmtException {
+			throws AccountMgmtRemoteException {
 		log.debug("*** getAccounts() *** ");
 
 		Collection<AccountDTO> returnedDTOs = new ArrayList<AccountDTO>(count);
-		
+
 		try {
-			Collection<Account> accounts = accountManager.getAccounts(index, count);
-			
+			Collection<Account> accounts = accountManager.getAccounts(index,
+					count);
+
 			for (Account account : accounts) {
 				returnedDTOs.add(DTOConversionUtil.convertAccount(account));
 			}
-			
+
 		} catch (Throwable ex) {
 			log.error(ex);
-			throw new AccountMgmtException(ex.toString());
+			throw new AccountMgmtRemoteException(ex.toString());
 		}
-		
+
 		return returnedDTOs;
 	}
-	
-	
 
 }

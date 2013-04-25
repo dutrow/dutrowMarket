@@ -4,10 +4,8 @@
 package dutrow.sales.ejbclient;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 import java.util.Calendar;
-import java.util.Collection;
 
 import javax.ejb.EJBException;
 import javax.naming.NamingException;
@@ -19,13 +17,10 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import dutrow.sales.bl.BuyerMgmtException;
 import dutrow.sales.dto.AccountDTO;
 import dutrow.sales.dto.AuctionDTO;
-import dutrow.sales.dto.BidDTO;
-import dutrow.sales.dto.BidResultDTO;
-import dutrow.sales.dto.ImageDTO;
 import dutrow.sales.ejb.BuyerMgmtRemote;
+import dutrow.sales.ejb.BuyerMgmtRemoteException;
 
 /**
  * @author dutroda1
@@ -85,7 +80,7 @@ public class TransactionDemonstrationIT extends Support {
 	}
 
 	@Test
-	public void transactionDemonstration() throws BuyerMgmtException {
+	public void transactionDemonstration() throws BuyerMgmtRemoteException {
 		log.debug("*** transactionDemonstration() *** ");
 
 		try {
@@ -105,7 +100,7 @@ public class TransactionDemonstrationIT extends Support {
 			} else {
 				Assert.fail("transactions were not rolled back");
 			}
-		} catch (BuyerMgmtException e) {
+		} catch (BuyerMgmtRemoteException e) {
 			log.warn("error when gettingAuctionDTO", e);
 		}
 

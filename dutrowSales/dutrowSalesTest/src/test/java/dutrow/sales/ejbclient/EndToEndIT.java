@@ -17,14 +17,14 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import dutrow.sales.bl.AccountMgmtException;
-import dutrow.sales.bl.BuyerMgmtException;
 import dutrow.sales.dto.AccountDTO;
 import dutrow.sales.dto.AuctionDTO;
 import dutrow.sales.dto.BidDTO;
 import dutrow.sales.dto.BidResultDTO;
 import dutrow.sales.ejb.AccountMgmtRemote;
+import dutrow.sales.ejb.AccountMgmtRemoteException;
 import dutrow.sales.ejb.BuyerMgmtRemote;
+import dutrow.sales.ejb.BuyerMgmtRemoteException;
 import dutrow.sales.ejb.ParserRemote;
 import dutrow.sales.ejb.SellerMgmtRemote;
 import ejava.util.ejb.EJBClient;
@@ -95,7 +95,7 @@ public class EndToEndIT extends Support {
 	}
 
 	@Test
-	public void endToEnd() throws BuyerMgmtException {
+	public void endToEnd() throws BuyerMgmtRemoteException {
 
 		// reset databases
 		boolean isReset = testSupport.resetAll();
@@ -119,7 +119,7 @@ public class EndToEndIT extends Support {
 			accountManager.createAccountDTO(seller);
 			accountManager.createAccountDTO(buyer1);
 			accountManager.createAccountDTO(buyer2);
-		} catch (AccountMgmtException e) {
+		} catch (AccountMgmtRemoteException e) {
 			Assert.fail("Create accounts failed");
 		}
 
@@ -144,7 +144,7 @@ public class EndToEndIT extends Support {
 		AuctionDTO gotAuction = null;
 		try {
 			gotAuction = buyerManager.getAuctionDTO(auction.id);
-		} catch (BuyerMgmtException e) {
+		} catch (BuyerMgmtRemoteException e) {
 			Assert.fail("Buyer manager threw exception on getAuctionDTO");
 		}
 		Assert.assertEquals("requested " + auction.id + " and retreived "

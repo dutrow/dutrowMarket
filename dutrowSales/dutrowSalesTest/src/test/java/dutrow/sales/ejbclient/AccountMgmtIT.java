@@ -17,6 +17,7 @@ import org.junit.Test;
 import dutrow.sales.bl.AccountMgmtException;
 import dutrow.sales.dto.AccountDTO;
 import dutrow.sales.ejb.AccountMgmtRemote;
+import dutrow.sales.ejb.AccountMgmtRemoteException;
 
 /**
  * @author dutroda1
@@ -70,7 +71,7 @@ public class AccountMgmtIT extends Support {
 				"jcstaff@gmail.com");
 		try {
 			accountManager.createAccountDTO(jim);
-		} catch (AccountMgmtException e) {
+		} catch (AccountMgmtRemoteException e) {
 			log.warn(e.getMessage());
 		}
 	}
@@ -81,7 +82,7 @@ public class AccountMgmtIT extends Support {
 		AccountDTO twin = null;
 		try {
 			twin = accountManager.getAccountDTO(dan.userId);
-		} catch (AccountMgmtException e) {
+		} catch (AccountMgmtRemoteException e) {
 			log.warn(e.getMessage());
 		}
 		Assert.assertNotNull("Account not found", twin);
@@ -98,7 +99,7 @@ public class AccountMgmtIT extends Support {
 		try {
 			retrieved = accountManager.getAccountDTO("dutrow");
 			log.info("retrieved: " + retrieved.toString());
-		} catch (AccountMgmtException e) {
+		} catch (AccountMgmtRemoteException e) {
 			log.warn(e.getMessage());
 		}
 		Assert.assertNotNull("Could not retrieve account", retrieved);
@@ -108,7 +109,7 @@ public class AccountMgmtIT extends Support {
 		try {
 			Assert.assertTrue("Could not update account",
 					accountManager.updateAccountDTO(retrieved));
-		} catch (AccountMgmtException e) {
+		} catch (AccountMgmtRemoteException e) {
 			log.warn(e.getMessage());
 		}
 
@@ -121,14 +122,14 @@ public class AccountMgmtIT extends Support {
 				"jcstaff@gmail.com");
 		try {
 			accountManager.createAccountDTO(jim);
-		} catch (AccountMgmtException e) {
+		} catch (AccountMgmtRemoteException e) {
 			log.warn(e.getMessage());
 		}
 		log.info("testAccountManager::closeAccount");
 		try {
 			Assert.assertTrue("Could not close account",
 					accountManager.closeAccountDTO(jim.userId));
-		} catch (AccountMgmtException e) {
+		} catch (AccountMgmtRemoteException e) {
 			log.warn(e.getMessage());
 		}
 	}

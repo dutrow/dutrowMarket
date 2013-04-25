@@ -25,6 +25,7 @@ import dutrow.sales.dto.BidDTO;
 import dutrow.sales.dto.BidResultDTO;
 import dutrow.sales.dto.ImageDTO;
 import dutrow.sales.ejb.BuyerMgmtRemote;
+import dutrow.sales.ejb.BuyerMgmtRemoteException;
 
 /**
  * @author dutroda1
@@ -91,14 +92,14 @@ public class BuyerMgmtIT extends Support {
 	}
 
 	@Test
-	public void testGetAuction() throws BuyerMgmtException {
+	public void testGetAuction() throws BuyerMgmtRemoteException {
 		log.debug("*** testGetAuction() *** ");
 		AuctionDTO theOpenAuction = buyerManager.getAuctionDTO(auction.id);
 		Assert.assertNotNull("The Open Auction is null", theOpenAuction);
 	}
 
 	@Test
-	public void testGetAuctionImages() throws BuyerMgmtException {
+	public void testGetAuctionImages() throws BuyerMgmtRemoteException {
 		log.debug("*** testGetAuctionImages() *** ");
 		// TODO: add an image to an auction
 		Collection<ImageDTO> images = buyerManager.getAuctionImages(auction.id);
@@ -108,7 +109,7 @@ public class BuyerMgmtIT extends Support {
 	}
 
 	@Test
-	public void testListMyBids() throws BuyerMgmtException {
+	public void testListMyBids() throws BuyerMgmtRemoteException {
 		log.info("*** testListMyBids() *** ");
 		Collection<BidDTO> bids = buyerManager.listMyBids(bidder.userId);
 		Assert.assertNotNull("listMyBids returned null", bids);
@@ -118,7 +119,7 @@ public class BuyerMgmtIT extends Support {
 	}
 
 	@Test
-	public void testListMyOpenBids() throws BuyerMgmtException {
+	public void testListMyOpenBids() throws BuyerMgmtRemoteException {
 		log.debug("*** testListMyOpenBids() *** ");
 		Collection<BidDTO> bids = buyerManager.listMyOpenBids(bidder.userId);
 		Assert.assertNotNull("listMyBids returned null", bids);
@@ -130,7 +131,7 @@ public class BuyerMgmtIT extends Support {
 	}
 
 	@Test
-	public void testPlaceBid() throws BuyerMgmtException {
+	public void testPlaceBid() throws BuyerMgmtRemoteException {
 		log.debug("*** testPlaceBid() *** ");
 		BidResultDTO one = buyerManager.placeBid(bidder.userId, auction.id,
 				2.00f);

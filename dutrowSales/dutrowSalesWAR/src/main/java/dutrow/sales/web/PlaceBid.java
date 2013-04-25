@@ -15,11 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import dutrow.sales.bl.BuyerMgmtException;
 import dutrow.sales.dto.AuctionDTO;
 import dutrow.sales.dto.BidResultDTO;
 import dutrow.sales.ejb.AccountMgmtRemote;
 import dutrow.sales.ejb.BuyerMgmtRemote;
+import dutrow.sales.ejb.BuyerMgmtRemoteException;
 import dutrow.sales.ejb.ParserRemote;
 import dutrow.sales.ejb.SellerMgmtRemote;
 import dutrow.sales.ejb.SupportRemote;
@@ -72,7 +72,7 @@ public class PlaceBid extends Handler {
 			
 		
 			
-		} catch (BuyerMgmtException ex) {
+		} catch (BuyerMgmtRemoteException ex) {
 			log.fatal("error making bid:" + ex, ex);
 			request.setAttribute(Strings.EXCEPTION_PARAM, ex);
 			RequestDispatcher rd = context
