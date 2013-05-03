@@ -85,6 +85,7 @@ public class SupportEJB implements SupportRemote {
 	}
 
 	@Override
+	//@RolesAllowed({"admin"})
 	public boolean resetAll() {
 		return testUtil.resetAll();
 	}

@@ -34,8 +34,8 @@
 			<artifactId>eSalesTestUtil</artifactId>
 			<version>3.0.2013.1</version>
 
-			<exclusions>
-				<!-- these won't be needed on server -->
+			<!-- exclusions>
+				< these won't be needed on server>
 				<exclusion>
 					<groupId>stax</groupId>
 					<artifactId>stax-api</artifactId>
@@ -52,7 +52,7 @@
 					<groupId>com.sun.xml.bind</groupId>
 					<artifactId>jaxb-impl</artifactId>
 				</exclusion>
-			</exclusions>
+			</exclusions -->
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

@@ -4,8 +4,8 @@
 package dutrow.bidbot.ejbclient;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
+import javax.ejb.EJB;
 import javax.naming.NamingException;
 
 import org.apache.commons.logging.Log;
@@ -17,8 +17,6 @@ import org.junit.Test;
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
 import dutrow.bidbot.ejb.OrderMgmtRemote;
-import dutrow.sales.dto.AccountDTO;
-import dutrow.sales.ejb.AccountMgmtRemote;
 
 /**
  * @author dutroda1
@@ -31,6 +29,7 @@ public class OrderMgmtIT extends Support {
 			.getProperty(
 					"jndi.name.registrar",
 					"dutrowBidbotWAR/OrderMgmtEJB!dutrow.bidbot.ejb.OrderMgmtRemote");
+	@EJB
 	private OrderMgmtRemote orderManager;
 
 
