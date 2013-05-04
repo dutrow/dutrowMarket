@@ -46,8 +46,7 @@ public class GetUserAuctions extends Handler {
 			SupportRemote support) throws ServletException, IOException {
 
 		try{
-			String userId = (String) request
-					.getParameter(Strings.ID_PARAM);
+			String userId = request.getRemoteUser();
 			
 			Collection<AuctionDTO> openAuctions = sellerMgmt.getUserAuctions();
 			request.setAttribute(Strings.AUCTIONS_PARAM, openAuctions);

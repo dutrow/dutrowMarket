@@ -11,9 +11,9 @@ public final class Strings {
 	public static final String COMMAND_PARAM = "command";
 	public static final String EXCEPTION_PARAM = "exception";
 	public static final String HANDLER_TYPE_KEY = "type";
-	public static final String ADMIN_TYPE = "admin";
-	public static final String USER_TYPE = "user";
-	public static final String ANON_TYPE = "anon";
+	public static final String ADMIN_TYPE = "esales-admin";
+	public static final String USER_TYPE = "esales-user";
+	public static final String ANON_TYPE = "known";
 
 	// COMMANDS
 	public static final String GET_ACCOUNTS = "Get Accounts";

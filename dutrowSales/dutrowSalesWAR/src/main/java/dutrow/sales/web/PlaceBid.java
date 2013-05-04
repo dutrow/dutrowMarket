@@ -54,7 +54,7 @@ public class PlaceBid extends Handler {
 		 */
 
 		String auctionIdStr = request.getParameter("auction");
-		String bidderIdStr = request.getParameter("bidder");
+		String bidderIdStr = request.getRemoteUser();
 		String bidAmountStr = request.getParameter("amount");
 		
 		long auctionId = Integer.parseInt(auctionIdStr);

@@ -53,7 +53,7 @@ public class CreateAuction extends Handler {
 		String description = request.getParameter("description");
 		String stString = request.getParameter("startTime");
 		String etString = request.getParameter("endTime");
-		String seller = request.getParameter("seller");
+		String seller = request.getRemoteUser();
 		String price = request.getParameter("price");
 		String open = request.getParameter("open");
 

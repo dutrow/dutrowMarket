@@ -6,11 +6,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +33,9 @@ public class MgmtServlet extends HttpServlet {
 
 	private Map<String, Handler> handlers = new HashMap<String, Handler>();
 
+	@Resource(name="httpPort")
+    Integer httpPort;
+	
 	/**
 	 * This will get automatically inject when running within the application
 	 * server.
@@ -201,5 +206,31 @@ public class MgmtServlet extends HttpServlet {
 	public void destroy() {
 		log.debug("destroy() called");
 	}
+	
+	private class Logout extends Handler {
+
+		/* (non-Javadoc)
+		 * @see dutrow.sales.web.Handler#handle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, javax.servlet.ServletContext, dutrow.sales.ejb.BuyerMgmtRemote, dutrow.sales.ejb.AccountMgmtRemote, dutrow.sales.ejb.SellerMgmtRemote, dutrow.sales.ejb.ParserRemote, dutrow.sales.ejb.SupportRemote)
+		 */
+		@Override
+		public void handle(HttpServletRequest request,
+				HttpServletResponse response, ServletContext context,
+				BuyerMgmtRemote buyerMgmt, AccountMgmtRemote accountMgmt,
+				SellerMgmtRemote sellerMgmt, ParserRemote parser,
+				SupportRemote support) throws ServletException, IOException {
+            request.getSession().invalidate();
+            
+            //switch back to straight HTTP            
+            String contextPath = new StringBuilder()
+                .append("http://")
+                .append(request.getServerName())
+                .append(":")
+                .append(httpPort)
+                .append(request.getContextPath())
+                .toString();            
+            
+            response.sendRedirect(contextPath + Strings.MAIN_PAGE);
+        }
+    }
 
 }
