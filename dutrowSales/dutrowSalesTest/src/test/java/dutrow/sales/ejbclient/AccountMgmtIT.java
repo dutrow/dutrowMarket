@@ -14,7 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import dutrow.sales.bl.AccountMgmtException;
 import dutrow.sales.dto.AccountDTO;
 import dutrow.sales.ejb.AccountMgmtRemote;
 import dutrow.sales.ejb.AccountMgmtRemoteException;
@@ -54,7 +53,7 @@ public class AccountMgmtIT extends Support {
 	public void setUp() throws Exception {
 		super.setUp();
 
-		log.debug("Set up for AccountMgmtIT");
+		log.debug(" **** Set up for AccountMgmtIT **** ");
 
 		configureJndi();
 
@@ -66,7 +65,7 @@ public class AccountMgmtIT extends Support {
 
 	@Test
 	public void testCreateAccount() {
-		log.info("testCreateAccount");
+		log.info(" **** testCreateAccount **** ");
 		AccountDTO jim = new AccountDTO("jcs", "Jim", "C", "Stafford",
 				"jcstaff@gmail.com");
 		try {
@@ -78,7 +77,7 @@ public class AccountMgmtIT extends Support {
 
 	@Test
 	public void testGetAccount() {
-		log.info("testGetAccount");
+		log.info(" **** testGetAccount **** ");
 		AccountDTO twin = null;
 		try {
 			twin = accountManager.getAccountDTO(dan.userId);
@@ -93,8 +92,9 @@ public class AccountMgmtIT extends Support {
 	}
 
 	@Test
-	public void testUpdateAccount() {
-		log.info("testUpdateAccount");
+	public void testUpdateAccount() throws NamingException {
+		log.info(" **** testUpdateAccount **** ");
+		runAs(user1User, user1Password);
 		AccountDTO retrieved = null;
 		try {
 			retrieved = accountManager.getAccountDTO("dutrow");
@@ -116,9 +116,10 @@ public class AccountMgmtIT extends Support {
 	}
 
 	@Test
-	public void testCloseAccount() {
-		log.info("testCloseAccount");
-		AccountDTO jim = new AccountDTO("jcs", "Jim", "C", "Stafford",
+	public void testCloseAccount() throws NamingException {
+		log.info(" **** testCloseAccount **** ");
+		runAs(user1User, user1Password);
+		AccountDTO jim = new AccountDTO(user1User, "Jim", "C", "Stafford",
 				"jcstaff@gmail.com");
 		try {
 			accountManager.createAccountDTO(jim);
@@ -128,7 +129,7 @@ public class AccountMgmtIT extends Support {
 		log.info("testAccountManager::closeAccount");
 		try {
 			Assert.assertTrue("Could not close account",
-					accountManager.closeAccountDTO(jim.userId));
+					accountManager.closeAccountDTO());
 		} catch (AccountMgmtRemoteException e) {
 			log.warn(e.getMessage());
 		}

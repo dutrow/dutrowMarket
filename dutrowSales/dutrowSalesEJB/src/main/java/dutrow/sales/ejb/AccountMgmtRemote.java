@@ -16,7 +16,7 @@ public interface AccountMgmtRemote {
 	boolean createAccountDTO(AccountDTO accountDetails) throws AccountMgmtRemoteException;
 	AccountDTO getAccountDTO(String userString) throws AccountMgmtRemoteException;
     boolean updateAccountDTO(AccountDTO accountDetails) throws AccountMgmtRemoteException;
-	boolean closeAccountDTO(String userId) throws AccountMgmtRemoteException;
+	boolean closeAccountDTO() throws AccountMgmtRemoteException;
 	Collection<AccountDTO> getAccounts(int index, int count) throws AccountMgmtRemoteException;
     
 }

@@ -80,13 +80,12 @@ public class TransactionDemonstrationIT extends Support {
 	}
 
 	@Test
-	public void transactionDemonstration() throws BuyerMgmtRemoteException {
+	public void transactionDemonstration() throws BuyerMgmtRemoteException, NamingException {
 		log.debug("*** transactionDemonstration() *** ");
-
+		runAs(user1User, user1Password);
 		try {
 			float[] bidarray = { 1.0f, 2.0f, 0.30f };
-			boolean result = buyerManager.placeMultiBid(bidder.userId,
-					auction.id, bidarray);
+			buyerManager.placeMultiBid(auction.id, bidarray);
 		} catch (EJBException expected) {
 			log.info("encountered expected exception:" + expected.getMessage());
 		}

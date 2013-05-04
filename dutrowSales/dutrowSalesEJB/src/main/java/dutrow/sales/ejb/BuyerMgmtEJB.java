@@ -10,6 +10,8 @@ import java.util.Collection;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
@@ -37,6 +39,10 @@ import dutrow.sales.dto.ImageDTO;
  */
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
+@RolesAllowed({"esales-user", "esales-trusted", "esales-admin"})
+//esales-admin		these users will be able to perform management and test functions on eSales.
+//esales-trusted	these users can bid on auctions on behalf of a specified user.
+//esales-user		these users can create and auction, and bid on auctions. This role is also required to subscribe to JMS auction events.
 public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 		javax.ejb.SessionSynchronization {
 	private static final Log log = LogFactory.getLog(BuyerMgmtEJB.class);
@@ -102,8 +108,10 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	 * @see dutrow.sales.ejb.BuyerMgmtRemote#listOpenAuctions()
 	 */
 	@Override
+	@PermitAll
 	public Collection<AuctionDTO> getOpenAuctions() {
 		log.debug("*** listOpenAuctions() *** ");
+		log.debug("caller=" + ctx.getCallerPrincipal().getName());
 		Collection<AuctionItem> oas = buyerMgmt.getOpenAuctions();
 		Collection<AuctionDTO> openAuctions = new ArrayList<AuctionDTO>();
 		for (AuctionItem oa : oas) {
@@ -115,7 +123,7 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	@Override
 	public AuctionItem getAuction(long auction) throws BuyerMgmtRemoteException {
 		log.debug("*** getAccount() *** ");
-
+		log.debug("caller=" + ctx.getCallerPrincipal().getName());
 		try {
 			return buyerMgmt.getAuction(auction);
 		} catch (Throwable ex) {
@@ -128,6 +136,7 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	@Override
 	public AuctionDTO getAuctionDTO(long auction) throws BuyerMgmtRemoteException {
 		log.debug("*** getAuctionDTO ***");
+		log.debug("caller=" + ctx.getCallerPrincipal().getName());
 		return DTOConversionUtil.convertAuctionItem(getAuction(auction));
 	}
 
@@ -137,8 +146,10 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	 * @see dutrow.sales.ejb.BuyerMgmtRemote#getAuctionImages(java.lang.String)
 	 */
 	@Override
+	@RolesAllowed({"esales-user"})
 	public Collection<ImageDTO> getAuctionImages(long auctionId) {
 		log.debug("*** getAuctionImages() ***");
+		log.debug("caller=" + ctx.getCallerPrincipal().getName());
 		Collection<ImageDTO> imageBytes = new ArrayList<ImageDTO>();
 
 		AuctionItem ai = buyerMgmt.getAuction(auctionId);
@@ -157,10 +168,11 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	 * @see dutrow.sales.ejb.BuyerMgmtLocal#listMyBids(java.lang.String)
 	 */
 	@Override
-	public Collection<BidDTO> listMyBids(String userId) {
+	public Collection<BidDTO> listMyBids() {
 		log.debug("*** listMyBids() ***");
+		log.debug("caller=" + ctx.getCallerPrincipal().getName());
 		Collection<BidDTO> bids = new ArrayList<BidDTO>();
-		Collection<Bid> listedBids = buyerMgmt.listBids(userId);
+		Collection<Bid> listedBids = buyerMgmt.listBids(ctx.getCallerPrincipal().getName());
 
 		for (Bid b : listedBids) {
 			BidDTO bd = DTOConversionUtil.convertBid(b);
@@ -177,10 +189,11 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	 * @see dutrow.sales.ejb.BuyerMgmtLocal#listMyOpenBids(java.lang.String)
 	 */
 	@Override
-	public Collection<BidDTO> listMyOpenBids(String userId) {
+	public Collection<BidDTO> listMyOpenBids() {
 		log.debug("*** listMyOpenBids() ***");
+		log.debug("caller=" + ctx.getCallerPrincipal().getName());
 		Collection<BidDTO> bids = new ArrayList<BidDTO>();
-		Collection<Bid> listedBids = buyerMgmt.listOpenBids(userId);
+		Collection<Bid> listedBids = buyerMgmt.listOpenBids(ctx.getCallerPrincipal().getName());
 
 		for (Bid b : listedBids)
 			bids.add(DTOConversionUtil.convertBid(b));
@@ -195,10 +208,10 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	 * float)
 	 */
 	@Override
-	public BidResultDTO placeBid(String userId, long auctionId, float bidValue) {
+	public BidResultDTO placeBid(long auctionId, float bidValue) {
 		log.debug("*** placeBid() ***");
-
-		BidResult bidResult = buyerMgmt.placeBid(userId, auctionId, bidValue);
+		log.debug("caller=" + ctx.getCallerPrincipal().getName());
+		BidResult bidResult = buyerMgmt.placeBid(ctx.getCallerPrincipal().getName(), auctionId, bidValue);
 
 		if (bidResult.getBid() == null) {
 			ctx.setRollbackOnly();
@@ -209,11 +222,11 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	}
 
 	@Override
-	public BidResultDTO placeBidLocal(String userId, long auctionId,
+	public BidResultDTO placeBidLocal(long auctionId,
 			float bidValue) {
 		log.debug("*** placeBidLocal() ***");
-
-		BidResult bidResult = buyerMgmt.placeBid(userId, auctionId, bidValue);
+		log.debug("caller=" + ctx.getCallerPrincipal().getName());
+		BidResult bidResult = buyerMgmt.placeBid(ctx.getCallerPrincipal().getName(), auctionId, bidValue);
 
 		return DTOConversionUtil.convertBidResult(bidResult);
 	}
@@ -225,12 +238,12 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	 * long, float[])
 	 */
 	@Override
-	public boolean placeMultiBid(String userId, long auctionId,
+	public boolean placeMultiBid(long auctionId,
 			float[] bidValues) throws BuyerMgmtRemoteException {
 		log.debug("*** placeMultiBid() ***");
-
+		log.debug("caller=" + ctx.getCallerPrincipal().getName());
 		for (float bidValue : bidValues) {
-			BidResult bidResult = buyerMgmt.placeBid(userId, auctionId,
+			BidResult bidResult = buyerMgmt.placeBid(ctx.getCallerPrincipal().getName(), auctionId,
 					bidValue);
 
 			if (bidResult.getBid() == null) {

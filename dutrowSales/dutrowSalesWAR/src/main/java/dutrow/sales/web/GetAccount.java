@@ -4,7 +4,6 @@
 package dutrow.sales.web;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;

@@ -49,7 +49,7 @@ public class GetUserAuctions extends Handler {
 			String userId = (String) request
 					.getParameter(Strings.ID_PARAM);
 			
-			Collection<AuctionDTO> openAuctions = sellerMgmt.getUserAuctions(userId);
+			Collection<AuctionDTO> openAuctions = sellerMgmt.getUserAuctions();
 			request.setAttribute(Strings.AUCTIONS_PARAM, openAuctions);
 			
 			RequestDispatcher rd = context

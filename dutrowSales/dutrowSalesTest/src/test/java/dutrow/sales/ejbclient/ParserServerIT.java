@@ -7,11 +7,8 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 import dutrow.sales.ejb.ParserRemote;
-
-
 import ejava.util.ejb.EJBClient;
 
 public class ParserServerIT {
@@ -44,7 +41,7 @@ public class ParserServerIT {
 
     //@Test//tested in EndToEndIT
     public void testIngest() throws Exception {
-        log.info("*** testIngest ***");
+        log.info(" **** testIngest **** ");
         parser.ingest();
     }
 }

@@ -24,11 +24,11 @@ public interface BuyerMgmtRemote {
 
 	AuctionDTO getAuctionDTO(long auction) throws BuyerMgmtRemoteException;
 	Collection<ImageDTO> getAuctionImages(long auctionId) throws BuyerMgmtRemoteException;
-	Collection<BidDTO> listMyBids(String userId) throws BuyerMgmtRemoteException;
-	Collection<BidDTO> listMyOpenBids(String userId) throws BuyerMgmtRemoteException;
+	Collection<BidDTO> listMyBids() throws BuyerMgmtRemoteException;
+	Collection<BidDTO> listMyOpenBids() throws BuyerMgmtRemoteException;
 
-	BidResultDTO placeBid(String userId, long auctionId, float bidValue) throws BuyerMgmtRemoteException;
-	boolean placeMultiBid(String userId, long auctionId, float [] bidValues) throws BuyerMgmtRemoteException;
+	BidResultDTO placeBid(long auctionId, float bidValue) throws BuyerMgmtRemoteException;
+	boolean placeMultiBid(long auctionId, float [] bidValues) throws BuyerMgmtRemoteException;
 	
 	AuctionItem getAuction(long auction) throws BuyerMgmtRemoteException;
 

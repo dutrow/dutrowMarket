@@ -15,6 +15,6 @@ import dutrow.sales.dto.AuctionDTO;
  */
 @Local
 public interface SellerMgmtLocal {
-	Collection<AuctionDTO> getUserAuctions(String userId);
-	Collection<AuctionDTO> getOpenUserAuctions(String userId);
+	Collection<AuctionDTO> getUserAuctions();
+	Collection<AuctionDTO> getOpenUserAuctions();
 }

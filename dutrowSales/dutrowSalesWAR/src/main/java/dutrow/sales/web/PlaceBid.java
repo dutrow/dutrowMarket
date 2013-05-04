@@ -60,7 +60,7 @@ public class PlaceBid extends Handler {
 		long auctionId = Integer.parseInt(auctionIdStr);
 		float bidValue = Float.parseFloat(bidAmountStr);
 		try {
-			BidResultDTO result = buyerMgmt.placeBid(bidderIdStr, auctionId, bidValue);
+			BidResultDTO result = buyerMgmt.placeBid(auctionId, bidValue);
 			
 			if (result.bid != null){
 				AuctionDTO auction = buyerMgmt.getAuctionDTO(auctionId);

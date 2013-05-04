@@ -8,7 +8,10 @@ import java.util.Collection;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -30,11 +33,17 @@ import dutrow.sales.dto.ImageDTO;
  */
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
+@RolesAllowed({"esales-user", "esales-admin"})
+// esales-admin		these users will be able to perform management and test functions on eSales.
+// esales-user		these users can create and auction, and bid on auctions. This role is also required to subscribe to JMS auction events.
 public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 	private static final Log log = LogFactory.getLog(SellerMgmtEJB.class);
 
 	@Inject
 	SellerMgmt sellerMgmt;
+	
+	@Resource
+	protected SessionContext ctx;
 
 	@PostConstruct
 	public void init() {
@@ -60,6 +69,7 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 	 * )
 	 */
 	@Override
+	@RolesAllowed({"esales-user"})
 	public long createAuction(AuctionDTO auction) {
 		log.debug("createAuction");
 		return sellerMgmt.createAuction(DTOConversionUtil
@@ -72,8 +82,9 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 	 * @see dutrow.sales.ejb.SellerMgmtRemote#getUserAuctions(java.lang.String)
 	 */
 	@Override
-	public Collection<AuctionDTO> getUserAuctions(String userId) {
-
+	@RolesAllowed({"esales-user"})
+	public Collection<AuctionDTO> getUserAuctions() {
+		String userId = ctx.getCallerPrincipal().getName();
 		Collection<AuctionItem> auctions = sellerMgmt.getUserAuctions(userId);
 
 		Collection<AuctionDTO> auctionDTOs = new ArrayList<AuctionDTO>();
@@ -91,7 +102,9 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 	 * dutrow.sales.ejb.SellerMgmtLocal#getOpenUserAuctions(java.lang.String)
 	 */
 	@Override
-	public Collection<AuctionDTO> getOpenUserAuctions(String userId) {
+	@RolesAllowed({"esales-user"})
+	public Collection<AuctionDTO> getOpenUserAuctions() {
+		String userId = ctx.getCallerPrincipal().getName();
 		Collection<AuctionItem> auctions = sellerMgmt
 				.getOpenUserAuctions(userId);
 
@@ -108,6 +121,7 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 	 * @see dutrow.sales.ejb.SellerMgmtRemote#getAuction(long)
 	 */
 	@Override
+	@RolesAllowed({"esales-user"})
 	public AuctionDTO getAuction(long auctionId) {
 		AuctionItem ai = sellerMgmt.getAuction(auctionId);
 		return DTOConversionUtil.convertAuctionItem(ai);
@@ -119,6 +133,7 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 	 * @see dutrow.sales.ejb.SellerMgmtRemote#getAuctionImages(long)
 	 */
 	@Override
+	@RolesAllowed({"esales-user"})
 	public Collection<ImageDTO> getAuctionImages(long auctionId) {
 		log.debug("*** getAuctionImages() ***");
 		Collection<ImageDTO> imageBytes = new ArrayList<ImageDTO>();

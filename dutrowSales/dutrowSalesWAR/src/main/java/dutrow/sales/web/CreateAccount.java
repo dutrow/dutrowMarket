@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import dutrow.sales.bl.AccountMgmtException;
 import dutrow.sales.dto.AccountDTO;
 import dutrow.sales.ejb.AccountMgmtRemote;
 import dutrow.sales.ejb.BuyerMgmtRemote;

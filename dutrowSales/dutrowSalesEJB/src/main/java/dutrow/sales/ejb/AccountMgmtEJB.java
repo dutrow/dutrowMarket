@@ -8,7 +8,11 @@ import java.util.Collection;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -29,11 +33,17 @@ import dutrow.sales.dto.DTOConversionUtil;
  */
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
+@RolesAllowed({"esales-admin"})
+//esales-admin		these users will be able to perform management and test functions on eSales.
+//esales-user		these users can create and auction, and bid on auctions. This role is also required to subscribe to JMS auction events.
 public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	private static final Log log = LogFactory.getLog(AccountMgmtEJB.class);
 
 	@Inject
 	private AccountMgmt accountManager;
+	
+	@Resource
+	protected SessionContext ctx;
 
 	@PostConstruct
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -58,6 +68,7 @@ public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	 * @see dutrow.sales.ejb.AccountMgmtLocal#createAccount()
 	 */
 	@Override
+	@PermitAll
 	public Account createAccount(Account accountDetails)
 			throws AccountMgmtException {
 		log.debug("*** createAccount() *** ");
@@ -77,6 +88,7 @@ public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	 * @see dutrow.sales.ejb.AccountMgmtLocal#getAccount()
 	 */
 	@Override
+	@PermitAll
 	public Account getAccount(String userString) throws AccountMgmtException {
 		log.debug("*** getAccount() *** ");
 
@@ -94,6 +106,7 @@ public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	 * @see dutrow.sales.ejb.AccountMgmtLocal#updateAccount()
 	 */
 	@Override
+	@RolesAllowed({"esales-user","esales-admin"})
 	public boolean updateAccount(Account accountDetails)
 			throws AccountMgmtException {
 		log.debug("*** updateAccount() *** ");
@@ -106,6 +119,15 @@ public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 		}
 	}
 
+	// user can close own account
+	@RolesAllowed({"esales-user","esales-admin"})
+	public boolean closeAccount() throws AccountMgmtException {
+		log.debug("*** closeAccount() *** ");
+
+		String userId = ctx.getCallerPrincipal().getName();
+		return closeAccount(userId);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -113,8 +135,7 @@ public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	 */
 	@Override
 	public boolean closeAccount(String userId) throws AccountMgmtException {
-		log.debug("*** closeAccount() *** ");
-
+		log.debug("*** closeAccount(userId) *** ");
 		try {
 			return accountManager.closeAccount(userId);
 		} catch (Throwable ex) {
@@ -131,6 +152,7 @@ public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	 * AccountDTO)
 	 */
 	@Override
+	@PermitAll
 	public boolean createAccountDTO(AccountDTO accountDetails)
 			throws AccountMgmtRemoteException {
 		log.debug("*** createAccountDTO() *** ");
@@ -152,6 +174,7 @@ public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	 * @see dutrow.sales.ejb.AccountMgmtRemote#getAccountDTO(java.lang.String)
 	 */
 	@Override
+	@PermitAll
 	public AccountDTO getAccountDTO(String userString)
 			throws AccountMgmtRemoteException {
 		log.debug("*** getAccountDTO() *** ");
@@ -175,6 +198,7 @@ public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	 * AccountDTO)
 	 */
 	@Override
+	@RolesAllowed({"esales-user","esales-admin"})
 	public boolean updateAccountDTO(AccountDTO accountDetails)
 			throws AccountMgmtRemoteException {
 		log.debug("*** updateAccountDTO() *** ");
@@ -190,12 +214,22 @@ public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 		return true;
 	}
 
+	
+	@Override
+	// user can close own account
+	@RolesAllowed({"esales-user","esales-admin"})
+	public boolean closeAccountDTO() throws AccountMgmtRemoteException {
+		log.debug("*** closeAccount() *** ");
+
+		String userId = ctx.getCallerPrincipal().getName();
+		return closeAccountDTO(userId);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see dutrow.sales.ejb.AccountMgmtRemote#closeAccountDTO(java.lang.String)
 	 */
-	@Override
 	public boolean closeAccountDTO(String userId)
 			throws AccountMgmtRemoteException {
 		try {
@@ -211,6 +245,7 @@ public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	 * @see dutrow.sales.ejb.AccountMgmtRemote#getAccounts(int, int)
 	 */
 	@Override
+	@PermitAll
 	public Collection<AccountDTO> getAccounts(int index, int count)
 			throws AccountMgmtRemoteException {
 		log.debug("*** getAccounts() *** ");

@@ -17,7 +17,7 @@ import dutrow.sales.dto.BidResultDTO;
 @Local
 public interface BuyerMgmtLocal {
 	
-	BidResultDTO placeBidLocal(String userId, long auctionId, float bidValue);
-	Collection<BidDTO> listMyBids(String userId);
-	Collection<BidDTO> listMyOpenBids(String userId);
+	Collection<BidDTO> listMyBids();
+	Collection<BidDTO> listMyOpenBids();
+	BidResultDTO placeBidLocal(long auctionId, float bidValue);
 }

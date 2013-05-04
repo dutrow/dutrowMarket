@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -24,6 +25,8 @@ import ejava.projects.esales.xml.ESalesParser;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
+@RolesAllowed({"esales-admin", "admin"})
+//esales-admin		these users will be able to perform management and test functions on eSales.
 public class ParserEJB implements ParserRemote {
 	@Resource(name = "vals/xmlFile")
 	private static String xmlFile;

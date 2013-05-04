@@ -18,7 +18,6 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import dutrow.sales.bl.BuyerMgmtException;
 import dutrow.sales.dto.AccountDTO;
 import dutrow.sales.dto.AuctionDTO;
 import dutrow.sales.dto.BidDTO;
@@ -65,10 +64,10 @@ public class BuyerMgmtIT extends Support {
 
 		log.debug("*** Set up for BuyerMgmtIT ***");
 		log.debug("testSupport=" + testSupport);
-		seller = new AccountDTO("seller", "John", "s", "Hopkins",
+		seller = new AccountDTO(user1User, "John", "s", "Hopkins",
 				"seller@jhu.edu");
 		testSupport.createAccount(seller);
-		bidder = new AccountDTO("bidder", "Alexander", "X", "Kossiakoff",
+		bidder = new AccountDTO(user2User, "Alexander", "X", "Kossiakoff",
 				"kossi@jhuapl.edu");
 		testSupport.createAccount(bidder);
 		auction = new AuctionDTO("VT Fuse", "Science & Toys",
@@ -92,15 +91,17 @@ public class BuyerMgmtIT extends Support {
 	}
 
 	@Test
-	public void testGetAuction() throws BuyerMgmtRemoteException {
+	public void testGetAuction() throws BuyerMgmtRemoteException, NamingException {
 		log.debug("*** testGetAuction() *** ");
+		runAs(user2User, user2Password);
 		AuctionDTO theOpenAuction = buyerManager.getAuctionDTO(auction.id);
 		Assert.assertNotNull("The Open Auction is null", theOpenAuction);
 	}
 
 	@Test
-	public void testGetAuctionImages() throws BuyerMgmtRemoteException {
+	public void testGetAuctionImages() throws BuyerMgmtRemoteException, NamingException {
 		log.debug("*** testGetAuctionImages() *** ");
+		runAs(user2User, user2Password);
 		// TODO: add an image to an auction
 		Collection<ImageDTO> images = buyerManager.getAuctionImages(auction.id);
 		Assert.assertNotNull("Failure to getAuctionImages for auction: "
@@ -109,9 +110,10 @@ public class BuyerMgmtIT extends Support {
 	}
 
 	@Test
-	public void testListMyBids() throws BuyerMgmtRemoteException {
+	public void testListMyBids() throws BuyerMgmtRemoteException, NamingException {
 		log.info("*** testListMyBids() *** ");
-		Collection<BidDTO> bids = buyerManager.listMyBids(bidder.userId);
+		runAs(user2User, user2Password);
+		Collection<BidDTO> bids = buyerManager.listMyBids();
 		Assert.assertNotNull("listMyBids returned null", bids);
 		for (BidDTO bidDTO : bids) {
 			log.info(bidDTO);
@@ -119,9 +121,10 @@ public class BuyerMgmtIT extends Support {
 	}
 
 	@Test
-	public void testListMyOpenBids() throws BuyerMgmtRemoteException {
+	public void testListMyOpenBids() throws BuyerMgmtRemoteException, NamingException {
 		log.debug("*** testListMyOpenBids() *** ");
-		Collection<BidDTO> bids = buyerManager.listMyOpenBids(bidder.userId);
+		runAs(user2User, user2Password);
+		Collection<BidDTO> bids = buyerManager.listMyOpenBids();
 		Assert.assertNotNull("listMyBids returned null", bids);
 		for (BidDTO bidDTO : bids) {
 			log.info(bidDTO);
@@ -131,17 +134,18 @@ public class BuyerMgmtIT extends Support {
 	}
 
 	@Test
-	public void testPlaceBid() throws BuyerMgmtRemoteException {
+	public void testPlaceBid() throws BuyerMgmtRemoteException, NamingException {
 		log.debug("*** testPlaceBid() *** ");
-		BidResultDTO one = buyerManager.placeBid(bidder.userId, auction.id,
+		runAs(user1User, user1Password);
+		BidResultDTO one = buyerManager.placeBid(auction.id,
 				2.00f);
 		BidResultDTO two = new BidResultDTO();
 		try {
-			two = buyerManager.placeBid(bidder.userId, auction.id, 1.00f);
+			two = buyerManager.placeBid(auction.id, 1.00f);
 		} catch (EJBException e) {
 			log.info("Expected EJB Exception: " + e.getMessage());
 		}
-		BidResultDTO three = buyerManager.placeBid(bidder.userId, auction.id,
+		BidResultDTO three = buyerManager.placeBid(auction.id,
 				3.00f);
 
 		Assert.assertNotNull("First Bid invalid: " + one.result, one.bid);
