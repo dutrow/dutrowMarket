@@ -70,14 +70,14 @@
     
 	<servlet-mapping>
         <servlet-name>AnonHandler</servlet-name>
-        <url-pattern>/model/anon/handler</url-pattern>
+        <url-pattern>/model/handler</url-pattern>
     </servlet-mapping>
     
     
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>admin-access</web-resource-name>
-            <url-pattern>/model/admin/handler</url-pattern>
+            <url-pattern>/model/admin/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>esales-admin</role-name>
@@ -98,6 +98,5 @@
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-    
 
 </web-app>

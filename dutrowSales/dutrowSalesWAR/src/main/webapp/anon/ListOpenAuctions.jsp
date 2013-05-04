@@ -6,7 +6,7 @@
     <h2>List Open Auctions</h2>    
     
     <form method="GET" 
-        action="<%=request.getContextPath()%>/model/anon/handler">
+        action="<%=request.getContextPath()%>/model/handler">
         <input type="submit" name="command" value="List Open Auctions"/>
     </form>
     

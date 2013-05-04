@@ -21,7 +21,7 @@
         
         
         <form method="GET" 
-            action="<%=request.getContextPath()%>/model/anon/handler">
+            action="<%=request.getContextPath()%>/model/handler">
             Amount $: <input type="text" name="amount" size="25"/><p/>   
             <input type="hidden" name="accountNumber" value="<%= acctNum %>"/>
             <input type="submit" name="command" value="Deposit"/>

@@ -6,8 +6,8 @@ Project 3
 
 1.		Provide all functionality from Projects 1 and 2.
 			All functionality is maintained (as submitted) from projects 1 and 2. The following enhancements have been made over previous submissions
-				-
-				-
+				- Changed the bidbot URL to http://localhost:8080/dutrowBidbot
+				- All forms and EJBs that previously required userId inputs are now replaced with context/request-based user credentials.
 				
 2.		Enhance eSales with access restrictions.
 	a.	Assign the EJB to the "other" security domain.
@@ -36,6 +36,7 @@ Project 3
 4.		Enhance eBidbot with access restrictions and the ability to log into eSales.
 	a.	Assign the EJB to the "other" security domain.
 			see: jboss-ejb3.xml - dutrowBidbotWAR/src/main/resources/META-INF
+			
 	b.	Restrict access to the OrderMgmt to users in the ebidbot role once they get beyond creating an account.
 			see: dutrow.bidbot.ejb.OrderMgmtEJB.java in dutrowBidbotWAR/src/main/java
 	c.	Run-as an esales-trusted user when making bids on behalf of a user. This may require the use of a "helper" EJB to encapsulate the scope of the run-as role/identity.
@@ -44,6 +45,7 @@ Project 3
 	a.	Add a valid login to your existsing tests to re-enable them under the newly secured environment.
 			see: runAs(String username, String password) in dutrow.bidbot.ejbclient.Support.java - dutrowBidbotWAR/src/test/java
 			this method is invoked to pass the credentials of valid users for each of the actions
+			
 	b.	Add a new unit test that verifies the access controls of the protected and open methods
 			see: accessControlTest in dutrow.bidbot.ejbclient.AccessControlIT - dutrowBidbotWAR/src/test/java
 			this test mimics most functionality in OrderMgmtIT, except the expected case is failure to call EJBs

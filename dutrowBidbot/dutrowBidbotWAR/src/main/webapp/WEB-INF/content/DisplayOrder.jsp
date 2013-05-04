@@ -5,9 +5,9 @@
 <jsp:directive.page import="java.util.*" />
 <jsp:directive.page import="dutrow.bidbot.bo.*" />
 <html>
-<title>Auction Display</title>
+<title>Bid Order Display</title>
 <body>
-	<h2>Auction Display</h2>
+	<h2>Bid Order Display</h2>
 
 	<jsp:scriptlet>Object o = request.getAttribute("order");</jsp:scriptlet>
 
@@ -16,6 +16,7 @@
 				BidOrder a = (BidOrder) o;
 				long aid = a.getAuctionId();
 				String bid = a.getBidder().getUserId();
+				String salesId = a.getBidder().getSalesAccount();
 				long bo = a.getBidOrderId();
 				float sb = a.getStartBid();
 				float mb = a.getMaxBid();
@@ -24,6 +25,7 @@
 		</jsp:scriptlet>
 		<li>auction id <%=aid%> </a></li>
 		<li>bidder id <%=bid%></li>
+		<li>sales acct id <%=salesId%></li>
 		<li>bid order <%=bo%></li>
 		<li>startBid <%=sb%></li>
 		<li>maxBid <%=mb%></li>

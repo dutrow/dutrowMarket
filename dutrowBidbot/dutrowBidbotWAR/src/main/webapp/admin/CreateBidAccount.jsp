@@ -7,9 +7,9 @@
     
     <form method="GET" 
         action="<%=request.getContextPath()%>/model/admin/handler">
-		userId: <input type="text" name="userId" size="25" value="bidbotboy"/><p/>   
-        accountId : <input type="text" name="accountId" size="25" value="buyer1"/><p/>
-        password : <input type="password" name="password" size="25" value="P@$$W0rD"/><p/>
+		userId: <input type="text" name="userId" size="25" value="user3"/><p/>   
+        accountId : <input type="text" name="accountId" size="25" value="user1"/><p/>
+        password : <input type="password" name="password" size="25" value="password"/><p/>
 		<input type="submit" name="command" value="Create Account"/>
     </form>
 </body>

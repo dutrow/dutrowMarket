@@ -3,8 +3,10 @@
  */
 package dutrow.bidbot.ejb;
 
+import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -34,6 +36,9 @@ import dutrow.bidbot.web.PlaceOrder;
 public class OrderMgmtEJB implements OrderMgmtRemote {
 	private static final Log log = LogFactory.getLog(OrderMgmtEJB.class);
 
+	@Resource
+	protected SessionContext ctx;
+	
 	@Inject
 	private BidAccountDAO dao;
 
@@ -42,6 +47,11 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 	private OrderMgmt orderMgmt;
 
 	public long createOrder(BidOrder order) {
+		if (order.getBidder().getUserId() != ctx.getCallerPrincipal().getName()){
+			throw new IllegalArgumentException("Logged in user does not match bid order");
+		}
+			
+		
 		boolean b = orderMgmt.createOrder(order);
 		return order.getBidOrderId();
 	}
@@ -51,6 +61,10 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 	}
 
 	public boolean placeBid(BidOrder order, float bid) {
+		if (order.getBidder().getUserId() != ctx.getCallerPrincipal().getName()){
+			throw new IllegalArgumentException("Logged in user does not match bid order");
+		}
+		
 		return orderMgmt.placeBid(order, bid);
 	}
 

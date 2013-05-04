@@ -23,7 +23,6 @@
         Description: <input type="text" name="description" size="75" value="several pounds of course notes and over 16,000 online yahoo forum messages"/><p/>
         Start Time: <input type="text" name="startTime" size="25" value="2001-02-12 00:00:00.0"/><p/>
         End Time: <input type="text" name="endTime" size="25" value="2050-01-01 00:00:00.0"/><p/>
-        seller: <input type="text" name="seller" size="25" value="seller"/><p/>
         asking price: <input type="number" name="price" size="25" value="1"/><p/>
         open: <input type="checkbox" name="open" value="true" checked="checked"/><p/>
         

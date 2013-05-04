@@ -6,7 +6,7 @@
     <h2>Get Auction</h2>    
     
     <form method="GET" 
-        action="<%=request.getContextPath()%>/model/anon/handler">
+        action="<%=request.getContextPath()%>/model/handler">
         Auction Number: <input type="text" name="id" size="25"/><p/>   
         <input type="submit" name="command" value="Get Auction"/>
     </form>

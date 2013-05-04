@@ -6,12 +6,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,9 @@ import dutrow.bidbot.ejb.OrderMgmtRemote;
 public class BidServlet extends HttpServlet {
 	private static final Log log = LogFactory.getLog(BidServlet.class);
 	private Map<String, Handler> handlers = new HashMap<String, Handler>();
+	public static final String LOGOUT_COMMAND = "logout";
+	@Resource(name = "httpPort")
+	Integer httpPort;
 
 	/**
 	 * This will get automatically inject when running within the application
@@ -61,6 +65,9 @@ public class BidServlet extends HttpServlet {
 					.getInitParameter(Strings.HANDLER_TYPE_KEY))) {
 				handlers.put(Strings.PLACE_ORDER, new PlaceOrder());
 			}
+
+			handlers.put(LOGOUT_COMMAND, new Logout());
+
 		} catch (Exception ex) {
 			log.fatal("error initializing handler", ex);
 			throw new ServletException("error initializing handler", ex);
@@ -84,8 +91,8 @@ public class BidServlet extends HttpServlet {
 		BidbotUtilRemote util = injectedBidbotUtil;
 
 		try {
-			if (orderMgmt == null || util == null ) {
-				 // not injected -- manually lookup
+			if (orderMgmt == null || util == null) {
+				// not injected -- manually lookup
 				ServletConfig config = getServletConfig();
 				String ctxFactory = config.getServletContext()
 						.getInitParameter(Context.INITIAL_CONTEXT_FACTORY);
@@ -111,7 +118,7 @@ public class BidServlet extends HttpServlet {
 				util = (BidbotUtilRemote) jndi.lookup(jndiName);
 
 			}
-			if (command != null) {	
+			if (command != null) {
 				Handler handler = handlers.get(command);
 				if (handler != null) {
 					handler.handle(request, response, getServletContext(),
@@ -146,7 +153,7 @@ public class BidServlet extends HttpServlet {
 				}
 			}
 		}
-		
+
 	}
 
 	/**
@@ -160,6 +167,34 @@ public class BidServlet extends HttpServlet {
 
 	public void destroy() {
 		log.debug("destroy() called");
+	}
+
+	private class Logout extends Handler {
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * dutrow.bidbot.web.Handler#handle(javax.servlet.http.HttpServletRequest
+		 * , javax.servlet.http.HttpServletResponse,
+		 * javax.servlet.ServletContext, dutrow.bidbot.ejb.OrderMgmtRemote,
+		 * dutrow.bidbot.ejb.BidbotUtilRemote)
+		 */
+		@Override
+		public void handle(HttpServletRequest request,
+				HttpServletResponse response, ServletContext context,
+				OrderMgmtRemote orderMgmt, BidbotUtilRemote support)
+				throws ServletException, IOException {
+			request.getSession().invalidate();
+
+			// switch back to straight HTTP
+			String contextPath = new StringBuilder().append("http://")
+					.append(request.getServerName()).append(":")
+					.append(httpPort).append(request.getContextPath())
+					.toString();
+
+			response.sendRedirect(contextPath + Strings.MAIN_PAGE);
+		}
 	}
 
 }

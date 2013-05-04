@@ -2,7 +2,35 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0">
 
-	<display-name>Dutrow Sales Web Application</display-name>
+	<display-name>Dutrow Bidbot Web Application</display-name>
+	
+	
+	<env-entry>
+        <env-entry-name>httpPort</env-entry-name>
+        <env-entry-type>java.lang.Integer</env-entry-type>
+        <env-entry-value>${jboss.servlet.port}</env-entry-value>
+    </env-entry> 
+	
+	<login-config>
+        <!-- <auth-method>BASIC</auth-method>
+        <realm-name>dutrowBidbot</realm-name> -->
+        <auth-method>FORM</auth-method>
+        <form-login-config>
+            <form-login-page>/WEB-INF/content/Login.jsp</form-login-page>
+            <form-error-page>/WEB-INF/content/LoginFailure.jsp</form-error-page>
+        </form-login-config>
+    </login-config>
+    
+    <security-role>
+        <role-name>ebidbot-admin</role-name>
+    </security-role>
+    <security-role>
+        <role-name>ebidbot-user</role-name>
+    </security-role>
+    <security-role>
+        <role-name>known</role-name>
+    </security-role>
+	
 	
 	<servlet>
         <servlet-name>AdminHandler</servlet-name>
@@ -10,14 +38,13 @@
         </servlet-class>
         <init-param>      
             <param-name>type</param-name>
-            <param-value>admin</param-value>
+            <param-value>ebidbot-admin</param-value>
         </init-param>
     </servlet>
 	<servlet-mapping>
         <servlet-name>AdminHandler</servlet-name>
         <url-pattern>/model/admin/handler</url-pattern>
     </servlet-mapping>
-    
  
     <servlet>
         <servlet-name>UserHandler</servlet-name>
@@ -25,7 +52,7 @@
         </servlet-class>
         <init-param>      
             <param-name>type</param-name>
-            <param-value>user</param-value>
+            <param-value>ebidbot-user</param-value>
         </init-param>
     </servlet>
 	<servlet-mapping>
@@ -40,13 +67,39 @@
         </servlet-class>
         <init-param>      
             <param-name>type</param-name>
-            <param-value>anon</param-value>
+            <param-value>known</param-value>
         </init-param>
     </servlet>
 	<servlet-mapping>
         <servlet-name>AnonHandler</servlet-name>
-        <url-pattern>/model/anon/handler</url-pattern>
+        <url-pattern>/model/handler</url-pattern>
     </servlet-mapping>
+ 
+     
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>admin-access</web-resource-name>
+            <url-pattern>/model/admin/handler</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ebidbot-admin</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>user-access</web-resource-name>
+            <url-pattern>/model/user/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ebidbot-user</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
  
 
 </web-app>

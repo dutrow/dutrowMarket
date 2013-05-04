@@ -6,7 +6,7 @@
     <h2>Create Account</h2>    
     
     <form method="GET" 
-        action="<%=request.getContextPath()%>/model/anon/handler">
+        action="<%=request.getContextPath()%>/model/handler">
         User ID: <input type="text" name="id" size="25" value="seller"/><p/>
         First Name: <input type="text" name="first" size="25" value="Seller"/><p/>
         Middle Name: <input type="text" name="middle" size="25" value="B"/><p/>

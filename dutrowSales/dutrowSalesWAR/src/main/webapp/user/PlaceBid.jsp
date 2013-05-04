@@ -7,8 +7,7 @@
     
     <form method="GET" 
         action="<%=request.getContextPath()%>/model/user/handler">
-        auction: <input type="text" name="auction" size="25" value="1"/><p/>   
-        bidder : <input type="text" name="bidder" size="25" value="buyer1"/><p/>
+        auction: <input type="text" name="auction" size="25" value="1001"/><p/>   
         amount : <input type="number" name="amount" size="25" value="2.0"/><p/>         
         <input type="submit" name="command" value="Place Bid"/>
     </form>

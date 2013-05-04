@@ -41,7 +41,7 @@ public class PlaceOrder extends Handler {
 			throws ServletException, IOException {
 
 		try {
-			String userId = request.getParameter("userId");
+			String userId = request.getRemoteUser();
 			String auctionStr = request.getParameter("auctionId");
 			int auctionId = Integer.parseInt(auctionStr);
 			String startStr = request.getParameter("start");

@@ -33,6 +33,8 @@ public class MgmtServlet extends HttpServlet {
 
 	private Map<String, Handler> handlers = new HashMap<String, Handler>();
 
+	public static final String LOGOUT_COMMAND = "logout";
+	
 	@Resource(name="httpPort")
     Integer httpPort;
 	
@@ -88,6 +90,9 @@ public class MgmtServlet extends HttpServlet {
 				handlers.put(Strings.CREATE_ACCOUNT, new CreateAccount());
 				handlers.put(Strings.GET_ACCOUNT, new GetAccount());
 			}
+			
+			handlers.put(LOGOUT_COMMAND, new Logout());
+			
 		} catch (Exception ex) {
 			log.fatal("error initializing handler", ex);
 			throw new ServletException("error initializing handler", ex);

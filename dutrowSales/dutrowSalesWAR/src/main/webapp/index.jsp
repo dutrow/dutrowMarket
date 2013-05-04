@@ -48,6 +48,7 @@
     	<li><a href="user/PlaceBid.jsp">Place Bid</a></li>
     </ul>
     
+    <h3><a href="model/handler?command=logout">Logout</a></h3>
     
 </body>
 </html>

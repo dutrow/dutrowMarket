@@ -7,7 +7,6 @@
     
     <form method="GET" 
         action="<%=request.getContextPath()%>/model/user/handler">
-        User id: <input type="text" name="id" size="25"/><p/>
         <input type="submit" name="command" value="Get User Auctions"/>
     </form>
     
