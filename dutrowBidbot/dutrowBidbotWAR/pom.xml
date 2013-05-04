@@ -25,7 +25,7 @@
 			<artifactId>dutrowSalesEJB</artifactId>
 			<version>${project.version}</version>
 			<type>ejb-client</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

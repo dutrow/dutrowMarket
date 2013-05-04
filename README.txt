@@ -8,6 +8,7 @@ Project 3
 			All functionality is maintained (as submitted) from projects 1 and 2. The following enhancements have been made over previous submissions
 				- Changed the bidbot URL to http://localhost:8080/dutrowBidbot
 				- All forms and EJBs that previously required userId inputs are now replaced with context/request-based user credentials.
+				- Added remote calls from eBidbot to eSales
 				
 2.		Enhance eSales with access restrictions.
 	a.	Assign the EJB to the "other" security domain.

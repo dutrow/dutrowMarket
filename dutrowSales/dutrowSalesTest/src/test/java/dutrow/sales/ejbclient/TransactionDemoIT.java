@@ -56,7 +56,7 @@ public class TransactionDemoIT extends Support {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-
+		runAs(admin1User, admin1Password);
 		configureJndi();
 
 		log.debug("*** Set up for BuyerMgmtIT ***");
@@ -77,6 +77,7 @@ public class TransactionDemoIT extends Support {
 				+ seller.userId + " auction.id: " + auction.id);
 
 		Assert.assertNotSame("Auction not created", 0, auction.id);
+		runAs(knownUser, knownPassword);
 	}
 
 	@Test

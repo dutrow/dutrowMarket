@@ -29,7 +29,7 @@ public class Support {
 	protected static final String utilJNDI = System.getProperty(
 			"jndi.name.registrar",
 			"dutrowBidbot/BidbotUtilEJB!dutrow.bidbot.ejb.BidbotUtilRemote");
-			//"dutrowBidbotWAR/BidbotUtilEJB!dutrow.bidbot.ejb.BidbotUtilRemote");
+	// "dutrowBidbotWAR/BidbotUtilEJB!dutrow.bidbot.ejb.BidbotUtilRemote");
 
 	protected BidbotUtilRemote testSupport;
 
@@ -47,35 +47,39 @@ public class Support {
 	protected static final String knownPassword = System.getProperty(
 			"known.password", "password");
 
+	protected static final String admin1User = System.getProperty(
+			"admin1.user", "admin1");
+	protected static final String admin1Password = System.getProperty(
+			"admin1.password", "password");
 	protected static final String admin2User = System.getProperty(
 			"admin2.user", "admin2");
 	protected static final String admin2Password = System.getProperty(
 			"admin2.password", "password");
 
-//	protected static final String syssales1User = System.getProperty(
-//			"syssales1.user", "syssales1");
-//	protected static final String syssales1Password = System.getProperty(
-//			"syssales1.password", "password");
-//	protected static final String sysbidbot1User = System.getProperty(
-//			"sysbidbot1.user", "sysbidbot1");
-//	protected static final String sysbidbot1Password = System.getProperty(
-//			"sysbidbot1.password", "password");
+	protected static final String syssales1User = System.getProperty(
+			"syssales1.user", "syssales1");
+	protected static final String syssales1Password = System.getProperty(
+			"syssales1.password", "password");
+	protected static final String sysbidbot1User = System.getProperty(
+			"sysbidbot1.user", "sysbidbot1");
+	protected static final String sysbidbot1Password = System.getProperty(
+			"sysbidbot1.password", "password");
 
-//	protected static final String user1User = System.getProperty("user1.user",
-//			"user1");
-//	protected static final String user1Password = System.getProperty(
-//			"user1.password", "password");
-//	protected static final String user2User = System.getProperty("user2.user",
-//			"user2");
-//	protected static final String user2Password = System.getProperty(
-//			"user2.password", "password");
+	protected static final String user1User = System.getProperty("user1.user",
+			"user1");
+	protected static final String user1Password = System.getProperty(
+			"user1.password", "password");
+	protected static final String user2User = System.getProperty("user2.user",
+			"user2");
+	protected static final String user2Password = System.getProperty(
+			"user2.password", "password");
 	protected static final String user3User = System.getProperty("user3.user",
 			"user3");
 	protected static final String user3Password = System.getProperty(
 			"user3.password", "password");
 
 	/**
-	 * @throws NamingException 
+	 * @throws NamingException
 	 * @throws java.lang.Exception
 	 */
 	@Before
@@ -111,18 +115,20 @@ public class Support {
 		}
 
 	}
-	
-	protected Context runAs(String username, String password) throws NamingException {
-        if (jndi!=null) {
-        	jndi.close();
-        }
-        Properties env = new Properties();
-        if (username != null) {
-            env.put(Context.SECURITY_PRINCIPAL, username);
-            env.put(Context.SECURITY_CREDENTIALS, password);
-        }
-        log.debug(String.format("%s env=%s", username==null?"anonymous":username, env));
-        jndi=new InitialContext(env);
-        return jndi;
-    }
+
+	protected Context runAs(String username, String password)
+			throws NamingException {
+		if (jndi != null) {
+			jndi.close();
+		}
+		Properties env = new Properties();
+		if (username != null) {
+			env.put(Context.SECURITY_PRINCIPAL, username);
+			env.put(Context.SECURITY_CREDENTIALS, password);
+		}
+		log.debug(String.format("%s env=%s", username == null ? "anonymous"
+				: username, env));
+		jndi = new InitialContext(env);
+		return jndi;
+	}
 }

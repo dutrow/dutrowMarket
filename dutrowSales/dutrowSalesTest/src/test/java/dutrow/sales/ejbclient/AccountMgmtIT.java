@@ -52,6 +52,7 @@ public class AccountMgmtIT extends Support {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
+		runAs(admin1User, admin1Password);
 
 		log.debug(" **** Set up for AccountMgmtIT **** ");
 
@@ -60,7 +61,7 @@ public class AccountMgmtIT extends Support {
 		dan = new AccountDTO("dutrow", "Dan", "Allan", "Dutrow",
 				"dan.dutrow@gmail.com");
 		accountManager.createAccountDTO(dan);
-
+		runAs(knownUser, knownPassword);
 	}
 
 	@Test

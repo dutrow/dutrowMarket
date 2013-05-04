@@ -59,17 +59,19 @@ public class BuyerMgmtIT extends Support {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-
+		runAs(admin1User, admin1Password);
 		configureJndi();
 
 		log.debug("*** Set up for BuyerMgmtIT ***");
 		log.debug("testSupport=" + testSupport);
 		seller = new AccountDTO(user1User, "John", "s", "Hopkins",
 				"seller@jhu.edu");
+		
 		testSupport.createAccount(seller);
 		bidder = new AccountDTO(user2User, "Alexander", "X", "Kossiakoff",
 				"kossi@jhuapl.edu");
 		testSupport.createAccount(bidder);
+		
 		auction = new AuctionDTO("VT Fuse", "Science & Toys",
 				"detonates an explosive device automatically", Calendar
 						.getInstance().getTime(), 18.00f, seller.userId, seller.email, true);
@@ -79,6 +81,7 @@ public class BuyerMgmtIT extends Support {
 				+ seller.userId + " auction.id: " + auction.id);
 
 		Assert.assertNotSame("Auction not created", 0, auction.id);
+		runAs(knownUser, knownPassword);
 	}
 
 	@Test

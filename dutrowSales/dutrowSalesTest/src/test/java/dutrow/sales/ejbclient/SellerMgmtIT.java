@@ -55,7 +55,7 @@ public class SellerMgmtIT extends Support {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-
+		runAs(admin1User, admin1Password);
 		configureJndi();
 
 		log.debug(" **** Set up for SellerMgmtIT **** ");
@@ -78,6 +78,7 @@ public class SellerMgmtIT extends Support {
 		seller = new AccountDTO("seller", "John", "s", "Hopkins",
 				"seller@jhu.edu");
 		testSupport.createAccount(seller);
+		runAs(knownUser, knownPassword);
 
 	}
 

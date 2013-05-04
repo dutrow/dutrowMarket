@@ -92,6 +92,7 @@ public class EndToEndIT extends Support {
 		configureJndi();
 
 		log.debug("testSupport=" + testSupport);
+		runAs(knownUser, knownPassword);
 	}
 
 	@Test
