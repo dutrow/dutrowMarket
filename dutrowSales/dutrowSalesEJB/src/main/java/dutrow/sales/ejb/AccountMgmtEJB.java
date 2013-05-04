@@ -35,7 +35,6 @@ import dutrow.sales.dto.DTOConversionUtil;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @RolesAllowed({"esales-admin"})
 //esales-admin		these users will be able to perform management and test functions on eSales.
-//esales-user		these users can create and auction, and bid on auctions. This role is also required to subscribe to JMS auction events.
 public class AccountMgmtEJB implements AccountMgmtLocal, AccountMgmtRemote {
 	private static final Log log = LogFactory.getLog(AccountMgmtEJB.class);
 

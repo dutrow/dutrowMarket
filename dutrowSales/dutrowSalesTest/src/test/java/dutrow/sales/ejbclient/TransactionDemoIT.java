@@ -26,9 +26,9 @@ import dutrow.sales.ejb.BuyerMgmtRemoteException;
  * @author dutroda1
  * 
  */
-public class TransactionDemonstrationIT extends Support {
+public class TransactionDemoIT extends Support {
 	private static final Log log = LogFactory
-			.getLog(TransactionDemonstrationIT.class);
+			.getLog(TransactionDemoIT.class);
 
 	private static final String registrarJNDI = System
 			.getProperty("jndi.name.registrar",

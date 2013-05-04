@@ -3,6 +3,7 @@
  */
 package dutrow.bidbot.ejb;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -24,6 +25,8 @@ import dutrow.sales.ejb.AccountMgmtRemote;
  */
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
+@RolesAllowed({"ebidbot-admin", "admin"})
+//ebidbot-admin	these users will be able to perform management and test functions on eBidbot.
 public class BidbotUtilEJB implements BidbotUtilRemote {
 	
 	@Inject

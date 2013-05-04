@@ -20,18 +20,17 @@ import dutrow.bidbot.ejb.OrderMgmtRemote;
 
 /**
  * @author dutroda1
- *
+ * 
  */
 public class OrderMgmtIT extends Support {
 	private static Log log = LogFactory.getLog(OrderMgmtIT.class);
-	
-	private static final String registrarJNDI = System
-			.getProperty(
-					"jndi.name.registrar",
-					"dutrowBidbotWAR/OrderMgmtEJB!dutrow.bidbot.ejb.OrderMgmtRemote");
+
+	private static final String registrarJNDI = System.getProperty(
+			"jndi.name.registrar",
+			"dutrowBidbot/OrderMgmtEJB!dutrow.bidbot.ejb.OrderMgmtRemote");
+	// "dutrowBidbotWAR/OrderMgmtEJB!dutrow.bidbot.ejb.OrderMgmtRemote");
 	@EJB
 	private OrderMgmtRemote orderManager;
-
 
 	public void configureJndi() {
 		assertNotNull("jndi.name.registrar not supplied", registrarJNDI);
@@ -47,22 +46,29 @@ public class OrderMgmtIT extends Support {
 	}
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws NamingException
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws NamingException {
 		super.setUp();
 		log.debug("Set up for OrderMgmtIT");
 		configureJndi();
 	}
 
-
 	/**
-	 * Test method for {@link dutrow.bidbot.ejb.OrderMgmtEJB#createOrder(dutrow.bidbot.bo.BidOrder)}.
+	 * Test method for
+	 * {@link dutrow.bidbot.ejb.OrderMgmtEJB#createOrder(dutrow.bidbot.bo.BidOrder)}
+	 * .
+	 * 
+	 * @throws NamingException
 	 */
 	@Test
-	public void testCreateOrder() {
+	public void testCreateOrder() throws NamingException {
+
+		runAs(admin2User, admin2Password);
 		BidAccount ba = testSupport.createBidder();
+
+		runAs(user3User, user3Password);
 		Assert.assertNotNull("BidAccount is null", ba);
 		orderManager.createAccount(ba);
 		BidOrder bo1 = new BidOrder(3, 4.5f, 7.5f, ba);
@@ -82,14 +88,26 @@ public class OrderMgmtIT extends Support {
 	}
 
 	/**
-	 * Test method for {@link dutrow.bidbot.ejb.OrderMgmtEJB#placeBid(dutrow.bidbot.bo.BidOrder, float)}.
+	 * Test method for
+	 * {@link dutrow.bidbot.ejb.OrderMgmtEJB#placeBid(dutrow.bidbot.bo.BidOrder, float)}
+	 * .
+	 * 
+	 * @throws NamingException
 	 */
 	@Test
-	public void testPlaceBid() {
+	public void testPlaceBid() throws NamingException {
+
+		runAs(admin2User, admin2Password);
 		BidAccount ba = testSupport.createBidder();
+
+		runAs(user3User, user3Password);
 		Assert.assertNotNull("BidAccount is null", ba);
 		orderManager.createAccount(ba);
+
+		runAs(admin2User, admin2Password);
 		BidOrder bo = testSupport.createOrder(ba);
+
+		runAs(user3User, user3Password);
 		orderManager.createAccount(bo.getBidder());
 		orderManager.createOrder(bo);
 		Assert.assertTrue(orderManager.placeBid(bo, 5f));
@@ -98,10 +116,16 @@ public class OrderMgmtIT extends Support {
 
 	/**
 	 * Test method for {@link dutrow.bidbot.ejb.OrderMgmtEJB#endOrder(long)}.
+	 * 
+	 * @throws NamingException
 	 */
 	@Test
-	public void testEndOrder() {
+	public void testEndOrder() throws NamingException {
+
+		runAs(admin2User, admin2Password);
 		BidAccount ba = testSupport.createBidder();
+
+		runAs(user3User, user3Password);
 		Assert.assertNotNull("BidAccount is null", ba);
 		orderManager.createAccount(ba);
 		BidOrder bo = new BidOrder(3, 4.5f, 7.5f, ba);
@@ -113,14 +137,25 @@ public class OrderMgmtIT extends Support {
 	}
 
 	/**
-	 * Test method for {@link dutrow.bidbot.ejb.OrderMgmtEJB#getOrderStatus(long)}.
+	 * Test method for
+	 * {@link dutrow.bidbot.ejb.OrderMgmtEJB#getOrderStatus(long)}.
+	 * 
+	 * @throws NamingException
 	 */
 	@Test
-	public void testGetOrderStatus() {
+	public void testGetOrderStatus() throws NamingException {
+
+		runAs(admin2User, admin2Password);
 		BidAccount ba = testSupport.createBidder();
+
+		runAs(user3User, user3Password);
 		Assert.assertNotNull("BidAccount is null", ba);
 		orderManager.createAccount(ba);
+
+		runAs(admin2User, admin2Password);
 		BidOrder bo = testSupport.createOrder(ba);
+
+		runAs(user3User, user3Password);
 		orderManager.createAccount(bo.getBidder());
 		bo.setBidOrderId(orderManager.createOrder(bo));
 		boolean orderStatus = orderManager.getOrderStatus(bo.getBidOrderId());
@@ -128,9 +163,10 @@ public class OrderMgmtIT extends Support {
 
 	}
 
-
 	@Test
-	public void testCreateAccount() {
+	public void testCreateAccount() throws NamingException {
+
+		runAs(user3User, user3Password);
 		BidAccount ba1 = orderManager
 				.createAccount("dan", "ddutrow", "passwdd");
 		BidAccount ba2 = orderManager.getAccount("dan");

@@ -2,6 +2,53 @@ Dan Dutrow
 Enterprise Java
 Spring 2013
 
+Project 3
+
+1.		Provide all functionality from Projects 1 and 2.
+			All functionality is maintained (as submitted) from projects 1 and 2. The following enhancements have been made over previous submissions
+				-
+				-
+				
+2.		Enhance eSales with access restrictions.
+	a.	Assign the EJB to the "other" security domain.
+			see: jboss-ejb3.xml - dutrowSalesEJB/src/main/resources/META-INF
+	b.	Restrict access to the EJB methods seller/buyer account-specific methods to to users within the esales role. 
+			see: dutrow.sales.ejb.*EJB.java - dutrowSalesEJB/src/main/java
+
+		Also restrict them to only working with their own account and derived the account name from their login.
+			-
+	c.	Allow any user to perform read operations.
+			see: @PermitAll in *EJB.java
+	d.	Restrict any administrative functions to the esales-admin role.
+			see: @RolesAllowed({"esales-admin", "admin"}) in SupportEJB.java
+			
+3.		Extend your existing RMI Test project and RMI client(s) to address new authentication requirements.
+	a.	Add a valid login to your existsing tests to re-enable them under the newly secured environment.
+			see: runAs(String username, String password) in dutrow.sales.ejbclient.Support.java - dutrowSalesTest/src/test/java
+			this method is invoked to pass the credentials of valid users for each of the actions
+			
+	b.	Add a new unit test that verifies the access controls of the protected and open methods.
+			see: accessControlTest in dutrow.sales.ejbclient.AccessControlIT - dutrowSalesTest/src/test/java
+			this test mimics most functionality in EndToEndIT, except the expected case is failure to call EJBs
+			look for "Caught EJBAccessException: good!" in test output
+			
+			
+4.		Enhance eBidbot with access restrictions and the ability to log into eSales.
+	a.	Assign the EJB to the "other" security domain.
+			see: jboss-ejb3.xml - dutrowBidbotWAR/src/main/resources/META-INF
+	b.	Restrict access to the OrderMgmt to users in the ebidbot role once they get beyond creating an account.
+			see: dutrow.bidbot.ejb.OrderMgmtEJB.java in dutrowBidbotWAR/src/main/java
+	c.	Run-as an esales-trusted user when making bids on behalf of a user. This may require the use of a "helper" EJB to encapsulate the scope of the run-as role/identity.
+			-
+5.		Extend your existing RMI Test project and RMI client(s) to address new authentication requirements.
+	a.	Add a valid login to your existsing tests to re-enable them under the newly secured environment.
+			see: runAs(String username, String password) in dutrow.bidbot.ejbclient.Support.java - dutrowBidbotWAR/src/test/java
+			this method is invoked to pass the credentials of valid users for each of the actions
+	b.	Add a new unit test that verifies the access controls of the protected and open methods
+			see: accessControlTest in dutrow.bidbot.ejbclient.AccessControlIT - dutrowBidbotWAR/src/test/java
+			this test mimics most functionality in OrderMgmtIT, except the expected case is failure to call EJBs
+			look for "Caught EJBAccessException: good!" in test output
+			
 Project 2
 
 Technical Details:

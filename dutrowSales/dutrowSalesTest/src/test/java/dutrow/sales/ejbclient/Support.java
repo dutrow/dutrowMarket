@@ -90,12 +90,10 @@ public class Support {
 		runAs(admin1User, admin1Password);
 		testSupport.resetAll();
 		log.debug("reset complete");
+		
+		runAs(knownUser, knownPassword);
 	}
 
-	protected Context runAs() throws NamingException {
-    	return runAs(knownUser, knownPassword);
-    }
-	
 	protected Context runAs(String username, String password) throws NamingException {
         if (jndi!=null) {
         	jndi.close();

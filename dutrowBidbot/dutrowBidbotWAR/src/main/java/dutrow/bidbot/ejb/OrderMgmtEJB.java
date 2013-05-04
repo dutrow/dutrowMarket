@@ -3,6 +3,8 @@
  */
 package dutrow.bidbot.ejb;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -26,6 +28,9 @@ import dutrow.bidbot.web.PlaceOrder;
  */
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
+@RolesAllowed({"ebidbot-admin", "ebidbot-user"})
+//ebidbot-admin	these users will be able to perform management and test functions on eBidbot.
+//ebidbot-user	these users can and manage their orders.
 public class OrderMgmtEJB implements OrderMgmtRemote {
 	private static final Log log = LogFactory.getLog(OrderMgmtEJB.class);
 
@@ -57,10 +62,12 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 		return orderMgmt.getOrderStatus(bidOrderId);
 	} // did user win or not
 
+	@PermitAll
 	public boolean createAccount(BidAccount ba) {
 		return orderMgmt.createAccount(ba);
 	}
 
+	@PermitAll
 	public BidAccount createAccount(String userId, String accountId,
 			String passwd) {
 		return orderMgmt.createAccount(userId, accountId, passwd);

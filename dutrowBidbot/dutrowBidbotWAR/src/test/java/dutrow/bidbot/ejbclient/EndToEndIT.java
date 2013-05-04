@@ -36,7 +36,8 @@ import dutrow.sales.ejb.SellerMgmtRemote;
 public class EndToEndIT extends Support {
 	private static final Log log = LogFactory.getLog(EndToEndIT.class);
 
-	
+//  runAs(admin2User, admin2Password);	
+//	runAs(user3User, user3Password);
 	
 /*	 
 				

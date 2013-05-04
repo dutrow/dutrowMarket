@@ -1,5 +1,6 @@
 package dutrow.sales.ejb;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import javax.annotation.PostConstruct;
@@ -42,7 +43,7 @@ public class ParserEJB implements ParserRemote {
 		log.debug("xmlFile=" + xmlFile);
 	}
 
-	public void ingest() throws Exception {
+	public void ingest() throws IOException{
 		log.info("ingest");
 
 		InputStream is = null;
