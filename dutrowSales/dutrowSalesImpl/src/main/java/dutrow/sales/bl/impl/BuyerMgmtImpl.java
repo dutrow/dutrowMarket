@@ -48,7 +48,7 @@ public class BuyerMgmtImpl implements BuyerMgmt {
 	 */
 	@Override
 	public Collection<AuctionItem> getOpenAuctions() {
-		return auctions.getAuctions();
+		return auctions.getOpenAuctions();
 	}
 
 	/* (non-Javadoc)

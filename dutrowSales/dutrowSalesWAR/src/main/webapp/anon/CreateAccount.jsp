@@ -7,7 +7,7 @@
     
     <form method="GET" 
         action="<%=request.getContextPath()%>/model/handler">
-        User ID: <input type="text" name="id" size="25" value="seller"/><p/>
+        User ID: <input type="text" name="id" size="25" value="user1"/><p/>
         First Name: <input type="text" name="first" size="25" value="Seller"/><p/>
         Middle Name: <input type="text" name="middle" size="25" value="B"/><p/>
         Last Name: <input type="text" name="last" size="25" value="Good"/><p/>

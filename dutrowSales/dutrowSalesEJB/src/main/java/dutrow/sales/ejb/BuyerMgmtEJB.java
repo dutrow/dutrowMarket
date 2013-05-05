@@ -42,7 +42,6 @@ import dutrow.sales.dto.ImageDTO;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @RolesAllowed({"esales-user", "esales-admin"})
 //esales-admin		these users will be able to perform management and test functions on eSales.
-//esales-trusted	these users can bid on auctions on behalf of a specified user.
 //esales-user		these users can create and auction, and bid on auctions. This role is also required to subscribe to JMS auction events.
 public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 		javax.ejb.SessionSynchronization {
@@ -122,6 +121,7 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	}
 
 	@Override
+	@PermitAll
 	public AuctionItem getAuction(long auction) throws BuyerMgmtException {
 		log.debug("*** getAccount() *** ");
 		log.debug("caller=" + ctx.getCallerPrincipal().getName());
@@ -135,6 +135,7 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	}
 
 	@Override
+	@PermitAll
 	public AuctionDTO getAuctionDTO(long auction) throws BuyerMgmtRemoteException {
 		log.debug("*** getAuctionDTO ***");
 		log.debug("caller=" + ctx.getCallerPrincipal().getName());
@@ -151,7 +152,7 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	 * @see dutrow.sales.ejb.BuyerMgmtRemote#getAuctionImages(java.lang.String)
 	 */
 	@Override
-	@RolesAllowed({"esales-user"})
+	@PermitAll
 	public Collection<ImageDTO> getAuctionImages(long auctionId) {
 		log.debug("*** getAuctionImages() ***");
 		log.debug("caller=" + ctx.getCallerPrincipal().getName());

@@ -157,12 +157,32 @@ public class JPAAuctionDAO implements AuctionDAO {
 	@Override
 	public Collection<AuctionItem> getUserAuctions(String userId) {
 		try {
-			
+
 			TypedQuery<AuctionItem> auctionQuery = em
 					.createQuery(
-					"select a from AuctionItem a where a.seller.userId=:userId",
-					AuctionItem.class);
+							"select a from AuctionItem a where a.seller.userId=:userId",
+							AuctionItem.class);
 			auctionQuery.setParameter("userId", userId);
+
+			return auctionQuery.getResultList();
+		} catch (RuntimeException ex) {
+			throw new DAOException("troubles: " + ex.toString(), ex);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see dutrow.sales.dao.AuctionDAO#getOpenAuctions()
+	 */
+	@Override
+	public Collection<AuctionItem> getOpenAuctions() {
+		try {
+
+			TypedQuery<AuctionItem> auctionQuery = em
+					.createQuery(
+							"select a from AuctionItem a where a.open=true",
+							AuctionItem.class);
 
 			return auctionQuery.getResultList();
 		} catch (RuntimeException ex) {

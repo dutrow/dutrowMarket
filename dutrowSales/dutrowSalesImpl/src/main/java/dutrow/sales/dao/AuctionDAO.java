@@ -17,6 +17,7 @@ public interface AuctionDAO {
 	boolean updateAuction(AuctionItem ai);
 	boolean removeAuction(long id);
 	Collection<AuctionItem> getAuctions();
+	Collection<AuctionItem> getOpenAuctions();
 	Collection<AuctionItem> getUserAuctions(String userId);
 	
 }

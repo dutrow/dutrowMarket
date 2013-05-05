@@ -175,12 +175,14 @@ public class IngestorImpl implements Ingestor{
 				Address localAddress = buyerAddresses.get(addr.getName());
 				ai.setShipTo(localAddress);
 			}
+		} else {
+			ai.setOpen(true);
 		}
 		
 		Float purchasePrice = object.getPurchasePrice();
 		if (purchasePrice != null){
 			ai.setPurchasePrice(purchasePrice);
-		}
+		} 
 
 		auctionDAO.createAuction(ai);
 		log.info("created auction item: " + ai);

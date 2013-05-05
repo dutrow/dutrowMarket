@@ -31,7 +31,7 @@
 			<tr>
 				<td><b>User Name</b></td>
 				<td><input type="text" size="20" name="j_username"
-					value="user2"></td>
+					value="user1"></td>
 			</tr>
 			<tr>
 				<td><b>Password</b></td>
@@ -50,7 +50,7 @@
 			<tr>
 				<td><b>User Name</b></td>
 				<td><input type="text" size="20" name="j_username"
-					value="user3"></td>
+					value="user2"></td>
 			</tr>
 			<tr>
 				<td><b>Password</b></td>
