@@ -84,7 +84,7 @@ public class BuyerMgmtImpl implements BuyerMgmt {
 		// the user must exist
 		Account verifiedBidder = this.accounts.getAccountByUser(bidder);
 		if (verifiedBidder == null)
-			return new BidResult(null, "bidder does not exist");
+			return new BidResult(null, "bidder " + bidder +  " does not exist");
 		
 		// the bid amount must be greater than any pre-existing bid
 		Bid highestBid = verifiedAuction.getHighestBid();

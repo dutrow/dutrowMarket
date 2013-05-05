@@ -43,7 +43,7 @@ public class OrderMgmtImplTest extends JPATestBase {
 		BidAccount ba = testSupport.createBidder();
 		orderManager.createAccount(ba);
 		log.info("createOrder - create a record within bidbot that indicates the sale and maximum bid. This may require some stubbing in project 1.");
-		BidOrder bidOrder = testSupport.createOrder(ba);
+		BidOrder bidOrder = testSupport.createOrder(1, ba);
 		Assert.assertNotNull("Test Support created a null bidOrder", bidOrder);
 		orderManager.createAccount(bidOrder.getBidder());
 		orderManager.createOrder(bidOrder);
@@ -104,7 +104,7 @@ public class OrderMgmtImplTest extends JPATestBase {
 	public void testGetOrderStatus() {
 		BidAccount ba = testSupport.createBidder();
 		orderManager.createAccount(ba);
-		BidOrder bo = testSupport.createOrder(ba);
+		BidOrder bo = testSupport.createOrder(1, ba);
 		orderManager.createAccount(bo.getBidder());
 		orderManager.createOrder(bo);
 		boolean orderStatus = orderManager.getOrderStatus(bo.getBidOrderId());
@@ -120,7 +120,7 @@ public class OrderMgmtImplTest extends JPATestBase {
 	public void testPlaceBid() {
 		BidAccount ba = testSupport.createBidder();
 		orderManager.createAccount(ba);
-		BidOrder bo = testSupport.createOrder(ba);
+		BidOrder bo = testSupport.createOrder(1, ba);
 		orderManager.createAccount(bo.getBidder());
 		orderManager.createOrder(bo);
 		Assert.assertTrue(orderManager.placeBid(bo, 5f));

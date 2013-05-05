@@ -97,8 +97,8 @@ public class BidbotTestUtilImpl implements BidbotTestUtil {
 	 * @see dutrow.bidbot.bl.BidbotTestUtil#createOrder()
 	 */
 	@Override
-	public BidOrder createOrder(BidAccount bidder) {
-		BidOrder bid = new BidOrder(2, 3.0f, 9.0f, bidder);
+	public BidOrder createOrder(long auctionId, BidAccount bidder) {
+		BidOrder bid = new BidOrder(auctionId, 3.0f, 9.0f, bidder);
 		
 		bidder.addOrder(bid);
 
@@ -111,7 +111,7 @@ public class BidbotTestUtilImpl implements BidbotTestUtil {
 	 */
 	@Override
 	public BidAccount createBidder() {
-		BidAccount acct = new BidAccount("user3","user1","password");
+		BidAccount acct = new BidAccount("user3","user2","password");
 		acct.setOrders(new ArrayList<BidOrder>());
 
 		return acct;

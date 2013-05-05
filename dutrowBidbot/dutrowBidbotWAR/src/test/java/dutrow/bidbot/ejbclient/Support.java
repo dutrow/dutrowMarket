@@ -17,6 +17,12 @@ import org.junit.After;
 import org.junit.Before;
 
 import dutrow.bidbot.ejb.BidbotUtilRemote;
+import dutrow.bidbot.ejb.OrderMgmtRemote;
+import dutrow.sales.ejb.AccountMgmtRemote;
+import dutrow.sales.ejb.BuyerMgmtRemote;
+import dutrow.sales.ejb.ParserRemote;
+import dutrow.sales.ejb.SellerMgmtRemote;
+import dutrow.sales.ejb.SupportRemote;
 
 /**
  * @author dutroda1
@@ -26,12 +32,43 @@ public class Support {
 	private static final Log log = LogFactory.getLog(Support.class);
 	protected InitialContext jndi;
 
+	protected static final String orderJNDI = System.getProperty(
+			"jndi.name.registrar",
+			"dutrowBidbot/OrderMgmtEJB!dutrow.bidbot.ejb.OrderMgmtRemote");
+	protected OrderMgmtRemote orderManager;
+
 	protected static final String utilJNDI = System.getProperty(
 			"jndi.name.registrar",
 			"dutrowBidbot/BidbotUtilEJB!dutrow.bidbot.ejb.BidbotUtilRemote");
-	// "dutrowBidbotWAR/BidbotUtilEJB!dutrow.bidbot.ejb.BidbotUtilRemote");
 
 	protected BidbotUtilRemote testSupport;
+
+	private static final String testSalesJNDI = System
+			.getProperty("jndi.name.registrar",
+					"dutrowSalesEAR/dutrowSalesEJB/SupportEJB!dutrow.sales.ejb.SupportRemote");
+	protected SupportRemote testSupportSales;
+
+	private static final String sellerJNDI = System
+			.getProperty("jndi.name.registrar",
+					"dutrowSalesEAR/dutrowSalesEJB/SellerMgmtEJB!dutrow.sales.ejb.SellerMgmtRemote");
+	protected SellerMgmtRemote sellerManager;
+
+	private static final String buyerJNDI = System
+			.getProperty("jndi.name.registrar",
+					"dutrowSalesEAR/dutrowSalesEJB/BuyerMgmtEJB!dutrow.sales.ejb.BuyerMgmtRemote");
+	protected BuyerMgmtRemote buyerManager;
+
+	private static final String accountJNDI = System
+			.getProperty(
+					"jndi.name.registrar",
+					"dutrowSalesEAR/dutrowSalesEJB/AccountMgmtEJB!dutrow.sales.ejb.AccountMgmtRemote");
+	protected AccountMgmtRemote accountManager;
+
+	public static final String parserJNDI = System
+			.getProperty("jndi.name",
+					"dutrowSalesEAR/dutrowSalesEJB/ParserEJB!dutrow.sales.ejb.ParserRemote");
+
+	protected static ParserRemote parser;
 
 	// known (no roles)
 	// admin1 esales-admin
@@ -78,29 +115,57 @@ public class Support {
 	protected static final String user3Password = System.getProperty(
 			"user3.password", "password");
 
+	public void configureJndi() {
+		assertNotNull("jndi.name.registrar not supplied", orderJNDI);
+		assertNotNull("jndi.name.registrar not supplied", sellerJNDI);
+		assertNotNull("jndi.name.registrar not supplied", buyerJNDI);
+		assertNotNull("jndi.name.registrar not supplied", accountJNDI);
+		assertNotNull("jndi.name.registrar not supplied", testSalesJNDI);
+		assertNotNull("jndi.name.registrar not supplied", utilJNDI);
+
+		log.debug("order jndi name:" + orderJNDI);
+		log.debug("seller jndi name:" + sellerJNDI);
+		log.debug("account jndi name:" + accountJNDI);
+		log.debug("buyer jndi name:" + buyerJNDI);
+		log.debug("parser jndi name: " + parserJNDI);
+		log.debug("test jndi name:" + testSalesJNDI);
+		log.debug("util name:" + utilJNDI);
+
+		try {
+			orderManager = (OrderMgmtRemote) jndi.lookup(orderJNDI);
+			sellerManager = (SellerMgmtRemote) jndi.lookup(sellerJNDI);
+			accountManager = (AccountMgmtRemote) jndi.lookup(accountJNDI);
+			buyerManager = (BuyerMgmtRemote) jndi.lookup(buyerJNDI);
+			parser = (ParserRemote) jndi.lookup(parserJNDI);
+			testSupportSales = (SupportRemote) jndi.lookup(testSalesJNDI);
+			testSupport = (BidbotUtilRemote) jndi.lookup(utilJNDI);
+		} catch (NamingException ne) {
+			log.warn(ne.getMessage());
+			log.warn(ne.getExplanation());
+		}
+		log.debug("orderManager=" + orderManager);
+		log.debug("sellerManager=" + sellerManager);
+		log.debug("accountManager=" + accountManager);
+		log.debug("buyerManager=" + buyerManager);
+		log.debug("parser=" + parser);
+		log.debug("testSupportSales=" + testSupportSales);
+		log.debug("testSupport=" + testSupport);
+	}
+
 	/**
 	 * @throws NamingException
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws NamingException {
-		log.debug("Set up for SupportIT");
-
-		assertNotNull("jndi.name.registrar not supplied", utilJNDI);
+		log.debug("Set up for Bidbot Support");
 
 		log.debug("getting jndi initial context");
 		jndi = new InitialContext();
 		log.debug("jndi=" + jndi.getEnvironment());
 		jndi.lookup("/"); // do a quick comms check of JNDI
 
-		log.debug("jndi name:" + utilJNDI);
-		try {
-			testSupport = (BidbotUtilRemote) jndi.lookup(utilJNDI);
-		} catch (NamingException ne) {
-			log.warn(ne.getMessage());
-			log.warn(ne.getExplanation());
-		}
-		log.debug("testSupport=" + testSupport);
+		configureJndi();
 
 		runAs(admin2User, admin2Password);
 		testSupport.reset();

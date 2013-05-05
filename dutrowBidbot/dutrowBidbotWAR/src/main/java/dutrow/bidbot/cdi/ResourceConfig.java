@@ -3,6 +3,7 @@
  */
 package dutrow.bidbot.cdi;
 
+import javax.ejb.EJB;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,6 +15,7 @@ import dutrow.bidbot.blimpl.OrderMgmtImpl;
 import dutrow.bidbot.dao.BidAccountDAO;
 import dutrow.bidbot.ejb.OrderMgmtHelper;
 import dutrow.bidbot.jpa.JPABidAccountDAO;
+import dutrow.sales.ejb.BuyerMgmtRemote;
 
 /**
  * @author dutroda1
@@ -54,12 +56,12 @@ public class ResourceConfig {
 			@BidbotEntityManager final EntityManager emgr) {
 		return new JPABidAccountDAO(emgr);
 	}
-	
+
 	// HELPER
-	@Produces
-	@BidbotOrderMgmtHelper
-	public OrderMgmtHelper getOrderMgmtHelper(){
-		return new OrderMgmtHelper();
-	}
+	//@Produces
+	//@BidbotOrderMgmtHelper
+	//public OrderMgmtHelper getOrderMgmtHelper(final BuyerMgmtRemote buyerMgr) {
+	//	return new OrderMgmtHelper(buyerMgr);
+	//}
 
 }

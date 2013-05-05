@@ -3,8 +3,6 @@
  */
 package dutrow.bidbot.ejbclient;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.util.Calendar;
 import java.util.Collection;
 
@@ -15,17 +13,12 @@ import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
-import org.junit.Test;
 
 import dutrow.sales.dto.AccountDTO;
 import dutrow.sales.dto.AuctionDTO;
 import dutrow.sales.dto.BidDTO;
 import dutrow.sales.dto.BidResultDTO;
-import dutrow.sales.ejb.AccountMgmtRemote;
-import dutrow.sales.ejb.BuyerMgmtRemote;
 import dutrow.sales.ejb.BuyerMgmtRemoteException;
-import dutrow.sales.ejb.ParserRemote;
-import dutrow.sales.ejb.SellerMgmtRemote;
 
 /**
  * @author dutroda1
@@ -34,52 +27,7 @@ import dutrow.sales.ejb.SellerMgmtRemote;
 public class EndToEndIT extends Support {
 	private static final Log log = LogFactory.getLog(EndToEndIT.class);
 
-	private static final String sellerJNDI = System
-			.getProperty("jndi.name.registrar",
-					"dutrowSalesEAR/dutrowSalesEJB/SellerMgmtEJB!dutrow.sales.ejb.SellerMgmtRemote");
-	private SellerMgmtRemote sellerManager;
 
-	private static final String buyerJNDI = System
-			.getProperty("jndi.name.registrar",
-					"dutrowSalesEAR/dutrowSalesEJB/BuyerMgmtEJB!dutrow.sales.ejb.BuyerMgmtRemote");
-	private BuyerMgmtRemote buyerManager;
-
-	private static final String accountJNDI = System
-			.getProperty(
-					"jndi.name.registrar",
-					"dutrowSalesEAR/dutrowSalesEJB/AccountMgmtEJB!dutrow.sales.ejb.AccountMgmtRemote");
-	private AccountMgmtRemote accountManager;
-
-	public static final String parserJNDI = System.getProperty("jndi.name",
-			"dutrowSalesEAR/dutrowSalesEJB/ParserEJB!dutrow.sales.ejb.ParserRemote");
-
-	private static ParserRemote parser;
-
-	public void configureJndi() {
-		assertNotNull("jndi.name.registrar not supplied", sellerJNDI);
-		assertNotNull("jndi.name.registrar not supplied", buyerJNDI);
-		assertNotNull("jndi.name.registrar not supplied", accountJNDI);
-
-		log.debug("seller jndi name:" + sellerJNDI);
-		log.debug("account jndi name:" + accountJNDI);
-		log.debug("buyer jndi name:" + buyerJNDI);
-		log.debug("parser jndi name: " + parserJNDI);
-
-		try {
-			sellerManager = (SellerMgmtRemote) jndi.lookup(sellerJNDI);
-			accountManager = (AccountMgmtRemote) jndi.lookup(accountJNDI);
-			buyerManager = (BuyerMgmtRemote) jndi.lookup(buyerJNDI);
-			parser = (ParserRemote) jndi.lookup(parserJNDI);
-		} catch (NamingException ne) {
-			log.warn(ne.getMessage());
-			log.warn(ne.getExplanation());
-		}
-		log.debug("sellerManager=" + sellerManager);
-		log.debug("accountManager=" + accountManager);
-		log.debug("buyerManager=" + buyerManager);
-		log.debug("parser=" + parser);
-
-	}
 
 	@Before
 	public void setUp() throws NamingException {
@@ -91,12 +39,18 @@ public class EndToEndIT extends Support {
 		log.debug("testSupport=" + testSupport);
 	}
 
-	@Test
+	//@Test
 	public void endToEnd() throws BuyerMgmtRemoteException, NamingException {
 		log.debug(" **** endToEnd **** ");
+		
+		runAs(admin1User, admin1Password);
+		log.info("reset sales databases");
+		boolean isReset = testSupportSales.resetAll();
+		Assert.assertTrue(isReset);
+		
 		runAs(admin2User, admin2Password);
-		log.info("reset databases");
-		boolean isReset = super.testSupport.reset();
+		log.info("reset bidbot databases");
+		isReset = super.testSupport.reset();
 		Assert.assertTrue(isReset);
 
 		log.info("ingest data");

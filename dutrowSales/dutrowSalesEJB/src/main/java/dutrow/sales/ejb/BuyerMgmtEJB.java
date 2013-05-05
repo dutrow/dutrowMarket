@@ -220,7 +220,7 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 
 		if (bidResult.getBid() == null) {
 			ctx.setRollbackOnly();
-			throw new EJBException(bidResult.getResult());
+			throw new EJBException(bidResult.getResult() + "caller=" + ctx.getCallerPrincipal().getName());
 		}
 
 		return DTOConversionUtil.convertBidResult(bidResult);

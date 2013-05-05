@@ -3,9 +3,8 @@
  */
 package dutrow.bidbot.ejbclient;
 
-import static org.junit.Assert.assertNotNull;
+import java.util.Calendar;
 
-import javax.ejb.EJB;
 import javax.naming.NamingException;
 
 import org.apache.commons.logging.Log;
@@ -16,7 +15,8 @@ import org.junit.Test;
 
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
-import dutrow.bidbot.ejb.OrderMgmtRemote;
+import dutrow.sales.dto.AccountDTO;
+import dutrow.sales.dto.AuctionDTO;
 import dutrow.sales.ejb.BuyerMgmtRemoteException;
 
 /**
@@ -26,25 +26,13 @@ import dutrow.sales.ejb.BuyerMgmtRemoteException;
 public class OrderMgmtIT extends Support {
 	private static Log log = LogFactory.getLog(OrderMgmtIT.class);
 
-	private static final String registrarJNDI = System.getProperty(
-			"jndi.name.registrar",
-			"dutrowBidbot/OrderMgmtEJB!dutrow.bidbot.ejb.OrderMgmtRemote");
-	// "dutrowBidbotWAR/OrderMgmtEJB!dutrow.bidbot.ejb.OrderMgmtRemote");
-	@EJB
-	private OrderMgmtRemote orderManager;
+	private BidAccount bidAccount;
 
-	public void configureJndi() {
-		assertNotNull("jndi.name.registrar not supplied", registrarJNDI);
+	private AuctionDTO auction;
 
-		log.debug("jndi name:" + registrarJNDI);
-		try {
-			orderManager = (OrderMgmtRemote) jndi.lookup(registrarJNDI);
-		} catch (NamingException ne) {
-			log.warn(ne.getMessage());
-			log.warn(ne.getExplanation());
-		}
-		log.debug("accountManager=" + orderManager);
-	}
+	private AccountDTO seller;
+
+	private AccountDTO buyer1;
 
 	/**
 	 * @throws NamingException
@@ -54,6 +42,31 @@ public class OrderMgmtIT extends Support {
 		super.setUp();
 		log.debug("Set up for OrderMgmtIT");
 		configureJndi();
+
+		runAs(admin1User, admin1Password);
+		seller = new AccountDTO("user1", "John", "s", "Hopkins",
+				"seller@jhu.edu");
+		testSupportSales.createAccount(seller);
+		buyer1 = new AccountDTO("user2", "Alexander", "X", "Kossiakoff",
+				"kossi@jhuapl.edu");
+		testSupportSales.createAccount(buyer1);
+		auction = new AuctionDTO("VT Fuse", "Science & Toys",
+				"detonates an explosive device automatically", Calendar
+						.getInstance().getTime(), 18.00f, seller.userId,
+				seller.email, true);
+		auction.id = testSupportSales.createAuction(auction);
+
+		log.debug("bidder.userId: " + buyer1.userId + " seller.userId: "
+				+ seller.userId + " auction.id: " + auction.id);
+
+		runAs(admin2User, admin2Password);
+		bidAccount = testSupport.createBidder();
+		Assert.assertNotNull("BidAccount is null", bidAccount);
+		orderManager.createAccount(bidAccount);
+		Assert.assertNotNull("Created account null", bidAccount);
+
+		runAs(knownUser, knownPassword);
+
 	}
 
 	/**
@@ -62,18 +75,14 @@ public class OrderMgmtIT extends Support {
 	 * .
 	 * 
 	 * @throws NamingException
-	 * @throws BuyerMgmtRemoteException 
+	 * @throws BuyerMgmtRemoteException
 	 */
 	@Test
-	public void testCreateOrder() throws NamingException, BuyerMgmtRemoteException {
+	public void testCreateOrder() throws NamingException,
+			BuyerMgmtRemoteException {
 
-		runAs(admin2User, admin2Password);
-		BidAccount ba = testSupport.createBidder();
-		Assert.assertNotNull("BidAccount is null", ba);
-		orderManager.createAccount(ba);
-		
 		runAs(user3User, user3Password);
-		BidOrder bo1 = new BidOrder(3, 4.5f, 7.5f, ba);
+		BidOrder bo1 = new BidOrder(auction.id, 4.5f, 7.5f, bidAccount);
 		bo1.setBidOrderId(orderManager.createOrder(bo1));
 		long bid1 = bo1.getBidOrderId();
 		Assert.assertNotSame("Create order problem", 0, bid1);
@@ -95,22 +104,17 @@ public class OrderMgmtIT extends Support {
 	 * .
 	 * 
 	 * @throws NamingException
-	 * @throws BuyerMgmtRemoteException 
+	 * @throws BuyerMgmtRemoteException
 	 */
 	@Test
 	public void testPlaceBid() throws NamingException, BuyerMgmtRemoteException {
 
-		runAs(admin2User, admin2Password);
-		BidAccount ba = testSupport.createBidder();
-		Assert.assertNotNull("BidAccount is null", ba);
-		orderManager.createAccount(ba);
-		
 		runAs(user3User, user3Password);
-		BidOrder bo1 = new BidOrder(3, 4.5f, 7.5f, ba);
+		BidOrder bo1 = new BidOrder(auction.id, 4.5f, 7.5f, bidAccount);
 		bo1.setBidOrderId(orderManager.createOrder(bo1));
 		long bid1 = bo1.getBidOrderId();
 		BidOrder bo2 = orderManager.getOrder(bid1);
-		
+
 		runAs(user3User, user3Password);
 		orderManager.createOrder(bo1);
 		Assert.assertTrue(orderManager.placeBid(bo1, 5f));
@@ -121,18 +125,13 @@ public class OrderMgmtIT extends Support {
 	 * Test method for {@link dutrow.bidbot.ejb.OrderMgmtEJB#endOrder(long)}.
 	 * 
 	 * @throws NamingException
-	 * @throws BuyerMgmtRemoteException 
+	 * @throws BuyerMgmtRemoteException
 	 */
 	@Test
 	public void testEndOrder() throws NamingException, BuyerMgmtRemoteException {
 
-		runAs(admin2User, admin2Password);
-		BidAccount ba = testSupport.createBidder();
-		Assert.assertNotNull("BidAccount is null", ba);
-		orderManager.createAccount(ba);
-		
 		runAs(user3User, user3Password);
-		BidOrder bo = new BidOrder(3, 4.5f, 7.5f, ba);
+		BidOrder bo = new BidOrder(auction.id, 4.5f, 7.5f, bidAccount);
 		bo.setBidOrderId(orderManager.createOrder(bo));
 		Assert.assertNotSame("Create Order", 0, bo.getBidOrderId());
 
@@ -145,19 +144,16 @@ public class OrderMgmtIT extends Support {
 	 * {@link dutrow.bidbot.ejb.OrderMgmtEJB#getOrderStatus(long)}.
 	 * 
 	 * @throws NamingException
-	 * @throws BuyerMgmtRemoteException 
+	 * @throws BuyerMgmtRemoteException
 	 */
 	@Test
-	public void testGetOrderStatus() throws NamingException, BuyerMgmtRemoteException {
-
+	public void testGetOrderStatus() throws NamingException,
+			BuyerMgmtRemoteException {
 		runAs(admin2User, admin2Password);
-		BidAccount ba = testSupport.createBidder();
-		Assert.assertNotNull("BidAccount is null", ba);
-		orderManager.createAccount(ba);
-		BidOrder bo = testSupport.createOrder(ba);
-		
+		BidOrder bo = testSupport.createOrder(auction.id, bidAccount);
+
 		runAs(user3User, user3Password);
-		bo.setBidOrderId(orderManager.createOrder(bo));		
+		bo.setBidOrderId(orderManager.createOrder(bo));
 		boolean orderStatus = orderManager.getOrderStatus(bo.getBidOrderId());
 		Assert.assertFalse(orderStatus);
 
@@ -166,16 +162,25 @@ public class OrderMgmtIT extends Support {
 	@Test
 	public void testCreateAccount() throws NamingException {
 
-		runAs(admin2User, admin2Password);
-		BidAccount ba1 = orderManager
-				.createAccount(user3User, "user2", "password");
-		
+		try {
+			runAs(admin2User, admin2Password);
+			orderManager.createAccount(user3User, "user2", "password");
+			Assert.fail("BidAccount should not have been created -- it already exists");
+		} catch (javax.ejb.EJBException ejbe){
+			log.info("Expected exception because account already exists");
+		} catch (IllegalArgumentException iae) {
+			log.info("Expected exception because account already exists");
+		}
+
 		runAs(user3User, user3Password);
+
 		BidAccount ba2 = orderManager.getAccount(user3User);
-		Assert.assertNotNull("Created account null", ba1);
+
 		Assert.assertNotNull("Retrieved account null", ba2);
-		Assert.assertEquals(ba1.getSalesAccount(), ba2.getSalesAccount());
-		Assert.assertEquals(ba1.getSalesPassword(), ba2.getSalesPassword());
+		Assert.assertEquals(bidAccount.getSalesAccount(), ba2.getSalesAccount());
+		Assert.assertEquals(bidAccount.getSalesPassword(),
+				ba2.getSalesPassword());
+
 	}
 
 }

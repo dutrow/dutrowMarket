@@ -16,6 +16,7 @@ import dutrow.bidbot.bo.BidOrder;
 public interface BidbotUtilRemote {
 	boolean reset(); // - reset the bidbot database to an initial starting state.
 
-	BidOrder createOrder(BidAccount ba);
 	BidAccount createBidder();
+
+	BidOrder createOrder(long auctionId, BidAccount ba);
 }

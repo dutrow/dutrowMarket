@@ -53,8 +53,8 @@ public class BidbotUtilEJB implements BidbotUtilRemote {
 	 * @see dutrow.bidbot.ejb.BidbotUtilRemote#createOrder()
 	 */
 	@Override
-	public BidOrder createOrder(BidAccount ba) {
-		return testUtil.createOrder(ba);
+	public BidOrder createOrder(long auctionId, BidAccount ba) {
+		return testUtil.createOrder(auctionId, ba);
 	}
 
 	/*

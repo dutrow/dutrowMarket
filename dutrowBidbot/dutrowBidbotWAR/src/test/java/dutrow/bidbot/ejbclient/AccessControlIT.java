@@ -3,9 +3,8 @@
  */
 package dutrow.bidbot.ejbclient;
 
-import static org.junit.Assert.assertNotNull;
+import java.util.Calendar;
 
-import javax.ejb.EJB;
 import javax.ejb.EJBAccessException;
 import javax.naming.NamingException;
 
@@ -17,7 +16,8 @@ import org.junit.Test;
 
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
-import dutrow.bidbot.ejb.OrderMgmtRemote;
+import dutrow.sales.dto.AccountDTO;
+import dutrow.sales.dto.AuctionDTO;
 import dutrow.sales.ejb.BuyerMgmtRemoteException;
 
 /**
@@ -26,26 +26,11 @@ import dutrow.sales.ejb.BuyerMgmtRemoteException;
  */
 public class AccessControlIT extends Support {
 	private static Log log = LogFactory.getLog(AccessControlIT.class);
+	private AccountDTO seller;
+	private AccountDTO buyer1;
+	private AuctionDTO auction;
+	private BidAccount bidAccount;
 
-	private static final String registrarJNDI = System.getProperty(
-			"jndi.name.registrar",
-			"dutrowBidbot/OrderMgmtEJB!dutrow.bidbot.ejb.OrderMgmtRemote");
-			//"dutrowBidbotWAR/OrderMgmtEJB!dutrow.bidbot.ejb.OrderMgmtRemote");
-	@EJB
-	private OrderMgmtRemote orderManager;
-
-	public void configureJndi() {
-		assertNotNull("jndi.name.registrar not supplied", registrarJNDI);
-
-		log.debug("jndi name:" + registrarJNDI);
-		try {
-			orderManager = (OrderMgmtRemote) jndi.lookup(registrarJNDI);
-		} catch (NamingException ne) {
-			log.warn(ne.getMessage());
-			log.warn(ne.getExplanation());
-		}
-		log.debug("accountManager=" + orderManager);
-	}
 
 	/**
 	 * @throws NamingException
@@ -55,6 +40,31 @@ public class AccessControlIT extends Support {
 		super.setUp();
 		log.debug("Set up for AccessControlIT");
 		configureJndi();
+
+		runAs(admin1User, admin1Password);
+		seller = new AccountDTO("user1", "John", "s", "Hopkins",
+				"seller@jhu.edu");
+		testSupportSales.createAccount(seller);
+		buyer1 = new AccountDTO("user2", "Alexander", "X", "Kossiakoff",
+				"kossi@jhuapl.edu");
+		testSupportSales.createAccount(buyer1);
+		auction = new AuctionDTO("VT Fuse", "Science & Toys",
+				"detonates an explosive device automatically", Calendar
+						.getInstance().getTime(), 18.00f, seller.userId,
+				seller.email, true);
+		auction.id = testSupportSales.createAuction(auction);
+
+		log.debug("bidder.userId: " + buyer1.userId + " seller.userId: "
+				+ seller.userId + " auction.id: " + auction.id);
+
+		runAs(admin2User, admin2Password);
+		bidAccount = testSupport.createBidder();
+		Assert.assertNotNull("BidAccount is null", bidAccount);
+		orderManager.createAccount(bidAccount);
+		Assert.assertNotNull("Created account null", bidAccount);
+
+		runAs(knownUser, knownPassword);
+
 	}
 
 	/**
@@ -69,10 +79,7 @@ public class AccessControlIT extends Support {
 	public void testCreateOrder() throws NamingException, BuyerMgmtRemoteException {
 
 		try {
-			BidAccount ba = testSupport.createBidder();
-			Assert.assertNotNull("BidAccount is null", ba);
-			orderManager.createAccount(ba);
-			BidOrder bo1 = new BidOrder(3, 4.5f, 7.5f, ba);
+			BidOrder bo1 = new BidOrder(auction.id, 4.5f, 7.5f, bidAccount);
 			bo1.setBidOrderId(orderManager.createOrder(bo1));
 			long bid1 = bo1.getBidOrderId();
 			Assert.assertNotSame("Create order problem", 0, bid1);
@@ -107,7 +114,7 @@ public class AccessControlIT extends Support {
 			BidAccount ba = testSupport.createBidder();
 			Assert.assertNotNull("BidAccount is null", ba);
 			orderManager.createAccount(ba);
-			BidOrder bo = testSupport.createOrder(ba);
+			BidOrder bo = testSupport.createOrder(auction.id, ba);
 			orderManager.createAccount(bo.getBidder());
 			orderManager.createOrder(bo);
 			Assert.assertTrue(orderManager.placeBid(bo, 5f));
@@ -129,10 +136,7 @@ public class AccessControlIT extends Support {
 
 		try {
 
-			BidAccount ba = testSupport.createBidder();
-			Assert.assertNotNull("BidAccount is null", ba);
-			orderManager.createAccount(ba);
-			BidOrder bo = new BidOrder(3, 4.5f, 7.5f, ba);
+			BidOrder bo = new BidOrder(auction.id, 4.5f, 7.5f, bidAccount);
 			bo.setBidOrderId(orderManager.createOrder(bo));
 			Assert.assertNotSame("Create Order", 0, bo.getBidOrderId());
 
@@ -155,10 +159,7 @@ public class AccessControlIT extends Support {
 	public void testGetOrderStatus() throws NamingException, BuyerMgmtRemoteException {
 
 		try {
-			BidAccount ba = testSupport.createBidder();
-			Assert.assertNotNull("BidAccount is null", ba);
-			orderManager.createAccount(ba);
-			BidOrder bo = testSupport.createOrder(ba);
+			BidOrder bo = new BidOrder(auction.id, 4.5f, 7.5f, bidAccount);
 			orderManager.createAccount(bo.getBidder());
 			bo.setBidOrderId(orderManager.createOrder(bo));
 			boolean orderStatus = orderManager.getOrderStatus(bo
