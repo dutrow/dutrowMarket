@@ -6,7 +6,6 @@ package dutrow.bidbot.ejb;
 import java.util.Properties;
 import java.util.TreeSet;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -26,6 +25,7 @@ import dutrow.bidbot.bl.OrderMgmt;
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
 import dutrow.bidbot.cdi.BidbotOrderManager;
+import dutrow.bidbot.cdi.BidbotOrderMgmtHelper;
 import dutrow.bidbot.dao.BidAccountDAO;
 import dutrow.sales.dto.AuctionDTO;
 import dutrow.sales.dto.BidDTO;
@@ -59,19 +59,12 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 	final String mName = "ejb:dutrowSalesEAR/dutrowSalesEJB/BuyerMgmtEJB!dutrow.sales.ejb.BuyerMgmtRemote";
 	@EJB(mappedName = mName)
 	private BuyerMgmtRemote buyerManager;
-
-	protected Context runAs(String username, String password)
-			throws NamingException {
-		Properties env = new Properties();
-		if (username != null) {
-			env.put(Context.SECURITY_PRINCIPAL, username);
-			env.put(Context.SECURITY_CREDENTIALS, password);
-		}
-		log.debug(String.format("%s env=%s", username == null ? "anonymous"
-				: username, env));
-		InitialContext jndi = new InitialContext(env);
-		return jndi;
-	}
+	
+	
+	//final String hName = "ejb:dutrowBidbot/OrderMgmtHelper!dutrow.bidbot.ejb.OrderMgmtHelper";
+	//@EJB(mappedName = hName)
+	@EJB
+	OrderMgmtHelper orderMgmtHelper;
 
 	protected BidResultDTO executeOrder(BidOrder order)
 			throws BuyerMgmtRemoteException, NamingException {
@@ -113,35 +106,24 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 			}
 		}
 
-		BidResultDTO result = placeBid(order.getAuctionId(), order.getBidder(),
+		BidResultDTO result = orderMgmtHelper.placeBid(order.getAuctionId(), order.getBidder(),
 				bidAmount);
 
 		return result;
 
 	}
 
-	protected BidResultDTO placeBid(long auctionId, BidAccount bidder,
+
+	@Override
+	public BidResultDTO placeBid(long auctionId, BidAccount bidder,
 			float bidAmount) throws BuyerMgmtRemoteException {
 
-		String userPrincipal = Context.SECURITY_PRINCIPAL;
-		String userCredentials = Context.SECURITY_CREDENTIALS;
-
 		BidResultDTO result = null;
-		try {
-			runAs(bidder.getSalesAccount(), bidder.getSalesPassword());
-			result = buyerManager.placeBid(auctionId, bidAmount);
-			runAs(userPrincipal, userCredentials); // return to user
-		} catch (NamingException ne) {
-			log.warn("Tried to run as " + bidder.getSalesAccount());
-			throw new BuyerMgmtRemoteException("Tried to run as " + bidder.getSalesAccount() + ": " + ne.getMessage());
-		} catch (javax.ejb.EJBException ejbe){
-			log.warn("Tried to run as " + bidder.getSalesAccount());
-			throw new BuyerMgmtRemoteException("Tried to run as " + bidder.getSalesAccount() + ": " + ejbe.getMessage());
-		}
-
+		result = orderMgmtHelper.placeBid(auctionId, bidder, bidAmount);
 		return result;
 
 	}
+
 
 	public long createOrder(BidOrder order) throws BuyerMgmtRemoteException,
 			NamingException {
@@ -165,24 +147,6 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 	public BidOrder getOrder(long bidOrderId) {
 		log.debug(" **** getOrder ****");
 		return orderMgmt.getOrder(bidOrderId);
-	}
-
-	public boolean placeBid(BidOrder order, float bid) {
-		log.debug(" **** placeBid ****");
-		String userPrincipal = Context.SECURITY_PRINCIPAL;
-		String userCredentials = Context.SECURITY_CREDENTIALS;
-		boolean result = false;
-		try {
-			runAs(order.getBidder().getSalesAccount(), order.getBidder()
-					.getSalesPassword());
-			result = orderMgmt.placeBid(order, bid);
-			runAs(userPrincipal, userCredentials); // return to user
-		} catch (NamingException e) {
-			log.warn("Could not authenticate as user: "
-					+ order.getBidder().getSalesAccount(), e);
-		}
-
-		return result;
 	}
 
 	public boolean endOrder(long bidOrderId) {

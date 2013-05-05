@@ -117,8 +117,6 @@ public class AccessControlIT extends Support {
 			BidOrder bo = testSupport.createOrder(auction.id, ba);
 			orderManager.createAccount(bo.getBidder());
 			orderManager.createOrder(bo);
-			Assert.assertTrue(orderManager.placeBid(bo, 5f));
-			Assert.assertFalse(orderManager.placeBid(bo, 200f));
 			Assert.fail("EJB Access Should Fail");
 		} catch (EJBAccessException ae) {
 			log.info("Caught EJBAccessException: good!");

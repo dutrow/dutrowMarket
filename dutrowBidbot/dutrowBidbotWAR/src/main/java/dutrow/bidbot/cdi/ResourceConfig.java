@@ -57,11 +57,4 @@ public class ResourceConfig {
 		return new JPABidAccountDAO(emgr);
 	}
 
-	// HELPER
-	//@Produces
-	//@BidbotOrderMgmtHelper
-	//public OrderMgmtHelper getOrderMgmtHelper(final BuyerMgmtRemote buyerMgr) {
-	//	return new OrderMgmtHelper(buyerMgr);
-	//}
-
 }

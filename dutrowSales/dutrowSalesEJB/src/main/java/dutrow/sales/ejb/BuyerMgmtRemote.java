@@ -27,6 +27,8 @@ public interface BuyerMgmtRemote {
 
 	BidResultDTO placeBid(long auctionId, float bidValue) throws BuyerMgmtRemoteException;
 	boolean placeMultiBid(long auctionId, float [] bidValues) throws BuyerMgmtRemoteException;
+
+	BidResultDTO placeBid(long auctionId, String bidderAcct, String bidderPasswd, float bidAmount);
 	
 
 }

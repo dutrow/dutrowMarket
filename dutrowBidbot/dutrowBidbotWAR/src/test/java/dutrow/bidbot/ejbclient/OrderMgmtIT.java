@@ -17,6 +17,7 @@ import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
 import dutrow.sales.dto.AccountDTO;
 import dutrow.sales.dto.AuctionDTO;
+import dutrow.sales.dto.BidResultDTO;
 import dutrow.sales.ejb.BuyerMgmtRemoteException;
 
 /**
@@ -117,8 +118,8 @@ public class OrderMgmtIT extends Support {
 
 		runAs(user3User, user3Password);
 		orderManager.createOrder(bo1);
-		Assert.assertTrue(orderManager.placeBid(bo1, 5f));
-		Assert.assertFalse(orderManager.placeBid(bo1, 200f));
+		BidResultDTO resultGood = orderManager.placeBid(auction.id, bidAccount, 5f);
+		Assert.assertNotNull(resultGood.result);
 	}
 
 	/**

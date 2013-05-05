@@ -40,7 +40,7 @@ import dutrow.sales.dto.ImageDTO;
  */
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-@RolesAllowed({"esales-user", "esales-trusted", "esales-admin"})
+@RolesAllowed({"esales-user", "esales-admin"})
 //esales-admin		these users will be able to perform management and test functions on eSales.
 //esales-trusted	these users can bid on auctions on behalf of a specified user.
 //esales-user		these users can create and auction, and bid on auctions. This role is also required to subscribe to JMS auction events.
@@ -257,6 +257,26 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 			}
 		}
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see dutrow.sales.ejb.BuyerMgmtRemote#placeBid(long, java.lang.String, java.lang.String, float)
+	 */
+	@Override
+	@RolesAllowed({"esales-trusted"})
+	public BidResultDTO placeBid(long auctionId, String bidderAcct,
+			String bidderPasswd, float bidValue) {
+		log.debug("*** placeBid(esales-trusted) ***");
+		log.debug("caller=" + ctx.getCallerPrincipal().getName());
+		BidResult bidResult = buyerMgmt.placeBid(bidderAcct, auctionId, bidValue);
+
+		if (bidResult.getBid() == null) {
+			ctx.setRollbackOnly();
+			throw new EJBException(bidResult.getResult() + " caller=" + ctx.getCallerPrincipal().getName());
+		}
+
+		return DTOConversionUtil.convertBidResult(bidResult);
+
 	}
 
 }
