@@ -111,7 +111,7 @@ public class BidbotTestUtilImpl implements BidbotTestUtil {
 	 */
 	@Override
 	public BidAccount createBidder() {
-		BidAccount acct = new BidAccount("bidbotSellerAcct","bidder","bidderPwd");
+		BidAccount acct = new BidAccount("user3","user1","password");
 		acct.setOrders(new ArrayList<BidOrder>());
 
 		return acct;

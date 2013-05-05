@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 
 /**
@@ -31,7 +33,7 @@ public class AuctionDTO implements Serializable{
 	
 	public AddressDTO shipTo;
 	
-	public Collection<BidDTO> bids;
+	public SortedSet<BidDTO> bids;
 	
 	public Collection<ImageDTO> images;
 	public boolean isExpired;
@@ -53,7 +55,7 @@ public class AuctionDTO implements Serializable{
 		this.seller_email = sellerEmailIn;
 		this.isOpen = isOpen;
 		this.images = new ArrayList<ImageDTO>();
-		this.bids = new ArrayList<BidDTO>();
+		this.bids = new TreeSet<BidDTO>();
 		this.isExpired = false;
 		
 		

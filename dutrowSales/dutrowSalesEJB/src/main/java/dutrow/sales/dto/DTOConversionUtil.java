@@ -3,11 +3,11 @@
  */
 package dutrow.sales.dto;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import dutrow.sales.bo.Account;
 import dutrow.sales.bo.Address;
@@ -126,7 +126,7 @@ public final class DTOConversionUtil {
 		adto.shipTo = DTOConversionUtil.convertAddress(ai.getShipTo());
 		adto.isOpen = ai.isOpen();
 		adto.isExpired = ai.isExpired();
-		adto.bids = new ArrayList<BidDTO>();
+		adto.bids = new TreeSet<BidDTO>();
 		for (Bid b : ai.getBids()) {
 			BidDTO biddto = DTOConversionUtil.convertBid(b);
 			adto.bids.add(biddto);
@@ -206,11 +206,12 @@ public final class DTOConversionUtil {
 	 * @return
 	 */
 	public static BidResultDTO convertBidResult(BidResult bidResult) {
-		BidResultDTO result = new BidResultDTO();
+		BidResultDTO result;
 		if (bidResult != null) {
-			result.bid = convertBid(bidResult.getBid());
-			result.result = bidResult.getResult();
+			result = new BidResultDTO(convertBid(bidResult.getBid()), bidResult.getResult());
 		}
+		else result = new BidResultDTO(null, "BidResult is null");
+		
 		return result;
 
 	}

@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import dutrow.sales.bl.BuyerMgmt;
+import dutrow.sales.bl.BuyerMgmtException;
 import dutrow.sales.bo.AuctionItem;
 import dutrow.sales.bo.Bid;
 import dutrow.sales.bo.BidResult;
@@ -121,7 +122,7 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	}
 
 	@Override
-	public AuctionItem getAuction(long auction) throws BuyerMgmtRemoteException {
+	public AuctionItem getAuction(long auction) throws BuyerMgmtException {
 		log.debug("*** getAccount() *** ");
 		log.debug("caller=" + ctx.getCallerPrincipal().getName());
 		try {
@@ -129,7 +130,7 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 		} catch (Throwable ex) {
 			log.error(ex);
 			ctx.setRollbackOnly();
-			throw new BuyerMgmtRemoteException(ex.toString());
+			throw new BuyerMgmtException(ex.toString());
 		}
 	}
 
@@ -137,7 +138,11 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	public AuctionDTO getAuctionDTO(long auction) throws BuyerMgmtRemoteException {
 		log.debug("*** getAuctionDTO ***");
 		log.debug("caller=" + ctx.getCallerPrincipal().getName());
-		return DTOConversionUtil.convertAuctionItem(getAuction(auction));
+		try{
+			return DTOConversionUtil.convertAuctionItem(getAuction(auction));
+		} catch (BuyerMgmtException bme){
+			throw new BuyerMgmtRemoteException(bme.getMessage());
+		}
 	}
 
 	/*

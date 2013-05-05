@@ -10,7 +10,6 @@ import dutrow.bidbot.bl.OrderMgmt;
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
 import dutrow.bidbot.dao.BidAccountDAO;
-import dutrow.bidbot.web.CreateBidAccount;
 
 /**
  * @author dutroda1
@@ -19,6 +18,8 @@ import dutrow.bidbot.web.CreateBidAccount;
 public class OrderMgmtImpl implements OrderMgmt {
 	private static final Log log = LogFactory.getLog(OrderMgmtImpl.class);
 
+
+	
 	private BidAccountDAO accountDAO;
 
 	public void setAccountDAO(BidAccountDAO accountDAO) {
@@ -63,6 +64,7 @@ public class OrderMgmtImpl implements OrderMgmt {
 
 		BidAccount newba = new BidAccount(userId, accountId, passwd);
 		String aid = accountDAO.createAccount(newba);
+		
 		if (aid != null)
 			return newba;
 
@@ -98,8 +100,11 @@ public class OrderMgmtImpl implements OrderMgmt {
 	 */
 	@Override
 	public boolean createOrder(BidOrder order) {
-		return accountDAO.createOrder(order);
+		boolean orderCreated = accountDAO.createOrder(order);
+			
+		return orderCreated;
 	}
+
 
 	/*
 	 * (non-Javadoc)

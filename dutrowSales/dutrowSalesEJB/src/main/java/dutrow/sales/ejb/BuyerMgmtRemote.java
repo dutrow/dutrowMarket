@@ -7,8 +7,6 @@ import java.util.Collection;
 
 import javax.ejb.Remote;
 
-import dutrow.sales.bl.BuyerMgmtException;
-import dutrow.sales.bo.AuctionItem;
 import dutrow.sales.dto.AuctionDTO;
 import dutrow.sales.dto.BidDTO;
 import dutrow.sales.dto.BidResultDTO;
@@ -30,6 +28,5 @@ public interface BuyerMgmtRemote {
 	BidResultDTO placeBid(long auctionId, float bidValue) throws BuyerMgmtRemoteException;
 	boolean placeMultiBid(long auctionId, float [] bidValues) throws BuyerMgmtRemoteException;
 	
-	AuctionItem getAuction(long auction) throws BuyerMgmtRemoteException;
 
 }

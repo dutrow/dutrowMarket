@@ -18,6 +18,7 @@ import org.junit.Test;
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
 import dutrow.bidbot.ejb.OrderMgmtRemote;
+import dutrow.sales.ejb.BuyerMgmtRemoteException;
 
 /**
  * @author dutroda1
@@ -62,9 +63,10 @@ public class AccessControlIT extends Support {
 	 * .
 	 * 
 	 * @throws NamingException
+	 * @throws BuyerMgmtRemoteException 
 	 */
 	@Test
-	public void testCreateOrder() throws NamingException {
+	public void testCreateOrder() throws NamingException, BuyerMgmtRemoteException {
 
 		try {
 			BidAccount ba = testSupport.createBidder();
@@ -96,9 +98,10 @@ public class AccessControlIT extends Support {
 	 * .
 	 * 
 	 * @throws NamingException
+	 * @throws BuyerMgmtRemoteException 
 	 */
 	@Test
-	public void testPlaceBid() throws NamingException {
+	public void testPlaceBid() throws NamingException, BuyerMgmtRemoteException {
 
 		try {
 			BidAccount ba = testSupport.createBidder();
@@ -119,9 +122,10 @@ public class AccessControlIT extends Support {
 	 * Test method for {@link dutrow.bidbot.ejb.OrderMgmtEJB#endOrder(long)}.
 	 * 
 	 * @throws NamingException
+	 * @throws BuyerMgmtRemoteException 
 	 */
 	@Test
-	public void testEndOrder() throws NamingException {
+	public void testEndOrder() throws NamingException, BuyerMgmtRemoteException {
 
 		try {
 
@@ -145,9 +149,10 @@ public class AccessControlIT extends Support {
 	 * {@link dutrow.bidbot.ejb.OrderMgmtEJB#getOrderStatus(long)}.
 	 * 
 	 * @throws NamingException
+	 * @throws BuyerMgmtRemoteException 
 	 */
 	@Test
-	public void testGetOrderStatus() throws NamingException {
+	public void testGetOrderStatus() throws NamingException, BuyerMgmtRemoteException {
 
 		try {
 			BidAccount ba = testSupport.createBidder();

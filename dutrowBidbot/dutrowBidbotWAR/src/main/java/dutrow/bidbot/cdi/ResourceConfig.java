@@ -12,6 +12,7 @@ import dutrow.bidbot.bl.OrderMgmt;
 import dutrow.bidbot.blimpl.BidbotTestUtilImpl;
 import dutrow.bidbot.blimpl.OrderMgmtImpl;
 import dutrow.bidbot.dao.BidAccountDAO;
+import dutrow.bidbot.ejb.OrderMgmtHelper;
 import dutrow.bidbot.jpa.JPABidAccountDAO;
 
 /**
@@ -52,6 +53,13 @@ public class ResourceConfig {
 	public BidAccountDAO getAccountDAO(
 			@BidbotEntityManager final EntityManager emgr) {
 		return new JPABidAccountDAO(emgr);
+	}
+	
+	// HELPER
+	@Produces
+	@BidbotOrderMgmtHelper
+	public OrderMgmtHelper getOrderMgmtHelper(){
+		return new OrderMgmtHelper();
 	}
 
 }

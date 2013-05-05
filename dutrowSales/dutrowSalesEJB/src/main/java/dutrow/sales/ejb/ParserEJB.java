@@ -26,8 +26,9 @@ import ejava.projects.esales.xml.ESalesParser;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-@RolesAllowed({"esales-admin"})
+@RolesAllowed({"esales-admin", "ebidbot-admin"})
 //esales-admin		these users will be able to perform management and test functions on eSales.
+//ebidbot-admin	these users will be able to perform management and test functions on eBidbot.
 public class ParserEJB implements ParserRemote {
 	@Resource(name = "vals/xmlFile")
 	private static String xmlFile;

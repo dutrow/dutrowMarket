@@ -7,6 +7,7 @@ import javax.ejb.Remote;
 
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
+import dutrow.sales.ejb.BuyerMgmtRemoteException;
 
 /**
  * @author dutroda1
@@ -14,7 +15,7 @@ import dutrow.bidbot.bo.BidOrder;
  */
 @Remote
 public interface OrderMgmtRemote {
-	long createOrder(BidOrder order);
+	long createOrder(BidOrder order) throws BuyerMgmtRemoteException;
 	BidOrder getOrder(long bidOrderId);
 	boolean placeBid(BidOrder order, float bid);
 	boolean endOrder(long bidOrderId); // complete order processing once auction has closed and note if won.

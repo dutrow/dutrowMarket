@@ -4,7 +4,6 @@
 package dutrow.bidbot.ejb;
 
 import javax.annotation.security.RolesAllowed;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -17,7 +16,6 @@ import dutrow.bidbot.bo.BidOrder;
 import dutrow.bidbot.cdi.BidbotOrderManager;
 import dutrow.bidbot.cdi.BidbotTest;
 import dutrow.bidbot.dao.BidAccountDAO;
-import dutrow.sales.ejb.AccountMgmtRemote;
 
 /**
  * @author dutroda1

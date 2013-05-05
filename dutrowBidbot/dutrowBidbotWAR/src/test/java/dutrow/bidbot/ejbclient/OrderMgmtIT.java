@@ -17,6 +17,7 @@ import org.junit.Test;
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
 import dutrow.bidbot.ejb.OrderMgmtRemote;
+import dutrow.sales.ejb.BuyerMgmtRemoteException;
 
 /**
  * @author dutroda1
@@ -61,16 +62,17 @@ public class OrderMgmtIT extends Support {
 	 * .
 	 * 
 	 * @throws NamingException
+	 * @throws BuyerMgmtRemoteException 
 	 */
 	@Test
-	public void testCreateOrder() throws NamingException {
+	public void testCreateOrder() throws NamingException, BuyerMgmtRemoteException {
 
 		runAs(admin2User, admin2Password);
 		BidAccount ba = testSupport.createBidder();
-
-		runAs(user3User, user3Password);
 		Assert.assertNotNull("BidAccount is null", ba);
 		orderManager.createAccount(ba);
+		
+		runAs(user3User, user3Password);
 		BidOrder bo1 = new BidOrder(3, 4.5f, 7.5f, ba);
 		bo1.setBidOrderId(orderManager.createOrder(bo1));
 		long bid1 = bo1.getBidOrderId();
@@ -93,41 +95,43 @@ public class OrderMgmtIT extends Support {
 	 * .
 	 * 
 	 * @throws NamingException
+	 * @throws BuyerMgmtRemoteException 
 	 */
 	@Test
-	public void testPlaceBid() throws NamingException {
+	public void testPlaceBid() throws NamingException, BuyerMgmtRemoteException {
 
 		runAs(admin2User, admin2Password);
 		BidAccount ba = testSupport.createBidder();
-
-		runAs(user3User, user3Password);
 		Assert.assertNotNull("BidAccount is null", ba);
 		orderManager.createAccount(ba);
-
-		runAs(admin2User, admin2Password);
-		BidOrder bo = testSupport.createOrder(ba);
-
+		
 		runAs(user3User, user3Password);
-		orderManager.createAccount(bo.getBidder());
-		orderManager.createOrder(bo);
-		Assert.assertTrue(orderManager.placeBid(bo, 5f));
-		Assert.assertFalse(orderManager.placeBid(bo, 200f));
+		BidOrder bo1 = new BidOrder(3, 4.5f, 7.5f, ba);
+		bo1.setBidOrderId(orderManager.createOrder(bo1));
+		long bid1 = bo1.getBidOrderId();
+		BidOrder bo2 = orderManager.getOrder(bid1);
+		
+		runAs(user3User, user3Password);
+		orderManager.createOrder(bo1);
+		Assert.assertTrue(orderManager.placeBid(bo1, 5f));
+		Assert.assertFalse(orderManager.placeBid(bo1, 200f));
 	}
 
 	/**
 	 * Test method for {@link dutrow.bidbot.ejb.OrderMgmtEJB#endOrder(long)}.
 	 * 
 	 * @throws NamingException
+	 * @throws BuyerMgmtRemoteException 
 	 */
 	@Test
-	public void testEndOrder() throws NamingException {
+	public void testEndOrder() throws NamingException, BuyerMgmtRemoteException {
 
 		runAs(admin2User, admin2Password);
 		BidAccount ba = testSupport.createBidder();
-
-		runAs(user3User, user3Password);
 		Assert.assertNotNull("BidAccount is null", ba);
 		orderManager.createAccount(ba);
+		
+		runAs(user3User, user3Password);
 		BidOrder bo = new BidOrder(3, 4.5f, 7.5f, ba);
 		bo.setBidOrderId(orderManager.createOrder(bo));
 		Assert.assertNotSame("Create Order", 0, bo.getBidOrderId());
@@ -141,23 +145,19 @@ public class OrderMgmtIT extends Support {
 	 * {@link dutrow.bidbot.ejb.OrderMgmtEJB#getOrderStatus(long)}.
 	 * 
 	 * @throws NamingException
+	 * @throws BuyerMgmtRemoteException 
 	 */
 	@Test
-	public void testGetOrderStatus() throws NamingException {
+	public void testGetOrderStatus() throws NamingException, BuyerMgmtRemoteException {
 
 		runAs(admin2User, admin2Password);
 		BidAccount ba = testSupport.createBidder();
-
-		runAs(user3User, user3Password);
 		Assert.assertNotNull("BidAccount is null", ba);
 		orderManager.createAccount(ba);
-
-		runAs(admin2User, admin2Password);
 		BidOrder bo = testSupport.createOrder(ba);
-
+		
 		runAs(user3User, user3Password);
-		orderManager.createAccount(bo.getBidder());
-		bo.setBidOrderId(orderManager.createOrder(bo));
+		bo.setBidOrderId(orderManager.createOrder(bo));		
 		boolean orderStatus = orderManager.getOrderStatus(bo.getBidOrderId());
 		Assert.assertFalse(orderStatus);
 
@@ -166,10 +166,12 @@ public class OrderMgmtIT extends Support {
 	@Test
 	public void testCreateAccount() throws NamingException {
 
-		runAs(user3User, user3Password);
+		runAs(admin2User, admin2Password);
 		BidAccount ba1 = orderManager
-				.createAccount("dan", "ddutrow", "passwdd");
-		BidAccount ba2 = orderManager.getAccount("dan");
+				.createAccount(user3User, "user2", "password");
+		
+		runAs(user3User, user3Password);
+		BidAccount ba2 = orderManager.getAccount(user3User);
 		Assert.assertNotNull("Created account null", ba1);
 		Assert.assertNotNull("Retrieved account null", ba2);
 		Assert.assertEquals(ba1.getSalesAccount(), ba2.getSalesAccount());

@@ -10,7 +10,7 @@ import java.util.Date;
  * @author dutroda1
  *
  */
-public class BidDTO implements Serializable {
+public class BidDTO implements Serializable, Comparable<BidDTO> {
 	/**
 	 * 
 	 */
@@ -21,4 +21,9 @@ public class BidDTO implements Serializable {
 	public String poc_email;
 	
 	public long auctionItem;
+	
+	@Override
+	public int compareTo(BidDTO other) {
+		return Float.compare(this.amount, other.amount);
+	}
 }

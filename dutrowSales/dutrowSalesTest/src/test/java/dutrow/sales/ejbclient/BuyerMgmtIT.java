@@ -142,11 +142,12 @@ public class BuyerMgmtIT extends Support {
 		runAs(user1User, user1Password);
 		BidResultDTO one = buyerManager.placeBid(auction.id,
 				2.00f);
-		BidResultDTO two = new BidResultDTO();
+		BidResultDTO two ;
 		try {
 			two = buyerManager.placeBid(auction.id, 1.00f);
 		} catch (EJBException e) {
 			log.info("Expected EJB Exception: " + e.getMessage());
+			two = new BidResultDTO(null, "Rejected - Good!");
 		}
 		BidResultDTO three = buyerManager.placeBid(auction.id,
 				3.00f);

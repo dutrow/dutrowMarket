@@ -13,5 +13,12 @@
             <ejb-name>*</ejb-name>
             <sec:security-domain>other</sec:security-domain>
         </sec:security>
+        <sec:security>
+        	<ejb-name>OrderMgmtHelper</ejb-name>
+        	<sec:security-domain>other</sec:security-domain>
+        	<sec:run-as-principal>sysbidbot1</sec:run-as-principal>
+        </sec:security>
     </assembly-descriptor>
+    
+    
 </jboss:ejb-jar>

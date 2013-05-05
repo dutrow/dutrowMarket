@@ -14,7 +14,6 @@ import junit.framework.Assert;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jboss.ejb.client.EJBClient;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -95,17 +94,20 @@ public class EndToEndIT extends Support {
 	@Test
 	public void endToEnd() throws BuyerMgmtRemoteException, NamingException {
 		log.debug(" **** endToEnd **** ");
-		runAs(admin1User, admin1Password);
+		runAs(admin2User, admin2Password);
 		log.info("reset databases");
 		boolean isReset = super.testSupport.reset();
 		Assert.assertTrue(isReset);
 
 		log.info("ingest data");
 		try {
+			runAs(admin2User, admin2Password);
 			parser.ingest();
 		} catch (Exception e) {
-			Assert.fail("Parser ingest failed");
+			log.error("Parser ingest failed", e);
+			Assert.fail("Parser ingest failed: " + e.getMessage());
 		}
+		runAs(knownUser, knownPassword);
 
 		// createAccount for seller, buyer1, and buyer2 in eSales
 		AccountDTO seller = new AccountDTO(user1User, "John", "s", "Hopkins",
@@ -115,7 +117,6 @@ public class EndToEndIT extends Support {
 		AccountDTO buyer2 = new AccountDTO(user3User, "Ralph", "D.", "Semmel",
 				"Ralph.Semmel@jhuapl.edu");
 
-		runAs(knownUser, knownPassword);
 		// The Injestor already creates user1 (my seller)
 		// try {
 		// accountManager.createAccountDTO(seller);
