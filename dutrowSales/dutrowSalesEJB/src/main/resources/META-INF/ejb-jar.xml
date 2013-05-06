@@ -14,6 +14,24 @@
                 <env-entry-value>/xml/eSales-all.xml</env-entry-value>
             </env-entry>
         </session>
+        <session>
+            <ejb-name>SellerMgmtEJB</ejb-name>
+            <env-entry>
+                <env-entry-name>vals/checkItemInterval</env-entry-name>
+                <env-entry-type>java.lang.Long</env-entry-type>
+                <env-entry-value>10000</env-entry-value>
+                <injection-target>
+                    <injection-target-class>
+                        dutrow.sales.ejb.SellerMgmtEJB
+                    </injection-target-class>
+                    <injection-target-name>
+                        checkItemInterval
+                    </injection-target-name>
+                </injection-target>
+            </env-entry>
+            </session>
+            
     </enterprise-beans>
+
 
 </ejb-jar>

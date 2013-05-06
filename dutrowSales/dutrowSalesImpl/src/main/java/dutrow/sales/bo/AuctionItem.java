@@ -378,4 +378,17 @@ public class AuctionItem {
 		return this.endTime.before(Calendar.getInstance().getTime());
 	}
 
+	/**
+	 * 
+	 */
+	public void closeAuction() {
+		this.open = false;
+		Bid highestBid = getHighestBid();
+		if (highestBid != null){
+			this.setBuyer(highestBid.getBidder());
+			this.setPurchasePrice(highestBid.getAmount());
+		}
+		
+	}
+
 }

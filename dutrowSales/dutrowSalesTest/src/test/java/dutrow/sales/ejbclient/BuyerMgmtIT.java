@@ -30,31 +30,13 @@ import dutrow.sales.ejb.BuyerMgmtRemoteException;
  * @author dutroda1
  * 
  */
-public class BuyerMgmtIT extends Support {
+public class BuyerMgmtIT extends SalesSupport {
 	private static final Log log = LogFactory.getLog(BuyerMgmtIT.class);
-
-	private static final String registrarJNDI = System
-			.getProperty("jndi.name.registrar",
-					"dutrowSalesEAR/dutrowSalesEJB/BuyerMgmtEJB!dutrow.sales.ejb.BuyerMgmtRemote");
-	private BuyerMgmtRemote buyerManager;
 
 	private AccountDTO seller;
 	private AccountDTO bidder;
 	private AuctionDTO auction;
 	long auctionId;
-
-	public void configureJndi() {
-		assertNotNull("jndi.name.registrar not supplied", registrarJNDI);
-
-		log.debug("jndi name:" + registrarJNDI);
-		try {
-			buyerManager = (BuyerMgmtRemote) jndi.lookup(registrarJNDI);
-		} catch (NamingException ne) {
-			log.warn(ne.getMessage());
-			log.warn(ne.getExplanation());
-		}
-		log.debug("buyerManager=" + buyerManager);
-	}
 
 	@Before
 	public void setUp() throws Exception {

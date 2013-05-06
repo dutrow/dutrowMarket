@@ -38,6 +38,7 @@ public class AccountDTO implements Serializable{
 		this.lastName = lastName;
 		this.email = email;
 		this.addresses = new ArrayList<AddressDTO>();
+
 	}
 
 	@Override

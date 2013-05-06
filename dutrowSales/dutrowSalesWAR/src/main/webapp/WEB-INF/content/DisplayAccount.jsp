@@ -21,6 +21,8 @@
                     String email = a.email;
                     String url = "?id=" + userId + 
                         "&command=Get%20Account";
+                    
+                    
             </jsp:scriptlet>
             <li><a href="<%= url %>"><%= userId %>, &lt;<%= email %>&gt;</a></li>
             <li><%= a.firstName %> <%= a.middleName %> <%= a.lastName %></li>

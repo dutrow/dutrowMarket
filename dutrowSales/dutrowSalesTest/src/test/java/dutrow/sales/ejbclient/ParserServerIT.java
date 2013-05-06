@@ -1,43 +1,11 @@
 package dutrow.sales.ejbclient;
 
-import javax.naming.InitialContext;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
 
-import dutrow.sales.ejb.ParserRemote;
-import ejava.util.ejb.EJBClient;
-
-public class ParserServerIT {
+public class ParserServerIT extends SalesSupport {
 	private static final Log log = LogFactory.getLog(ParserServerIT.class);
 
-    public static final String jndiName = System.getProperty("jndi.name",
-    		EJBClient.getRemoteLookupName("dutrowSalesEAR", "dutrowSalesEJB", 
-    				"ParserEJB", ParserRemote.class.getName()));
-    
-    private static ParserRemote parser;
-    private InitialContext jndi;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        log.debug("looking up name:" + jndiName);
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        jndi = new InitialContext();
-        parser = (ParserRemote)jndi.lookup(jndiName);
-    }
-    
-    @After
-    public void tearDown() throws Exception {
-    	if (jndi != null) {
-    		jndi.close();
-    	}
-    }
 
     //@Test//tested in EndToEndIT
     public void testIngest() throws Exception {

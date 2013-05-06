@@ -7,7 +7,7 @@ import dutrow.sales.ejb.AccountMgmtRemote;
 import dutrow.sales.ejb.BuyerMgmtRemote;
 import dutrow.sales.ejb.ParserRemote;
 import dutrow.sales.ejb.SellerMgmtRemote;
-import dutrow.sales.ejb.SupportRemote;
+import dutrow.sales.ejb.SalesSupportRemote;
 
 /**
  * This class is used to define the injection type for RegistrarRemote types
@@ -31,6 +31,6 @@ public class WebConfig {
 
 	@Produces
 	@EJB
-	public SupportRemote support;
+	public SalesSupportRemote support;
 
 }

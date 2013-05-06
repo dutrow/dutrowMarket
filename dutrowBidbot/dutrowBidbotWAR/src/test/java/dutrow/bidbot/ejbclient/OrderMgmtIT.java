@@ -24,7 +24,7 @@ import dutrow.sales.ejb.BuyerMgmtRemoteException;
  * @author dutroda1
  * 
  */
-public class OrderMgmtIT extends Support {
+public class OrderMgmtIT extends BidbotSupport {
 	private static Log log = LogFactory.getLog(OrderMgmtIT.class);
 
 	private BidAccount bidAccount;
@@ -42,7 +42,6 @@ public class OrderMgmtIT extends Support {
 	public void setUp() throws NamingException {
 		super.setUp();
 		log.debug("Set up for OrderMgmtIT");
-		configureJndi();
 
 		runAs(admin1User, admin1Password);
 		seller = new AccountDTO("user1", "John", "s", "Hopkins",

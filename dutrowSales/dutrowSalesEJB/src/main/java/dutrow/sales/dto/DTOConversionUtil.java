@@ -84,7 +84,7 @@ public final class DTOConversionUtil {
 	public static AccountDTO convertAccount(Account acct) {
 		if (acct == null)
 			return null;
-
+		
 		AccountDTO adto = new AccountDTO(acct.getUserId(), acct.getFirstName(),
 				acct.getMiddleName(), acct.getLastName(), acct.getPoc()
 						.getEmail());

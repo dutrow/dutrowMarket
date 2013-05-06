@@ -30,7 +30,7 @@ Project 3
 			this method is invoked to pass the credentials of valid users for each of the actions
 			
 	b.	Add a new unit test that verifies the access controls of the protected and open methods.
-			see: accessControlTest in dutrow.sales.ejbclient.AccessControlIT - dutrowSalesTest/src/test/java
+			see: accessControlTest in dutrow.sales.ejbclient.SalesAccessControlIT - dutrowSalesTest/src/test/java
 			this test mimics most functionality in EndToEndIT, except the expected case is failure to call EJBs
 			look for "Caught EJBAccessException: good!" in test output
 			
@@ -49,7 +49,7 @@ Project 3
 			this method is invoked to pass the credentials of valid users for each of the actions
 			
 	b.	Add a new unit test that verifies the access controls of the protected and open methods
-			see: accessControlTest in dutrow.bidbot.ejbclient.AccessControlIT - dutrowBidbotWAR/src/test/java
+			see: accessControlTest in dutrow.bidbot.ejbclient.BidbotAccessControlIT - dutrowBidbotWAR/src/test/java
 			this test mimics most functionality in OrderMgmtIT, except the expected case is failure to call EJBs
 			look for "Caught EJBAccessException: good!" in test output
 			

@@ -22,29 +22,10 @@ import dutrow.sales.ejb.AccountMgmtRemoteException;
  * @author dutroda1
  * 
  */
-public class AccountMgmtIT extends Support {
+public class AccountMgmtIT extends SalesSupport {
 	private static final Log log = LogFactory.getLog(AccountMgmtIT.class);
 
-	private static final String registrarJNDI = System
-			.getProperty(
-					"jndi.name.registrar",
-					"dutrowSalesEAR/dutrowSalesEJB/AccountMgmtEJB!dutrow.sales.ejb.AccountMgmtRemote");
-	private AccountMgmtRemote accountManager;
-
 	AccountDTO dan;
-
-	public void configureJndi() {
-		assertNotNull("jndi.name.registrar not supplied", registrarJNDI);
-
-		log.debug("jndi name:" + registrarJNDI);
-		try {
-			accountManager = (AccountMgmtRemote) jndi.lookup(registrarJNDI);
-		} catch (NamingException ne) {
-			log.warn(ne.getMessage());
-			log.warn(ne.getExplanation());
-		}
-		log.debug("accountManager=" + accountManager);
-	}
 
 	/**
 	 * @throws java.lang.Exception

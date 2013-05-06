@@ -13,6 +13,7 @@ import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
+import org.junit.Test;
 
 import dutrow.sales.dto.AccountDTO;
 import dutrow.sales.dto.AuctionDTO;
@@ -24,7 +25,7 @@ import dutrow.sales.ejb.BuyerMgmtRemoteException;
  * @author dutroda1
  * 
  */
-public class EndToEndIT extends Support {
+public class EndToEndIT extends BidbotSupport {
 	private static final Log log = LogFactory.getLog(EndToEndIT.class);
 
 
@@ -33,13 +34,9 @@ public class EndToEndIT extends Support {
 	public void setUp() throws NamingException {
 		log.debug("*** Set up for EndToEndIT ***");
 		super.setUp();
-
-		configureJndi();
-
-		log.debug("testSupport=" + testSupport);
 	}
 
-	//@Test
+	@Test
 	public void endToEnd() throws BuyerMgmtRemoteException, NamingException {
 		log.debug(" **** endToEnd **** ");
 		

@@ -15,11 +15,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import dutrow.sales.dto.AccountDTO;
+import dutrow.sales.dto.AddressDTO;
 import dutrow.sales.ejb.AccountMgmtRemote;
 import dutrow.sales.ejb.BuyerMgmtRemote;
 import dutrow.sales.ejb.ParserRemote;
 import dutrow.sales.ejb.SellerMgmtRemote;
-import dutrow.sales.ejb.SupportRemote;
+import dutrow.sales.ejb.SalesSupportRemote;
 
 /**
  * @author dutroda1
@@ -41,15 +42,22 @@ public class CreateAccount extends Handler {
 			HttpServletResponse response, ServletContext context,
 			BuyerMgmtRemote buyerMgmt, AccountMgmtRemote accountMgmt,
 			SellerMgmtRemote sellerMgmt, ParserRemote parser,
-			SupportRemote support) throws ServletException, IOException {
+			SalesSupportRemote support) throws ServletException, IOException {
 
 		String id = (String) request.getParameter("id");
 		String first = (String) request.getParameter("first");
 		String middle = (String) request.getParameter("middle");
 		String last = (String) request.getParameter("last");
 		String email = (String) request.getParameter("email");
-
+		
+		String street = (String) request.getParameter("street");
+		String city = (String) request.getParameter("city");
+		String state = (String) request.getParameter("state");
+		String zip = (String) request.getParameter("zip");
+		
+		AddressDTO addr = new AddressDTO("shipping", first + middle + last, street, city, state, zip);
 		AccountDTO account = new AccountDTO(id, first, middle, last, email);
+		account.addresses.add(addr);
 
 		try {
 			boolean good = accountMgmt.createAccountDTO(account);

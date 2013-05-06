@@ -26,31 +26,13 @@ import dutrow.sales.ejb.SellerMgmtRemote;
  * @author dutroda1
  * 
  */
-public class SellerMgmtIT extends Support {
+public class SellerMgmtIT extends SalesSupport {
 	private static final Log log = LogFactory.getLog(SellerMgmtIT.class);
-
-	private static final String registrarJNDI = System
-			.getProperty("jndi.name.registrar",
-					"dutrowSalesEAR/dutrowSalesEJB/SellerMgmtEJB!dutrow.sales.ejb.SellerMgmtRemote");
-	private SellerMgmtRemote sellerManager;
 
 	private AccountDTO seller;
 	private AccountDTO bidder;
 	private AuctionDTO auction;
 	long auctionId;
-
-	public void configureJndi() {
-		assertNotNull("jndi.name.registrar not supplied", registrarJNDI);
-
-		log.debug("jndi name:" + registrarJNDI);
-		try {
-			sellerManager = (SellerMgmtRemote) jndi.lookup(registrarJNDI);
-		} catch (NamingException ne) {
-			log.warn(ne.getMessage());
-			log.warn(ne.getExplanation());
-		}
-		log.debug("sellerManager=" + sellerManager);
-	}
 
 	@Before
 	public void setUp() throws Exception {

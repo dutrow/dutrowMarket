@@ -24,8 +24,8 @@ import dutrow.sales.ejb.BuyerMgmtRemoteException;
  * @author dutroda1
  * 
  */
-public class AccessControlIT extends Support {
-	private static Log log = LogFactory.getLog(AccessControlIT.class);
+public class BidbotAccessControlIT extends BidbotSupport {
+	private static Log log = LogFactory.getLog(BidbotAccessControlIT.class);
 	private AccountDTO seller;
 	private AccountDTO buyer1;
 	private AuctionDTO auction;
@@ -38,8 +38,7 @@ public class AccessControlIT extends Support {
 	@Before
 	public void setUp() throws NamingException {
 		super.setUp();
-		log.debug("Set up for AccessControlIT");
-		configureJndi();
+		log.debug("Set up for BidbotAccessControlIT");
 
 		runAs(admin1User, admin1Password);
 		seller = new AccountDTO("user1", "John", "s", "Hopkins",

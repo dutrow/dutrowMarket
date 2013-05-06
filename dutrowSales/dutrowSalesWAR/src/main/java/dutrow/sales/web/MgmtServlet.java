@@ -25,7 +25,7 @@ import dutrow.sales.ejb.AccountMgmtRemote;
 import dutrow.sales.ejb.BuyerMgmtRemote;
 import dutrow.sales.ejb.ParserRemote;
 import dutrow.sales.ejb.SellerMgmtRemote;
-import dutrow.sales.ejb.SupportRemote;
+import dutrow.sales.ejb.SalesSupportRemote;
 
 @SuppressWarnings("serial")
 public class MgmtServlet extends HttpServlet {
@@ -51,7 +51,7 @@ public class MgmtServlet extends HttpServlet {
 	@Inject
 	private ParserRemote injectedParser;
 	@Inject
-	private SupportRemote injectedSupport;
+	private SalesSupportRemote injectedSupport;
 
 	/**
 	 * Init verify the reference to the EJB logic is in place and initializes
@@ -116,7 +116,7 @@ public class MgmtServlet extends HttpServlet {
 		AccountMgmtRemote accountMgmt = injectedAccountMgmt;
 		SellerMgmtRemote sellerMgmt = injectedSellerMgmt;
 		ParserRemote parser = injectedParser;
-		SupportRemote support = injectedSupport;
+		SalesSupportRemote support = injectedSupport;
 
 		try {
 			if (buyerMgmt == null || accountMgmt == null || sellerMgmt == null
@@ -159,7 +159,7 @@ public class MgmtServlet extends HttpServlet {
 				jndiName = config.getServletContext().getInitParameter(
 						"dutrow.support.remote");
 				log.info("JNDI Name: " + jndiName);
-				support = (SupportRemote) jndi.lookup(jndiName);
+				support = (SalesSupportRemote) jndi.lookup(jndiName);
 
 			}
 			if (command != null) {
@@ -222,7 +222,7 @@ public class MgmtServlet extends HttpServlet {
 				HttpServletResponse response, ServletContext context,
 				BuyerMgmtRemote buyerMgmt, AccountMgmtRemote accountMgmt,
 				SellerMgmtRemote sellerMgmt, ParserRemote parser,
-				SupportRemote support) throws ServletException, IOException {
+				SalesSupportRemote support) throws ServletException, IOException {
             request.getSession().invalidate();
             
             //switch back to straight HTTP            

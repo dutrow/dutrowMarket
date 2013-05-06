@@ -19,7 +19,7 @@ import dutrow.sales.ejb.AccountMgmtRemote;
 import dutrow.sales.ejb.BuyerMgmtRemote;
 import dutrow.sales.ejb.ParserRemote;
 import dutrow.sales.ejb.SellerMgmtRemote;
-import dutrow.sales.ejb.SupportRemote;
+import dutrow.sales.ejb.SalesSupportRemote;
 
 /**
  * @author dutroda1
@@ -42,7 +42,7 @@ public class GetAuction extends Handler {
 			HttpServletResponse response, ServletContext context,
 			BuyerMgmtRemote buyerMgmt, AccountMgmtRemote accountMgmt,
 			SellerMgmtRemote sellerMgmt, ParserRemote parser,
-			SupportRemote support) throws ServletException, IOException {
+			SalesSupportRemote support) throws ServletException, IOException {
 		try {
 			String auctionIdStr = (String) request
 					.getParameter(Strings.ID_PARAM);

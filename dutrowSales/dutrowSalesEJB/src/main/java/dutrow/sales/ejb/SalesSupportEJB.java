@@ -35,8 +35,8 @@ import dutrow.sales.dto.DTOConversionUtil;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @RolesAllowed({"esales-admin"})
 // esales-admin		these users will be able to perform management and test functions on eSales.
-public class SupportEJB implements SupportRemote {
-	private static final Log log = LogFactory.getLog(SupportEJB.class);
+public class SalesSupportEJB implements SalesSupportRemote {
+	private static final Log log = LogFactory.getLog(SalesSupportEJB.class);
 	
 	@Inject
 	TestSupport testUtil;

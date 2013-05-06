@@ -35,71 +35,14 @@ import ejava.util.ejb.EJBClient;
  * @author dutroda1
  * 
  */
-public class AccessControlIT extends Support {
-	private static final Log log = LogFactory.getLog(AccessControlIT.class);
+public class SalesAccessControlIT extends SalesSupport {
+	private static final Log log = LogFactory.getLog(SalesAccessControlIT.class);
 
-	private static final String sellerJNDI = System
-			.getProperty("jndi.name.registrar",
-					"dutrowSalesEAR/dutrowSalesEJB/SellerMgmtEJB!dutrow.sales.ejb.SellerMgmtRemote");
-	private SellerMgmtRemote sellerManager;
-
-	private static final String buyerJNDI = System
-			.getProperty("jndi.name.registrar",
-					"dutrowSalesEAR/dutrowSalesEJB/BuyerMgmtEJB!dutrow.sales.ejb.BuyerMgmtRemote");
-	private BuyerMgmtRemote buyerManager;
-
-	private static final String accountJNDI = System
-			.getProperty(
-					"jndi.name.registrar",
-					"dutrowSalesEAR/dutrowSalesEJB/AccountMgmtEJB!dutrow.sales.ejb.AccountMgmtRemote");
-	private AccountMgmtRemote accountManager;
-
-	public static final String parserJNDI = System.getProperty("jndi.name",
-			EJBClient.getRemoteLookupName("dutrowSalesEAR", "dutrowSalesEJB",
-					"ParserEJB", ParserRemote.class.getName()));
-
-	private static ParserRemote parser;
-
-	public void configureJndi() {
-		assertNotNull("jndi.name.registrar not supplied", sellerJNDI);
-		assertNotNull("jndi.name.registrar not supplied", buyerJNDI);
-		assertNotNull("jndi.name.registrar not supplied", accountJNDI);
-
-		log.debug("seller jndi name:" + sellerJNDI);
-		log.debug("account jndi name:" + accountJNDI);
-		log.debug("buyer jndi name:" + buyerJNDI);
-		log.debug("parser jndi name: " + parserJNDI);
-
-		try {
-			sellerManager = (SellerMgmtRemote) jndi.lookup(sellerJNDI);
-			accountManager = (AccountMgmtRemote) jndi.lookup(accountJNDI);
-			buyerManager = (BuyerMgmtRemote) jndi.lookup(buyerJNDI);
-			parser = (ParserRemote) jndi.lookup(parserJNDI);
-		} catch (NamingException ne) {
-			log.warn(ne.getMessage());
-			log.warn(ne.getExplanation());
-		}
-		log.debug("sellerManager=" + sellerManager);
-		log.debug("accountManager=" + accountManager);
-		log.debug("buyerManager=" + buyerManager);
-		log.debug("parser=" + parser);
-
-	}
-
-	@Before
-	public void setUp() throws Exception {
-		log.debug("*** Set up for EndToEndIT ***");
-		super.setUp();
-
-		configureJndi();
-
-		log.debug("testSupport=" + testSupport);
-	}
 
 	@Test
 	public void accessControlTest() throws BuyerMgmtRemoteException,
 			NamingException {
-		log.debug(" **** endToEnd **** ");
+		log.debug(" **** accessControlTest **** ");
 		// not runAs(admin1User, admin1Password);
 		log.info("reset databases");
 		boolean isReset = false;
@@ -153,9 +96,8 @@ public class AccessControlIT extends Support {
 		AuctionDTO gotAuction = null;
 		try {
 			gotAuction = buyerManager.getAuctionDTO(auction.id);
-			Assert.fail("EJB Access Should Fail");
 		} catch (EJBAccessException ae) {
-			log.info("Caught EJBAccessException: good!");
+			Assert.fail("EJB Access Should be PermitAll");
 		}
 		
 
