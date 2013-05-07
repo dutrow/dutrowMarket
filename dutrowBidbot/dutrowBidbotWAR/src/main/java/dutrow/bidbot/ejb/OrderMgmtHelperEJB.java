@@ -21,8 +21,8 @@ import dutrow.sales.ejb.BuyerMgmtRemoteException;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @RunAs("esales-trusted")
-public class OrderMgmtHelper {
-	private static final Log log = LogFactory.getLog(OrderMgmtHelper.class);
+public class OrderMgmtHelperEJB {
+	private static final Log log = LogFactory.getLog(OrderMgmtHelperEJB.class);
 
 	final String mName = "ejb:dutrowSalesEAR/dutrowSalesEJB/BuyerMgmtEJB!dutrow.sales.ejb.BuyerMgmtRemote";
 	@EJB(mappedName = mName)

@@ -28,7 +28,10 @@ import dutrow.sales.ejb.BuyerMgmtRemote;
  * This class will listen for market events and cause further bidding to occur.
  */
 @MessageDriven(activationConfig = {
-@ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge") })
+		@ActivationConfigProperty(propertyName = "destinationTopic", propertyValue = "javax.jms.Topic"),
+		@ActivationConfigProperty(propertyName = "destination", propertyValue = "topic/ejava/projects/emarket/esales-action"),
+		@ActivationConfigProperty(propertyName = "messageSelector", propertyValue = "JMSType in ('forSale', 'saleUpdate')"),
+		@ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge") })
 public class BidbotMDB implements MessageListener {
 	private static final Log log = LogFactory.getLog(BidbotMDB.class);
 

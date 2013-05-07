@@ -68,7 +68,7 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 	AccountMgmt acctMgmt;
 	
 	@EJB
-	SellerMgmtHelper esalessys;
+	SellerMgmtHelperEJB esalessys;
 
 	@Resource
 	protected SessionContext ctx;
@@ -122,9 +122,9 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 		timerService.createCalendarTimer(schedule);
 	}
 
-	//@Timeout
-	//@Transient
-	//@Schedule(second = "*/1", minute = "*", hour = "*", dayOfMonth = "*", month = "*", year = "*")
+	@Timeout
+	@Transient
+	@Schedule(second = "*/10", minute = "*", hour = "*", dayOfMonth = "*", month = "*", year = "*")
 	public void execute(Timer timer) {
 		log.info("timer fired:" + timer);
 		try {

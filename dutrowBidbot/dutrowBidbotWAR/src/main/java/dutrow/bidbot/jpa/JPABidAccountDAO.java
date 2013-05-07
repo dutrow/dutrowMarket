@@ -210,7 +210,7 @@ public class JPABidAccountDAO extends JPADAO implements BidAccountDAO {
 	public List<BidOrder> getBidOrdersByAuctionId(long itemId) {
 		try {
 			TypedQuery<BidOrder> auctionQuery = em.createQuery(
-					"select o from BidOrder where o.auctionId=:itemId", BidOrder.class);
+					"select a from BidOrder a where a.auctionId=:itemId", BidOrder.class);
 			auctionQuery.setParameter("itemId", itemId);
 			return auctionQuery.getResultList();
 		} catch (RuntimeException ex) {

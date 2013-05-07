@@ -13,7 +13,7 @@ import dutrow.bidbot.bl.OrderMgmt;
 import dutrow.bidbot.blimpl.BidbotTestUtilImpl;
 import dutrow.bidbot.blimpl.OrderMgmtImpl;
 import dutrow.bidbot.dao.BidAccountDAO;
-import dutrow.bidbot.ejb.OrderMgmtHelper;
+import dutrow.bidbot.ejb.OrderMgmtHelperEJB;
 import dutrow.bidbot.jpa.JPABidAccountDAO;
 import dutrow.sales.ejb.BuyerMgmtRemote;
 

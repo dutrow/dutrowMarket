@@ -4,6 +4,9 @@ Spring 2013
 
 Project 3
 
+mvn clean pre-integration-test -DskipTests; mvn test -rf :dutrowBidbot
+mvn clean pre-integration-test -DskipTests; mvn verify -rf :dutrowBidbot -Dit.test=dutrow.bidbot.ejbclient.EndToEndIT
+
 1.		Provide all functionality from Projects 1 and 2.
 			All functionality is maintained (as submitted) from projects 1 and 2. The following enhancements have been made over previous submissions
 				- Changed the bidbot URL to http://localhost:8080/dutrowBidbot

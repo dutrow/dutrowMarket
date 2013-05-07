@@ -38,8 +38,8 @@ import dutrow.sales.bo.POC;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @RunAs("esales-sys")
 //esales-sys	role required to perform internal auction actions like JMS publishing.
-public class SellerMgmtHelper {
-	private static final Log log = LogFactory.getLog(SellerMgmtHelper.class);
+public class SellerMgmtHelperEJB {
+	private static final Log log = LogFactory.getLog(SellerMgmtHelperEJB.class);
 
 	@Inject
 	SellerMgmt sellerMgmt;

@@ -60,7 +60,7 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 	//final String hName = "ejb:dutrowBidbot/OrderMgmtHelper!dutrow.bidbot.ejb.OrderMgmtHelper";
 	//@EJB(mappedName = hName)
 	@EJB
-	OrderMgmtHelper orderMgmtHelper;
+	OrderMgmtHelperEJB orderMgmtHelper;
 
 	protected BidResultDTO executeOrder(BidOrder order)
 			throws BuyerMgmtRemoteException, NamingException {

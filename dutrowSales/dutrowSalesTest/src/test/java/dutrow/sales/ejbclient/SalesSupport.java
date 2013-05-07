@@ -122,20 +122,19 @@ public class SalesSupport {
 		configureJndi();
 
 		cleanup();
-		
+
 		runAs(knownUser, knownPassword);
 	}
 
-	
 	private void cleanup() throws NamingException {
 		runAs(admin1User, admin1Password);
-		
+
 		sellerManager.cancelTimers();
 		log.debug("cancelTimers complete");
-		
+
 		testSupport.resetAll();
 		log.debug("reset complete");
-		
+
 	}
 
 	@BeforeClass
@@ -204,6 +203,11 @@ public class SalesSupport {
 
 	@After
 	public void tearDown() throws NamingException {
+
+		runAs(admin1User, admin1Password);
+
+		sellerManager.cancelTimers();
+		log.debug("cancelTimers complete");
 
 		if (jndi != null) {
 			jndi.close();

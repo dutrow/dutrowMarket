@@ -14,7 +14,7 @@
             <sec:security-domain>other</sec:security-domain>
         </sec:security>
         <sec:security>
-        	<ejb-name>OrderMgmtHelper</ejb-name>
+        	<ejb-name>OrderMgmtHelperEJB</ejb-name>
         	<sec:security-domain>other</sec:security-domain>
         	<sec:run-as-principal>sysbidbot1</sec:run-as-principal>
         </sec:security>
