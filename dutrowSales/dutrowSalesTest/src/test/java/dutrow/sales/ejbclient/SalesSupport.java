@@ -15,14 +15,15 @@ import javax.naming.NamingException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 
 import dutrow.sales.ejb.AccountMgmtRemote;
 import dutrow.sales.ejb.BuyerMgmtRemote;
 import dutrow.sales.ejb.ParserRemote;
-import dutrow.sales.ejb.SellerMgmtRemote;
 import dutrow.sales.ejb.SalesSupportRemote;
-import ejava.util.ejb.EJBClient;
+import dutrow.sales.ejb.SellerMgmtRemote;
 
 /**
  * @author dutroda1
@@ -54,41 +55,10 @@ public class SalesSupport {
 	protected static ParserRemote parser;
 
 	private static final String testJNDI = System
-			.getProperty("jndi.name.test",
+			.getProperty(
+					"jndi.name.test",
 					"dutrowSalesEAR/dutrowSalesEJB/SalesSupportEJB!dutrow.sales.ejb.SalesSupportRemote");
 	protected SalesSupportRemote testSupport;
-
-	final public void configureJndi() {
-
-		log.debug("seller jndi name:" + sellerJNDI);
-		log.debug("account jndi name:" + accountJNDI);
-		log.debug("buyer jndi name:" + buyerJNDI);
-		log.debug("parser jndi name: " + parserJNDI);
-		log.debug("test jndi name:" + testJNDI);
-
-		assertNotNull("jndi.name.seller not supplied", sellerJNDI);
-		assertNotNull("jndi.name.buyer not supplied", buyerJNDI);
-		assertNotNull("jndi.name.account not supplied", accountJNDI);
-		assertNotNull("jndi.name.parser not supplied", parserJNDI);
-		assertNotNull("jndi.name.test not supplied", testJNDI);
-
-		try {
-			sellerManager = (SellerMgmtRemote) jndi.lookup(sellerJNDI);
-			accountManager = (AccountMgmtRemote) jndi.lookup(accountJNDI);
-			buyerManager = (BuyerMgmtRemote) jndi.lookup(buyerJNDI);
-			parser = (ParserRemote) jndi.lookup(parserJNDI);
-			testSupport = (SalesSupportRemote) jndi.lookup(testJNDI);
-		} catch (NamingException ne) {
-			log.warn(ne.getMessage());
-			log.warn(ne.getExplanation());
-		}
-		log.debug("sellerManager=" + sellerManager);
-		log.debug("accountManager=" + accountManager);
-		log.debug("buyerManager=" + buyerManager);
-		log.debug("parser=" + parser);
-		log.debug("testSupport=" + testSupport);
-
-	}
 
 	// known (no roles)
 	// admin1 esales-admin
@@ -151,15 +121,70 @@ public class SalesSupport {
 
 		configureJndi();
 
-		runAs(admin1User, admin1Password);
-		testSupport.resetAll();
-		log.debug("reset complete");
-
-		sellerManager.cancelTimers();
-
+		cleanup();
+		
 		runAs(knownUser, knownPassword);
 	}
 
+	
+	private void cleanup() throws NamingException {
+		runAs(admin1User, admin1Password);
+		
+		sellerManager.cancelTimers();
+		log.debug("cancelTimers complete");
+		
+		testSupport.resetAll();
+		log.debug("reset complete");
+		
+	}
+
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		log.info("*** setUpClass() ***");
+		// give application time to fully deploy
+		if (Boolean
+				.parseBoolean(System.getProperty("cargo.startstop", "false"))) {
+			long waitTime = 15000;
+			log.info(String.format(
+					"pausing %d secs for server deployment to complete",
+					waitTime / 1000));
+			Thread.sleep(waitTime);
+		} else {
+			log.info(String.format("startstop not set"));
+		}
+	}
+
+	final public void configureJndi() {
+
+		log.debug("seller jndi name:" + sellerJNDI);
+		log.debug("account jndi name:" + accountJNDI);
+		log.debug("buyer jndi name:" + buyerJNDI);
+		log.debug("parser jndi name: " + parserJNDI);
+		log.debug("test jndi name:" + testJNDI);
+
+		assertNotNull("jndi.name.seller not supplied", sellerJNDI);
+		assertNotNull("jndi.name.buyer not supplied", buyerJNDI);
+		assertNotNull("jndi.name.account not supplied", accountJNDI);
+		assertNotNull("jndi.name.parser not supplied", parserJNDI);
+		assertNotNull("jndi.name.test not supplied", testJNDI);
+
+		try {
+			sellerManager = (SellerMgmtRemote) jndi.lookup(sellerJNDI);
+			accountManager = (AccountMgmtRemote) jndi.lookup(accountJNDI);
+			buyerManager = (BuyerMgmtRemote) jndi.lookup(buyerJNDI);
+			parser = (ParserRemote) jndi.lookup(parserJNDI);
+			testSupport = (SalesSupportRemote) jndi.lookup(testJNDI);
+		} catch (NamingException ne) {
+			log.warn(ne.getMessage());
+			log.warn(ne.getExplanation());
+		}
+		log.debug("sellerManager=" + sellerManager);
+		log.debug("accountManager=" + accountManager);
+		log.debug("buyerManager=" + buyerManager);
+		log.debug("parser=" + parser);
+		log.debug("testSupport=" + testSupport);
+
+	}
 
 	protected Context runAs(String username, String password)
 			throws NamingException {
@@ -179,7 +204,7 @@ public class SalesSupport {
 
 	@After
 	public void tearDown() throws NamingException {
-		
+
 		if (jndi != null) {
 			jndi.close();
 		}

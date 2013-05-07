@@ -4,6 +4,7 @@
 package dutrow.bidbot.ejbclient;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.ejb.EJBAccessException;
 import javax.naming.NamingException;
@@ -47,9 +48,12 @@ public class BidbotAccessControlIT extends BidbotSupport {
 		buyer1 = new AccountDTO("user2", "Alexander", "X", "Kossiakoff",
 				"kossi@jhuapl.edu");
 		testSupportSales.createAccount(buyer1);
+		Calendar cal = Calendar.getInstance();
+		Date now = cal.getTime();
+		cal.add(Calendar.SECOND, 10);
+		Date end = cal.getTime();
 		auction = new AuctionDTO("VT Fuse", "Science & Toys",
-				"detonates an explosive device automatically", Calendar
-						.getInstance().getTime(), 18.00f, seller.userId,
+				"detonates an explosive device automatically", now, end, 18.00f, seller.userId,
 				seller.email, true);
 		auction.id = testSupportSales.createAuction(auction);
 

@@ -3,7 +3,6 @@
  */
 package dutrow.bidbot.ejb;
 
-import java.util.Properties;
 import java.util.TreeSet;
 
 import javax.annotation.Resource;
@@ -14,8 +13,6 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.apache.commons.logging.Log;
@@ -25,7 +22,6 @@ import dutrow.bidbot.bl.OrderMgmt;
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
 import dutrow.bidbot.cdi.BidbotOrderManager;
-import dutrow.bidbot.cdi.BidbotOrderMgmtHelper;
 import dutrow.bidbot.dao.BidAccountDAO;
 import dutrow.sales.dto.AuctionDTO;
 import dutrow.sales.dto.BidDTO;

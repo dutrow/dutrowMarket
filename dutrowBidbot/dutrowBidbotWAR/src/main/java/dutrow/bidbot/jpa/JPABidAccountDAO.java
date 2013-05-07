@@ -6,6 +6,7 @@ package dutrow.bidbot.jpa;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -124,7 +125,7 @@ public class JPABidAccountDAO extends JPADAO implements BidAccountDAO {
 
 		try {
 
-			if (order.getBidOrderId() != 0){
+			if (order.getBidOrderId() != 0) {
 				BidOrder existingOrder = em.find(BidOrder.class,
 						order.getBidOrderId());
 				if (existingOrder != null) {
@@ -198,6 +199,23 @@ public class JPABidAccountDAO extends JPADAO implements BidAccountDAO {
 			throw new DAOException("troubles: " + ex.toString(), ex);
 		}
 		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see dutrow.bidbot.dao.BidAccountDAO#getBidOrdersByAuctionId(long)
+	 */
+	@Override
+	public List<BidOrder> getBidOrdersByAuctionId(long itemId) {
+		try {
+			TypedQuery<BidOrder> auctionQuery = em.createQuery(
+					"select o from BidOrder where o.auctionId=:itemId", BidOrder.class);
+			auctionQuery.setParameter("itemId", itemId);
+			return auctionQuery.getResultList();
+		} catch (RuntimeException ex) {
+			throw new DAOException("troubles: " + ex.toString(), ex);
+		}
 	}
 
 }

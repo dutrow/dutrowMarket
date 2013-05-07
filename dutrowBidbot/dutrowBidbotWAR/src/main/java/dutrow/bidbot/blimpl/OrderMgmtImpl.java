@@ -3,6 +3,8 @@
  */
 package dutrow.bidbot.blimpl;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -165,6 +167,14 @@ public class OrderMgmtImpl implements OrderMgmt {
 	@Override
 	public BidOrder getOrder(long bidOrderId) {
 		return accountDAO.getOrderById(bidOrderId);
+	}
+
+	/* (non-Javadoc)
+	 * @see dutrow.bidbot.bl.OrderMgmt#getOrdersforItem(long)
+	 */
+	@Override
+	public List<BidOrder> getOrdersforItem(long itemId) {
+		return accountDAO.getBidOrdersByAuctionId(itemId);
 	}
 
 }

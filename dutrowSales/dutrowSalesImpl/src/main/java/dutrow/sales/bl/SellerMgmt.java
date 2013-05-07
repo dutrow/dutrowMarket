@@ -16,4 +16,7 @@ public interface SellerMgmt {
 	Collection<AuctionItem> getUserAuctions(String userId);
 	Collection<AuctionItem> getOpenUserAuctions(String userId);
 	AuctionItem getAuction(long l);
+	
+	// esales-sys
+	Collection<AuctionItem> getOpenAuctions();
 }

@@ -45,11 +45,12 @@ public class AuctionDTO implements Serializable{
 		super();
 	}
 	
-	public AuctionDTO(String titleIn, String categoryIn, String descriptionIn, Date startTimeIn, float askingPriceIn, String sellerIn, String sellerEmailIn, boolean isOpen){
+	public AuctionDTO(String titleIn, String categoryIn, String descriptionIn, Date startTimeIn, Date endTimeIn, float askingPriceIn, String sellerIn, String sellerEmailIn, boolean isOpen){
 		this.title = titleIn;
 		this.category = categoryIn;
 		this.description = descriptionIn;
 		this.startTime = startTimeIn;
+		this.endTime = endTimeIn;
 		this.askingPrice = askingPriceIn;
 		this.seller = sellerIn;
 		this.seller_email = sellerEmailIn;

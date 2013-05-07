@@ -3,6 +3,8 @@
  */
 package dutrow.bidbot.bl;
 
+import java.util.List;
+
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
 
@@ -19,6 +21,8 @@ public interface OrderMgmt {
 	boolean createAccount(BidAccount ba);
 	BidAccount createAccount(String userId, String accountId, String passwd);
 	BidAccount getAccount(String userId);
+	
+	List<BidOrder> getOrdersforItem(long itemId);
 
 	
 

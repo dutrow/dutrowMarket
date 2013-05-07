@@ -3,13 +3,13 @@
  */
 package dutrow.sales.ejb;
 
+import java.beans.Transient;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Future;
 
 import javax.annotation.PostConstruct;
@@ -32,8 +32,6 @@ import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.MapMessage;
-import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.Topic;
 import javax.persistence.NoResultException;
@@ -44,10 +42,8 @@ import org.apache.commons.logging.LogFactory;
 import dutrow.sales.bl.AccountMgmt;
 import dutrow.sales.bl.SellerMgmt;
 import dutrow.sales.bo.Account;
-import dutrow.sales.bo.Address;
 import dutrow.sales.bo.AuctionItem;
 import dutrow.sales.bo.Image;
-import dutrow.sales.bo.POC;
 import dutrow.sales.dto.AuctionDTO;
 import dutrow.sales.dto.DTOConversionUtil;
 import dutrow.sales.dto.ImageDTO;
@@ -70,6 +66,9 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 	SellerMgmt sellerMgmt;
 	@Inject
 	AccountMgmt acctMgmt;
+	
+	@EJB
+	SellerMgmtHelper esalessys;
 
 	@Resource
 	protected SessionContext ctx;
@@ -85,18 +84,18 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 	private Destination sellTopic;
 
 	// injected
-	long checkItemInterval;
+	long checkAuctionInterval;
 
 	@PostConstruct
 	public void init() {
 		try {
-			log.debug("**** init ****");
-			log.debug("timerService=" + timerService);
-			log.debug("checkAuctionInterval=" + checkItemInterval);
-			log.debug("connFactory=" + connFactory);
-			log.debug("sellTopic=" + sellTopic);
-			log.debug("sellerManager=" + sellerMgmt);
-			log.debug("accountManager=" + acctMgmt);
+			log.info("**** init ****");
+			log.info("timerService=" + timerService);
+			log.info("checkAuctionInterval=" + checkAuctionInterval);
+			log.info("connFactory=" + connFactory);
+			log.info("sellTopic=" + sellTopic);
+			log.info("sellerManager=" + sellerMgmt);
+			log.info("accountManager=" + acctMgmt);
 		} catch (Throwable ex) {
 			log.warn("error in init", ex);
 			throw new EJBException("error in init" + ex);
@@ -113,7 +112,7 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 
 	public void initTimers(long delay) {
 		cancelTimers();
-		log.debug("initializing timers, checkItemInterval=" + delay);
+		log.debug("initializing timers, checkAuctionInterval=" + delay);
 		timerService.createTimer(0, delay, "checkAuctionTimer");
 	}
 
@@ -123,12 +122,13 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 		timerService.createCalendarTimer(schedule);
 	}
 
-	@Timeout
-	@Schedule(second = "*/10", minute = "*", hour = "*", dayOfMonth = "*", month = "*", year = "*")
+	//@Timeout
+	//@Transient
+	//@Schedule(second = "*/1", minute = "*", hour = "*", dayOfMonth = "*", month = "*", year = "*")
 	public void execute(Timer timer) {
 		log.info("timer fired:" + timer);
 		try {
-			checkAuction();
+			esalessys.checkAuction();
 		} catch (Exception ex) {
 			log.error("error checking auction", ex);
 		}
@@ -189,130 +189,17 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 		log.info(String.format("workAsync time=%d msecs", asyncTime));
 	}
 
-	public int checkAuction() {
-		log.info("checking auctions");
-		Connection connection = null;
-		Session session = null;
-		int index = 0;
-		try {
-			connection = connFactory.createConnection();
-			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-			Collection<AuctionItem> items = null;
+	
+	
 
-			String userId = ctx.getCallerPrincipal().getName();
-			items = sellerMgmt.getOpenUserAuctions(userId);
-
-			for (AuctionItem item : items) {
-				publishAuctionItem(session, item, "saleUpdate");
-			}
-
-			log.debug("processed " + index + " active items");
-			return index;
-		} catch (JMSException ex) {
-			log.error("error publishing auction item updates", ex);
-			return index;
-		} finally {
-			try {
-				if (session != null) {
-					session.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (JMSException ignored) {
-			}
-		}
-	}
-
-	protected void publishAuctionItem(Session session, AuctionItem item,
-			String jmsType) throws JMSException {
-		MessageProducer producer = null;
-		try {
-			producer = session.createProducer(sellTopic);
-			MapMessage message = session.createMapMessage();
-			message.setJMSType(jmsType);
-			message.setLong("id", item.getId());
-			message.setString("title", item.getTitle());
-			message.setString("seller", item.getSeller().getUserId());
-			message.setLong("startTime", item.getStartTime().getTime());
-			message.setLong("endTime", item.getEndTime().getTime());
-			message.setDouble("bids", item.getBids().size());
-			message.setDouble("highestBid",
-					(item.getHighestBid() == null ? 0.00 : item.getHighestBid()
-							.getAmount()));
-			producer.send(message);
-			log.debug("sent=" + message);
-		} finally {
-			if (producer != null) {
-				producer.close();
-			}
-		}
-	}
-
-	public void closeBidding(long itemId) throws SellerMgmtRemoteException {
-		AuctionItem item = sellerMgmt.getAuction(itemId);
-
-		if (item == null) {
-			throw new SellerMgmtRemoteException("itemId not found:" + itemId);
-		}
-
-		try {
-
-			item.closeAuction();
-			POC buyer = item.getBuyer();
-			if (buyer != null) {
-				Account acct = acctMgmt.getAccount(buyer.getUserId());
-				Map<String, Address> addressMap = acct.getAddresses();
-				if (addressMap != null && !addressMap.isEmpty()) {
-					Address shippingAddr = acct.getAddresses().get("shipping");
-					if (shippingAddr != null) {
-						item.setShipTo(acct.getAddresses().get("shipping"));
-					} else {
-						item.setShipTo(acct.getAddresses().values().iterator()
-								.next());
-					}
-				}
-			}
-			log.debug("closed bidding for item:" + item);
-		} catch (Exception ex) {
-			log.error("error closing bid", ex);
-			throw new SellerMgmtRemoteException("error closing bid:" + ex);
-		}
-	}
-
-	public void endAuction(long itemId) throws SellerMgmtRemoteException {
-		Connection connection = null;
-		Session session = null;
-		try {
-			AuctionItem item = sellerMgmt.getAuction(itemId);
-			if (item != null) {
-				item.closeAuction();
-				log.info("ending auction for:" + item);
-
-				connection = connFactory.createConnection();
-				session = connection.createSession(false,
-						Session.AUTO_ACKNOWLEDGE);
-				publishAuctionItem(session, item, "sold");
-			}
-		} catch (JMSException jex) {
-			log.error("error publishing jms message:", jex);
-		} finally {
-			try {
-				if (session != null) {
-					session.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (Exception ignored) {
-			}
-		}
-	}
-
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public long sellProduct(String sellerId, AuctionItem item)
+	@Override
+	@RolesAllowed({ "esales-user" })
+	public long createAuction(AuctionDTO auction)
 			throws SellerMgmtRemoteException {
-		log.debug("sellProduct(sellerId=" + sellerId + ",item=" + item + ")");
+		log.debug("createAuction");
+
+		AuctionItem auctionitem = DTOConversionUtil.convertAuctionDTO(auction);
+		sellerMgmt.createAuction(auctionitem);
 
 		Connection connection = null;
 		Session session = null;
@@ -321,13 +208,10 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 			connection = connFactory.createConnection();
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-			seller = acctMgmt.getAccount(sellerId);
-			item.setSeller(seller.getPoc());
-			sellerMgmt.createAuction(item);
-
-			publishAuctionItem(session, item, "forSale");
-			timerService.createTimer(item.getEndTime(), new Long(item.getId()));
-			return item.getId();
+			esalessys.publishAuctionItem(session, auctionitem, "forSale");
+			timerService.createTimer(auctionitem.getEndTime(), new Long(
+					auctionitem.getId()));
+			return auctionitem.getId();
 		} catch (JMSException ex) {
 			log.error("error publishing sell", ex);
 			ctx.setRollbackOnly();
@@ -360,21 +244,6 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 	@PreDestroy
 	public void close() {
 		log.debug("*** close() ***");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * dutrow.sales.ejb.SellerMgmtRemote#createAuction(dutrow.sales.dto.AuctionDTO
-	 * )
-	 */
-	@Override
-	@RolesAllowed({ "esales-user" })
-	public long createAuction(AuctionDTO auction) {
-		log.debug("createAuction");
-		return sellerMgmt.createAuction(DTOConversionUtil
-				.convertAuctionDTO(auction));
 	}
 
 	/*

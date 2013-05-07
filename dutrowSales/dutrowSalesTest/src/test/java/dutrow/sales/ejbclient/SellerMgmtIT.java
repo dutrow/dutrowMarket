@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.naming.NamingException;
 
@@ -20,7 +21,9 @@ import org.junit.Test;
 import dutrow.sales.dto.AccountDTO;
 import dutrow.sales.dto.AuctionDTO;
 import dutrow.sales.dto.ImageDTO;
+import dutrow.sales.ejb.SellerMgmtEJB;
 import dutrow.sales.ejb.SellerMgmtRemote;
+import dutrow.sales.ejb.SellerMgmtRemoteException;
 
 /**
  * @author dutroda1
@@ -48,9 +51,12 @@ public class SellerMgmtIT extends SalesSupport {
 		bidder = new AccountDTO("bidder", "Alexander", "X", "Kossiakoff",
 				"kossi@jhuapl.edu");
 		testSupport.createAccount(bidder);
+		Calendar cal = Calendar.getInstance();
+		Date now = cal.getTime();
+		cal.add(Calendar.SECOND, 10);
+		Date end = cal.getTime();
 		auction = new AuctionDTO("VT Fuse", "Science & Toys",
-				"detonates an explosive device automatically", Calendar
-						.getInstance().getTime(), 18.00f, seller.userId,
+				"detonates an explosive device automatically", now, end, 18.00f, seller.userId,
 				seller.email, true);
 		auction.id = testSupport.createAuction(auction);
 
@@ -69,14 +75,18 @@ public class SellerMgmtIT extends SalesSupport {
 	 * {@link dutrow.sales.ejb.SellerMgmtEJB#createAuction(dutrow.sales.dto.AuctionDTO)}
 	 * .
 	 * @throws NamingException 
+	 * @throws SellerMgmtRemoteException 
 	 */
 	@Test
-	public void testCreateAuction() throws NamingException {
+	public void testCreateAuction() throws NamingException, SellerMgmtRemoteException {
 		log.debug(" **** testCreateAuction() **** ");
 		runAs(user1User, user1Password);
+		Calendar cal = Calendar.getInstance();
+		Date now = cal.getTime();
+		cal.add(Calendar.SECOND, 10);
+		Date end = cal.getTime();
 		auction = new AuctionDTO("VT Fuse", "Science & Toys",
-				"detonates an explosive device automatically", Calendar
-						.getInstance().getTime(), 18.00f, seller.userId,
+				"detonates an explosive device automatically", now, end, 18.00f, seller.userId,
 				seller.email, true);
 		auction.id = sellerManager.createAuction(auction);
 
@@ -145,5 +155,7 @@ public class SellerMgmtIT extends SalesSupport {
 		Assert.assertNotNull("Failure to getAuctionImages for auction: "
 				+ auctionId, images);
 	}
+	
+	
 
 }

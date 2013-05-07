@@ -4,6 +4,7 @@
 package dutrow.bidbot.dao;
 
 import java.util.Collection;
+import java.util.List;
 
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
@@ -22,5 +23,6 @@ public interface BidAccountDAO {
 	BidOrder getOrderById(long bidOrderId);
 	boolean createOrder(BidOrder order);
 	boolean updateOrder(BidOrder bo);
+	List<BidOrder> getBidOrdersByAuctionId(long itemId);
 
 }

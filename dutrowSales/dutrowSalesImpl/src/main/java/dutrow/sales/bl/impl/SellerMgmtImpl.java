@@ -73,4 +73,13 @@ public class SellerMgmtImpl implements SellerMgmt {
 		return auctions.getAuctionById(auctionId);
 	}
 
+	/* (non-Javadoc)
+	 * @see dutrow.sales.bl.SellerMgmt#getOpenAuctions()
+	 */
+	@Override
+	public Collection<AuctionItem> getOpenAuctions() {
+
+		return auctions.getOpenAuctions();
+	}
+
 }

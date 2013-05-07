@@ -5,6 +5,7 @@ package dutrow.bidbot.ejbclient;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.naming.NamingException;
 
@@ -20,6 +21,7 @@ import dutrow.sales.dto.AuctionDTO;
 import dutrow.sales.dto.BidDTO;
 import dutrow.sales.dto.BidResultDTO;
 import dutrow.sales.ejb.BuyerMgmtRemoteException;
+import dutrow.sales.ejb.SellerMgmtRemoteException;
 
 /**
  * @author dutroda1
@@ -92,11 +94,19 @@ public class EndToEndIT extends BidbotSupport {
 
 		log.info("createAuction for seller");
 		runAs(user1User, user1Password);
+		Calendar cal = Calendar.getInstance();
+		Date now = cal.getTime();
+		cal.add(Calendar.SECOND, 10);
+		Date end = cal.getTime();
 		AuctionDTO auction = new AuctionDTO("VT Fuse", "Science & Toys",
-				"detonates an explosive device automatically", Calendar
-						.getInstance().getTime(), 18.00f, seller.userId,
+				"detonates an explosive device automatically", now , end, 18.00f, seller.userId,
 				seller.email, true);
-		auction.id = sellerManager.createAuction(auction);
+		try {
+			auction.id = sellerManager.createAuction(auction);
+		} catch (SellerMgmtRemoteException e) {
+			log.warn("Create Auction Failed", e);
+			Assert.fail("Create Auction Failed");
+		}
 
 		log.info("getUserAuctions for seller");
 		Collection<AuctionDTO> userAuctions = sellerManager.getUserAuctions();

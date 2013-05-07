@@ -6,6 +6,7 @@ package dutrow.sales.ejbclient;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.ejb.EJBException;
 import javax.naming.NamingException;
@@ -49,9 +50,12 @@ public class TransactionDemoIT extends SalesSupport {
 		bidder = new AccountDTO("bidder", "Alexander", "X", "Kossiakoff",
 				"kossi@jhuapl.edu");
 		testSupport.createAccount(bidder);
+		Calendar cal = Calendar.getInstance();
+		Date now = cal.getTime();
+		cal.add(Calendar.SECOND, 10);
+		Date end = cal.getTime();
 		auction = new AuctionDTO("VT Fuse", "Science & Toys",
-				"detonates an explosive device automatically", Calendar
-						.getInstance().getTime(), 18.00f, seller.userId,
+				"detonates an explosive device automatically", now, end, 18.00f, seller.userId,
 				seller.email, true);
 		auction.id = testSupport.createAuction(auction);
 
