@@ -7,9 +7,6 @@ Project 3
 mvn clean pre-integration-test -DskipTests; mvn test -rf :dutrowBidbot
 mvn clean pre-integration-test -DskipTests; mvn verify -rf :dutrowBidbot -Dit.test=dutrow.bidbot.ejbclient.EndToEndIT
 
-from dutrowSalesImpl/ run  $mvn clean install -DskipTests; mvn process-test-resources; ant -f target/test-classes/jmsNotifier-ant.xml init publisher
-
-
 1.		Provide all functionality from Projects 1 and 2.
 			All functionality is maintained (as submitted) from projects 1 and 2. The following enhancements have been made over previous submissions
 				- Changed the bidbot URL to http://localhost:8080/dutrowBidbot
