@@ -22,6 +22,9 @@ from dutrowSalesImpl/ run  $mvn clean install -DskipTests; ant -f target/test-cl
 	b.	Restrict access to the EJB methods seller/buyer account-specific methods to to users within the esales role. 
 			see: dutrow.sales.ejb.*EJB.java - dutrowSalesEJB/src/main/java
 
+		Restrict access beyond the main page to users with the esales role. You may use FORM or BASIC authentication. (I suggest FORM for easy logout/login as new user).
+			*** TODO? *** the user can see the other pages, but needs to log in for that action to execute
+			
 		Also restrict them to only working with their own account and derived the account name from their login.
 			done: all methods that use to require a userId now gets that from the session context.
 			
