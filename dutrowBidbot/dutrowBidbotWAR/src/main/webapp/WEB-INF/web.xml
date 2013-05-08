@@ -79,7 +79,8 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>admin-access</web-resource-name>
-            <url-pattern>/model/admin/handler</url-pattern>
+            <url-pattern>/model/admin/*</url-pattern>
+            <url-pattern>/admin/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>ebidbot-admin</role-name>
@@ -92,6 +93,7 @@
         <web-resource-collection>
             <web-resource-name>user-access</web-resource-name>
             <url-pattern>/model/user/*</url-pattern>
+            <url-pattern>/user/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>ebidbot-user</role-name>

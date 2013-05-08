@@ -11,7 +11,7 @@
     </env-entry> 
 	
 	<login-config>
-        <!-- <auth-method>BASIC</auth-method>
+        <!-- <auth-method>BASIC</auth-method> 
         <realm-name>dutrowSales</realm-name> -->
         <auth-method>FORM</auth-method>
         <form-login-config>
@@ -78,6 +78,7 @@
         <web-resource-collection>
             <web-resource-name>admin-access</web-resource-name>
             <url-pattern>/model/admin/*</url-pattern>
+            <url-pattern>/admin/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>esales-admin</role-name>
@@ -90,6 +91,7 @@
         <web-resource-collection>
             <web-resource-name>user-access</web-resource-name>
             <url-pattern>/model/user/*</url-pattern>
+            <url-pattern>/user/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>esales-user</role-name>

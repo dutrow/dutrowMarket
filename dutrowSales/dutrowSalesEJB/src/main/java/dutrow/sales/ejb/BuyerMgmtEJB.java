@@ -12,6 +12,7 @@ import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
@@ -52,6 +53,7 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 
 	@Resource
 	protected SessionContext ctx;
+
 
 	@PostConstruct
 	public void init() {

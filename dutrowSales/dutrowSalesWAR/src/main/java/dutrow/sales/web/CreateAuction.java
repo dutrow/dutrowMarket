@@ -57,8 +57,9 @@ public class CreateAuction extends Handler {
 		String price = request.getParameter("price");
 		String open = request.getParameter("open");
 
+		
 		SimpleDateFormat dateFormatter = new SimpleDateFormat(
-				"yyyy-MM-dd kk:mm:ss.S");
+				"yyyy-MM-dd'T'HH:mm:ss");
 
 		AccountDTO sellerAccount;
 		

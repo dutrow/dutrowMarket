@@ -68,7 +68,7 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 	AccountMgmt acctMgmt;
 	
 	@EJB
-	SellerMgmtHelperEJB esalessys;
+	SalesHelperEJB esalessys;
 
 	@Resource
 	protected SessionContext ctx;
