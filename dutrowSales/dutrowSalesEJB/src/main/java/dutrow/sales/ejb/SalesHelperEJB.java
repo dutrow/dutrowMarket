@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
@@ -57,6 +58,13 @@ public class SalesHelperEJB {
 	private ConnectionFactory connFactory;
 	@Resource(mappedName = "java:/topic/ejava/projects/emarket/esales-action", type = Topic.class)
 	private Destination sellTopic;
+	
+	@PostConstruct
+	void init(){
+		log.info("connFactory=" + connFactory);
+		log.info("sellTopic=" + sellTopic);
+
+	}
 
 	public void publishAuctionItem(Session session, AuctionItem item,
 			String jmsType) throws JMSException {
@@ -81,7 +89,7 @@ public class SalesHelperEJB {
 			message.setBoolean("open", item.isOpen());
 			message.setBooleanProperty("open", item.isOpen());
 			producer.send(message);
-			log.debug("sent=" + message);
+			log.debug("sent auction=" + message);
 		} finally {
 			if (producer != null) {
 				producer.close();
@@ -159,6 +167,88 @@ public class SalesHelperEJB {
 			}
 		}
 		publishAuctionItem(session, item, "sold");
+	}
+
+	/**
+	 * @param auctionitem
+	 * @param string
+	 */
+	public void publishAuctionItem(AuctionItem auctionitem, String string) {
+		Connection connection = null;
+		Session session = null;
+		
+		try {
+			connection = connFactory.createConnection();
+			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			publishAuctionItem(session, auctionitem, string);
+		}catch (JMSException ex) {
+			log.error("error publishing auction item updates", ex);
+		} finally {
+			try {
+				if (session != null) {
+					session.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (JMSException ignored) {
+			}
+		}
+	}
+
+	/**
+	 * @param auctionId
+	 * @param bidValue
+	 * @param string
+	 */
+	public void publishBid(long auctionId, float bidValue, String string) {
+		Connection connection = null;
+		Session session = null;
+		
+		try {
+			connection = connFactory.createConnection();
+			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			publishBid(session, auctionId, bidValue, string);
+		}catch (JMSException ex) {
+			log.error("error publishing bid", ex);
+		} finally {
+			try {
+				if (session != null) {
+					session.close();
+				}
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (JMSException ignored) {
+			}
+		}
+		
+	}
+
+	/**
+	 * @param session
+	 * @param auctionId
+	 * @param bidValue
+	 * @param jmsType
+	 * @throws JMSException 
+	 */
+	private void publishBid(Session session, long auctionId, float bidValue,
+			String jmsType) throws JMSException {
+		MessageProducer producer = null;
+		try {
+			producer = session.createProducer(sellTopic);
+			MapMessage message = session.createMapMessage();
+			message.setJMSType(jmsType);
+			message.setLong("id", auctionId);
+			message.setFloat("bid", bidValue);
+			producer.send(message);
+			log.debug("sent bid=" + message);
+		} finally {
+			if (producer != null) {
+				producer.close();
+			}
+		}
+		
 	}
 
 }

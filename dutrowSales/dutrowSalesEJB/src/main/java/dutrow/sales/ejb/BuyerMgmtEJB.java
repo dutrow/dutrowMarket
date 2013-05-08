@@ -54,6 +54,8 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 	@Resource
 	protected SessionContext ctx;
 
+	@EJB
+	SalesHelperEJB esalessys;	
 
 	@PostConstruct
 	public void init() {
@@ -225,6 +227,8 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 			ctx.setRollbackOnly();
 			throw new EJBException(bidResult.getResult() + "caller=" + ctx.getCallerPrincipal().getName());
 		}
+		
+		esalessys.publishBid(auctionId, bidValue, "bid");
 
 		return DTOConversionUtil.convertBidResult(bidResult);
 	}
@@ -235,15 +239,12 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 		log.debug("*** placeBidLocal() ***");
 		log.debug("caller=" + ctx.getCallerPrincipal().getName());
 		BidResult bidResult = buyerMgmt.placeBid(ctx.getCallerPrincipal().getName(), auctionId, bidValue);
-
+		esalessys.publishBid(auctionId, bidValue, "bid");
 		return DTOConversionUtil.convertBidResult(bidResult);
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see dutrow.sales.ejb.BuyerMgmtRemote#placeMultiBid(java.lang.String,
-	 * long, float[])
+	 * This is just a test of transaction rollbacks, so we won't publish
 	 */
 	@Override
 	public boolean placeMultiBid(long auctionId,
@@ -277,6 +278,8 @@ public class BuyerMgmtEJB implements BuyerMgmtLocal, BuyerMgmtRemote,
 			ctx.setRollbackOnly();
 			throw new EJBException(bidResult.getResult() + " caller=" + ctx.getCallerPrincipal().getName());
 		}
+		
+		esalessys.publishBid(auctionId, bidValue, "bid");
 
 		return DTOConversionUtil.convertBidResult(bidResult);
 

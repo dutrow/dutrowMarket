@@ -13,7 +13,7 @@
             Calendar cal = Calendar.getInstance();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             String now = df.format(cal.getTime());
-            cal.add(Calendar.SECOND, 15);
+            cal.add(Calendar.SECOND, 45);
             String soon = df.format(cal.getTime());
     </jsp:scriptlet>
     

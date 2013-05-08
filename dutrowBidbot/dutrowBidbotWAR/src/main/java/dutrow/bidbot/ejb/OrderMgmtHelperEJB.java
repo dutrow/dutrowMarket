@@ -31,7 +31,6 @@ public class OrderMgmtHelperEJB {
 	public BidResultDTO placeBid(long auctionId, BidAccount bidder,
 			float bidAmount) throws BuyerMgmtRemoteException {
 		return buyerManager.placeBid(auctionId, bidder.getSalesAccount(), bidder.getSalesPassword(), bidAmount);
-
 	}
 
 }

@@ -8,8 +8,8 @@
     <form method="GET" 
         action="<%=request.getContextPath()%>/model/user/handler">   
         auctionId : <input type="text" name="auctionId" size="25" value="1"/><p/>
-        startBid : <input type="text" name="start" size="25" value="1.00"/><p/>
-        maxBid : <input type="text" name="max" size="25" value="1.00"/><p/>
+        startBid : <input type="text" name="start" size="25" value="2.00"/><p/>
+        maxBid : <input type="text" name="max" size="25" value="15.00"/><p/>
                  
         <input type="submit" name="command" value="Place Order"/>
     </form>

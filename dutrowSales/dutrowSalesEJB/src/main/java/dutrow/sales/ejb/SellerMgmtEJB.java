@@ -73,15 +73,12 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 	@Resource
 	protected SessionContext ctx;
 
-	private @EJB
+	private @EJB // TODO: Remove, I think this serves the same function as my SalesHelperEJB
 	SellerMgmtActionEJB actions;
 
 	@Resource
 	private TimerService timerService;
-	@Resource(mappedName = "java:/JmsXA")
-	private ConnectionFactory connFactory;
-	@Resource(mappedName = "java:/topic/ejava/projects/emarket/esales-action", type = Topic.class)
-	private Destination sellTopic;
+	
 
 	// injected
 	long checkAuctionInterval;
@@ -92,8 +89,6 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 			log.info("**** init ****");
 			log.info("timerService=" + timerService);
 			log.info("checkAuctionInterval=" + checkAuctionInterval);
-			log.info("connFactory=" + connFactory);
-			log.info("sellTopic=" + sellTopic);
 			log.info("sellerManager=" + sellerMgmt);
 			log.info("accountManager=" + acctMgmt);
 		} catch (Throwable ex) {
@@ -201,21 +196,12 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 		AuctionItem auctionitem = DTOConversionUtil.convertAuctionDTO(auction);
 		sellerMgmt.createAuction(auctionitem);
 
-		Connection connection = null;
-		Session session = null;
 		Account seller = null;
 		try {
-			connection = connFactory.createConnection();
-			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-
-			esalessys.publishAuctionItem(session, auctionitem, "forSale");
+			esalessys.publishAuctionItem(auctionitem, "forSale");
 			timerService.createTimer(auctionitem.getEndTime(), new Long(
 					auctionitem.getId()));
 			return auctionitem.getId();
-		} catch (JMSException ex) {
-			log.error("error publishing sell", ex);
-			ctx.setRollbackOnly();
-			throw new EJBException("error publishing sell");
 		} catch (NoResultException ex) {
 			log.error("error locating information for sale, seller=" + seller,
 					ex);
@@ -224,21 +210,10 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 					"error locating information for sale, " + "seller="
 							+ seller + ":" + ex);
 		} catch (Exception ex) {
-			log.error("error selling product", ex);
+			log.error("error creating auction:", ex);
 			ctx.setRollbackOnly();
-			throw new SellerMgmtRemoteException("error selling product:" + ex);
-		} finally {
-			try {
-				if (session != null) {
-					session.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (JMSException ex) {
-				log.error("unable to close resources", ex);
-			}
-		}
+			throw new SellerMgmtRemoteException("error creating auction:" + ex);
+		} 
 	}
 
 	@PreDestroy

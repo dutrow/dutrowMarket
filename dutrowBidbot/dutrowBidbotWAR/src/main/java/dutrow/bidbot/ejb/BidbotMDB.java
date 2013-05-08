@@ -30,7 +30,7 @@ import dutrow.sales.ejb.BuyerMgmtRemote;
 @MessageDriven(activationConfig = {
 		@ActivationConfigProperty(propertyName = "destinationTopic", propertyValue = "javax.jms.Topic"),
 		@ActivationConfigProperty(propertyName = "destination", propertyValue = "topic/ejava/projects/emarket/esales-action"),
-		@ActivationConfigProperty(propertyName = "messageSelector", propertyValue = "JMSType in ('forSale', 'saleUpdate')"),
+		@ActivationConfigProperty(propertyName = "messageSelector", propertyValue = "JMSType in ('closed, saleUpdate')"),
 		@ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge") })
 public class BidbotMDB implements MessageListener {
 	private static final Log log = LogFactory.getLog(BidbotMDB.class);
@@ -57,22 +57,25 @@ public class BidbotMDB implements MessageListener {
 	public void onMessage(Message message) {
 		try {
 			log.debug("onMessage:" + message.getJMSMessageID());
-			MapMessage auctionMsg = (MapMessage) message;
-			long itemId = auctionMsg.getLong("id");
-			String titleIn = auctionMsg.getString("title");
-			String categoryIn = auctionMsg.getString("category");
-			String descriptionIn = "";
-			Date startTimeIn = null;
-			Date endTimeIn = null;
-			boolean isOpen = auctionMsg.getBoolean("open");
-			float askingPriceIn = auctionMsg.getFloat("askingPrice");
-			float numBids = auctionMsg.getFloat("bids");
-			float highestBid = auctionMsg.getFloat("highestBid");
-			String sellerIn = auctionMsg.getString("seller");
-			AuctionDTO ai = new AuctionDTO(titleIn, categoryIn, descriptionIn,
-					startTimeIn, endTimeIn, askingPriceIn, sellerIn, "", isOpen);
+			if (message.getJMSType().equalsIgnoreCase("saleUpdate")) {
+				MapMessage auctionMsg = (MapMessage) message;
+				long itemId = auctionMsg.getLong("id");
+				String titleIn = auctionMsg.getString("title");
+				String categoryIn = auctionMsg.getString("category");
+				String descriptionIn = "";
+				Date startTimeIn = null;
+				Date endTimeIn = null;
+				boolean isOpen = auctionMsg.getBoolean("open");
+				float askingPriceIn = auctionMsg.getFloat("askingPrice");
+				float numBids = auctionMsg.getFloat("bids");
+				float highestBid = auctionMsg.getFloat("highestBid");
+				String sellerIn = auctionMsg.getString("seller");
+				AuctionDTO ai = new AuctionDTO(titleIn, categoryIn,
+						descriptionIn, startTimeIn, endTimeIn, askingPriceIn,
+						sellerIn, "", isOpen);
 
-			processAuctionItem(ai);
+				processAuctionItem(ai);
+			}
 		} catch (Exception ex) {
 			log.error("error processing message", ex);
 		}
