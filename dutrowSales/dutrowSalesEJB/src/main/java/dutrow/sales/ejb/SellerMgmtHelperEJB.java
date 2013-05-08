@@ -37,7 +37,8 @@ import dutrow.sales.bo.POC;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @RunAs("esales-sys")
-//esales-sys	role required to perform internal auction actions like JMS publishing.
+// esales-sys role required to perform internal auction actions like JMS
+// publishing.
 public class SellerMgmtHelperEJB {
 	private static final Log log = LogFactory.getLog(SellerMgmtHelperEJB.class);
 
@@ -45,7 +46,7 @@ public class SellerMgmtHelperEJB {
 	SellerMgmt sellerMgmt;
 	@Inject
 	AccountMgmt acctMgmt;
-	
+
 	@Resource
 	protected SessionContext ctx;
 
@@ -65,13 +66,14 @@ public class SellerMgmtHelperEJB {
 		try {
 			connection = connFactory.createConnection();
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			ping(session, "ping");
 			Collection<AuctionItem> items = null;
 
 			items = sellerMgmt.getOpenAuctions();
 			log.info("#items: " + items.size());
 
 			Calendar now = Calendar.getInstance();
-			
+
 			for (AuctionItem item : items) {
 				log.info(item.getTitle() + " ends: " + item.getEndTime());
 				if (now.after(item.getEndTime())) {
@@ -98,7 +100,23 @@ public class SellerMgmtHelperEJB {
 			}
 		}
 	}
-	
+
+	public void ping(Session session, String jmsType) throws JMSException {
+		MessageProducer producer = null;
+		try {
+			producer = session.createProducer(sellTopic);
+			MapMessage message = session.createMapMessage();
+			message.setJMSType(jmsType);
+			message.setBoolean("alive", true);
+			producer.send(message);
+			log.debug("sent=" + message);
+		} finally {
+			if (producer != null) {
+				producer.close();
+			}
+		}
+	}
+
 	public void publishAuctionItem(Session session, AuctionItem item,
 			String jmsType) throws JMSException {
 		MessageProducer producer = null;
@@ -108,15 +126,15 @@ public class SellerMgmtHelperEJB {
 			message.setJMSType(jmsType);
 			message.setLong("id", item.getId());
 			message.setString("title", item.getTitle());
-			message.setString("category", item.getCategory().prettyName);			
+			message.setString("category", item.getCategory().prettyName);
 			message.setString("seller", item.getSeller().getUserId());
 			message.setLong("startTime", item.getStartTime().getTime());
 			message.setLong("endTime", item.getEndTime().getTime());
 			message.setFloat("askingPrice", item.getAskingPrice());
 			message.setFloat("bids", item.getBids().size());
 			message.setFloat("highestBid",
-					(item.getHighestBid() == null ? 0.00f : item.getHighestBid()
-							.getAmount()));
+					(item.getHighestBid() == null ? 0.00f : item
+							.getHighestBid().getAmount()));
 			message.setBoolean("open", item.isOpen());
 			producer.send(message);
 			log.debug("sent=" + message);
@@ -126,7 +144,6 @@ public class SellerMgmtHelperEJB {
 			}
 		}
 	}
-	
 
 	public void closeBidding(AuctionItem item) throws SellerMgmtRemoteException {
 
@@ -153,7 +170,6 @@ public class SellerMgmtHelperEJB {
 			throw new SellerMgmtRemoteException("error closing bid:" + ex);
 		}
 	}
-
 
 	public void endAuction(long itemId) throws SellerMgmtRemoteException {
 		Connection connection = null;
@@ -183,6 +199,5 @@ public class SellerMgmtHelperEJB {
 			}
 		}
 	}
-
 
 }
