@@ -109,6 +109,7 @@ public class SellerMgmtHelperEJB {
 			message.setLong("id", item.getId());
 			message.setString("title", item.getTitle());
 			message.setString("category", item.getCategory().prettyName);			
+			message.setStringProperty("category", item.getCategory().prettyName);
 			message.setString("seller", item.getSeller().getUserId());
 			message.setLong("startTime", item.getStartTime().getTime());
 			message.setLong("endTime", item.getEndTime().getTime());

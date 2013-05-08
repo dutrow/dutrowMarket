@@ -14,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * This class contains some demo methods to perform example actions on 
- * behalf of the AuctionMgmtEJB.
+ * behalf of the SellerMgmtEJB.
  */
 @Stateless
 public class SellerMgmtActionEJB {

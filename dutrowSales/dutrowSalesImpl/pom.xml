@@ -16,6 +16,10 @@
         This is the implementation of the dutrowSales application
     </description>
 
+	<properties>
+		<jms.classpath>build-classpath</jms.classpath>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>ejava.javaee.projects.eMarket</groupId>
@@ -23,6 +27,32 @@
 			<version>3.0.2013.1</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>javax.jms</groupId>
+			<artifactId>jms</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ejava.common</groupId>
+			<artifactId>jboss-rmi-client</artifactId>
+			<type>pom</type>
+			<scope>test</scope>
+		</dependency>
+        <!-- brings in JBoss HornetQ driver -->
+        <dependency>
+            <groupId>org.hornetq</groupId>
+            <artifactId>hornetq-jms-client</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hornetq</groupId>
+            <artifactId>hornetq-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.netty</groupId>
+            <artifactId>netty</artifactId>
+            <scope>test</scope>
+        </dependency>
 
 		<dependency>
 			<groupId>commons-logging</groupId>
@@ -35,9 +65,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- see http://groups.yahoo.com/group/ejava_class/message/15981 
-		org.hibernate.common:hibernate-commons-annotations:jar:4.0.1.Final:test
-		-->
+		<!-- see http://groups.yahoo.com/group/ejava_class/message/15981 org.hibernate.common:hibernate-commons-annotations:jar:4.0.1.Final:test -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -62,10 +90,10 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <scope>provided</scope>
-        </dependency>  
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -73,9 +101,21 @@
 			in JDBC URL, etc. -->
 		<testResources>
 			<testResource>
-				<directory>src/test/resources</directory>
-				<filtering>true</filtering>
-			</testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/hornetq*.xml</include>
+                    <include>**/*.properties</include>
+                </includes>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/hornetq*.xml</exclude>
+                    <exclude>**/*.properties</exclude>
+                </excludes>
+            </testResource>
 		</testResources>
 		<plugins>
 			<plugin>
@@ -88,6 +128,23 @@
 						</classpath>
 						<jpaconfiguration persistenceunit="dutrowSalesDAO-test" />
 					</hibernatetool>
+				</configuration>
+			</plugin>
+
+			<!-- create a classpath for our JSE clients to run -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>${jms.classpath}</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<outputFile>target/test-classes/dependency-classpath</outputFile>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -7,6 +7,8 @@ Project 3
 mvn clean pre-integration-test -DskipTests; mvn test -rf :dutrowBidbot
 mvn clean pre-integration-test -DskipTests; mvn verify -rf :dutrowBidbot -Dit.test=dutrow.bidbot.ejbclient.EndToEndIT
 
+from dutrowSalesImpl/ run  $mvn clean install -DskipTests; ant -f target/test-classes/jmsNotifier-ant.xml subscriber
+
 1.		Provide all functionality from Projects 1 and 2.
 			All functionality is maintained (as submitted) from projects 1 and 2. The following enhancements have been made over previous submissions
 				- Changed the bidbot URL to http://localhost:8080/dutrowBidbot
@@ -21,7 +23,8 @@ mvn clean pre-integration-test -DskipTests; mvn verify -rf :dutrowBidbot -Dit.te
 			see: dutrow.sales.ejb.*EJB.java - dutrowSalesEJB/src/main/java
 
 		Also restrict them to only working with their own account and derived the account name from their login.
-			-
+			done: all methods that use to require a userId now gets that from the session context.
+			
 	c.	Allow any user to perform read operations.
 			see: @PermitAll in *EJB.java
 	d.	Restrict any administrative functions to the esales-admin role.
@@ -55,6 +58,16 @@ mvn clean pre-integration-test -DskipTests; mvn verify -rf :dutrowBidbot -Dit.te
 			see: accessControlTest in dutrow.bidbot.ejbclient.BidbotAccessControlIT - dutrowBidbotWAR/src/test/java
 			this test mimics most functionality in OrderMgmtIT, except the expected case is failure to call EJBs
 			look for "Caught EJBAccessException: good!" in test output
+
+
+6.		Enhance eSalesWAR with access restrictions.
+			log-ins are required for each action.
+			logout is available for your convenience
+			
+8.		Add a Java SE JMS subscriber to consume events about Auctions pertaining to a specific category.
+			see: dutrow.sales.jms.Subscriber.java - dutrowSalesImpl/src/main/java [this is 95% the same as the jmsNotifier example -- I only added a more verbose printout]
+			this was made as simple as I could conceive possible -- no local hornetq tests or anything
+			output:     [java]  -subscriber Subscriber0 starting:durable=false, selector=JMSType in ('forSale', 'saleUpdate') username: user1 password: password
 			
 Project 2
 

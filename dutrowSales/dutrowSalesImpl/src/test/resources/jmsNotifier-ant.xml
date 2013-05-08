@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jmsNotifier" basedir="..">
+
+    <property file="test-classes/${ant.project.name}.properties"/>
+
+    <loadfile property="dependency-classpath" srcFile="test-classes/dependency-classpath" failonerror="false"/>
+
+    <path id="demo.classpath">
+        <pathelement path="test-classes"/>
+        <pathelement path="classes"/>
+        <fileset dir="." includes="dependency/*.jar"/>
+        <pathelement path="${dependency-classpath}"/>
+    </path>
+
+    <description>
+    This Ant script will run each of the JMS MessageCatcher test programs. 
+
+    Each of the targets take the following arguments
+    -Djndi.naming.connFactory - connection factory JNDI name
+    -Djndi.name.destination   - destination JNDI name
+    -Dxxx.name                - connectionID and durable topic name
+    -Dxxx.sleep               - delay between processing next message
+    -Dxxx.max                 - max messages before existing;0=unlimited
+
+    xxx stands for the target name.  
+    
+    Putting a sleep time on the publisher slows the rate of messages
+    published. Putting a sleep time on the subscribers slows the rate
+    of processing each message; potentially causing backlogs.
+    </description>
+
+    <target name="echo">
+        <property name="demo-classpath" refid="demo.classpath"/>
+        <echo>basedir=${basedir}</echo>
+        <echo>commons.logging.classpath=${commons.logging.classpath}</echo>
+        <echo>demo.classpath=${demo-classpath}</echo>
+    </target>
+
+    <target name="init">
+        <!-- replace the integration test jndi.properties with the demo
+            copy referencing the live JBoss instance -->
+        <copy tofile="test-classes/jndi.properties"
+              file="test-classes/jboss-jndi.properties"
+              overwrite="true"/>
+    </target>
+
+	<target name="subscriber" depends="init">
+	        <java classname="dutrow.sales.jms.Subscriber"
+            fork="true">
+            <classpath>
+                <path refid="demo.classpath"/>
+            </classpath>
+            <arg value="-jndi.name.connFactory"/>
+            <arg value="${jndi.name.connFactory}"/>
+            <arg value="-jndi.name.destination"/>
+            <arg value="${jndi.name.testTopic}"/>
+            <arg value="-name"/>
+            <arg value="${subscriber.name}"/>
+            <arg value="-sleep"/>
+            <arg value="${subscriber.sleep}"/>
+            <arg value="-max"/>
+            <arg value="${subscriber.max}"/>
+            <arg value="-durable"/>
+            <arg value="${subscriber.durable}"/>
+            <arg value="-selector"/>
+            <arg value="${subscriber.selector}"/>
+            <arg value="-username"/>
+            <arg value="${subscriber.username}"/>
+            <arg value="-password"/>
+            <arg value="${subscriber.password}"/>
+        </java>
+    </target>
+
+</project>
