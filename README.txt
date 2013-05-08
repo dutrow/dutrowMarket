@@ -87,8 +87,8 @@ A few convenient commands/bookmarks
 			Actually Jim, it's emarket-esales-action
 	
 	b.	Design your JMS Message. You can use any JMS Type and JMS/custom properties you wish. 
-			dutrow.sales.ejb.SellerMgmtHelperEJB.java - dutrowSalesEJB/src/main/java
-			void dutrow.sales.ejb.SellerMgmtHelperEJB.publishAuctionItem(Session session, AuctionItem item, String jmsType) throws JMSException{...}
+			dutrow.sales.ejb.SalesHelperEJB.java - dutrowSalesEJB/src/main/java
+			void dutrow.sales.ejb.SalesHelperEJB.publishAuctionItem(Session session, AuctionItem item, String jmsType) throws JMSException{...}
 			done: uses a MapMessage 
 		
 		However, you need to account for the fact that subscribers will be filtering on such things as the category or state of an auction.
@@ -100,7 +100,7 @@ A few convenient commands/bookmarks
 				
 			TODO:: BID UPDATES AND STUFF 
 	
-			dutrow.sales.ejb.SellerMgmtHelperEJB::
+			dutrow.sales.ejb.SalesHelperEJB::
 				checkAuction -> "saleUpdate"
 				closeBidding -> "closed"
 				sellItem -> "sold"
