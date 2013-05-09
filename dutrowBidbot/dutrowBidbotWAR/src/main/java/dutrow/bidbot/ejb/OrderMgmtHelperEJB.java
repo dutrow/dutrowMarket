@@ -99,7 +99,7 @@ public class OrderMgmtHelperEJB {
 		}
 	}
 	
-	protected void processAuctionItem(AuctionDTO ai) {
+	public void processAuctionItem(AuctionDTO ai) {
 		List<BidOrder> orders = null;
 
 		orders = orderMgmt.getOrdersForItem(ai.id);
@@ -109,7 +109,7 @@ public class OrderMgmtHelperEJB {
 
 	}
 
-	protected void processOrder(BidOrder order, AuctionDTO item) {
+	public void processOrder(BidOrder order, AuctionDTO item) {
 		log.info("processing order:" + order);
 		long auctionId = order.getAuctionId();
 

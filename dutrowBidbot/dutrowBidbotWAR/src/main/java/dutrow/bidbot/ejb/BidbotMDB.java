@@ -25,7 +25,7 @@ import dutrow.sales.ejb.BuyerMgmtRemote;
 @MessageDriven(activationConfig = {
 		@ActivationConfigProperty(propertyName = "destinationTopic", propertyValue = "javax.jms.Topic"),
 		@ActivationConfigProperty(propertyName = "destination", propertyValue = "topic/ejava/projects/emarket/esales-action"),
-		@ActivationConfigProperty(propertyName = "messageSelector", propertyValue = "JMSType in ('closed, saleUpdate')"),
+		@ActivationConfigProperty(propertyName = "messageSelector", propertyValue = "JMSType in ('closed', 'saleUpdate')"),
 		@ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge") })
 public class BidbotMDB implements MessageListener {
 	private static final Log log = LogFactory.getLog(BidbotMDB.class);
