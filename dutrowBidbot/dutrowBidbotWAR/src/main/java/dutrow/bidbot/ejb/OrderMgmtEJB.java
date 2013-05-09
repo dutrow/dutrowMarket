@@ -239,4 +239,17 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 		return orderMgmt.getAccount(userId);
 	}
 
+
+	/* (non-Javadoc)
+	 * @see dutrow.bidbot.ejb.OrderMgmtRemote#createOrder(long, float, float)
+	 */
+	@Override
+	public long createOrder(long auctionid, float firstBid, float maxBid) throws BuyerMgmtRemoteException, NamingException {
+		String callerId = ctx.getCallerPrincipal().getName();
+		BidAccount account = orderMgmt.getAccount(callerId);
+		BidOrder bo = new BidOrder(auctionid, firstBid, maxBid, account);
+		return createOrder(bo);
+		
+	}
+
 }

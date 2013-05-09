@@ -29,4 +29,6 @@ public interface OrderMgmtRemote {
 			throws BuyerMgmtRemoteException;
 	
 	void cancelTimers();
+	
+	long createOrder(long auctionid, float firstBid, float maxBid) throws BuyerMgmtRemoteException, NamingException;
 }
