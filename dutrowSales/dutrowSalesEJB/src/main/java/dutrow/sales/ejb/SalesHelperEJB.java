@@ -22,6 +22,7 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.MessageProducer;
+import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.Topic;
 
@@ -33,7 +34,11 @@ import dutrow.sales.bl.SellerMgmt;
 import dutrow.sales.bo.Account;
 import dutrow.sales.bo.Address;
 import dutrow.sales.bo.AuctionItem;
+import dutrow.sales.bo.Bid;
 import dutrow.sales.bo.POC;
+import dutrow.sales.dto.AuctionDTO;
+import dutrow.sales.dto.BidDTO;
+import dutrow.sales.dto.DTOConversionUtil;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -71,25 +76,16 @@ public class SalesHelperEJB {
 		MessageProducer producer = null;
 		try {
 			producer = session.createProducer(sellTopic);
-			MapMessage message = session.createMapMessage();
+			
+			AuctionDTO dto = DTOConversionUtil.convertAuctionItem(item);
+			ObjectMessage message = session.createObjectMessage(dto);
+			
 			message.setJMSType(jmsType);
-			message.setLong("id", item.getId());
-			message.setString("action", jmsType);
-			message.setString("title", item.getTitle());
-			message.setString("category", item.getCategory().prettyName);
+			
 			message.setStringProperty("category", item.getCategory().prettyName);
-			message.setString("seller", item.getSeller().getUserId());
-			message.setLong("startTime", item.getStartTime().getTime());
-			message.setLong("endTime", item.getEndTime().getTime());
-			message.setFloat("askingPrice", item.getAskingPrice());
-			message.setFloat("bids", item.getBids().size());
-			message.setFloat("highestBid",
-					(item.getHighestBid() == null ? 0.00f : item
-							.getHighestBid().getAmount()));
-			message.setBoolean("open", item.isOpen());
 			message.setBooleanProperty("open", item.isOpen());
 			producer.send(message);
-			log.debug("sent auction=" + message);
+			log.debug("sent auction[" + message + "] = " + dto.toString());
 		} finally {
 			if (producer != null) {
 				producer.close();
@@ -200,15 +196,18 @@ public class SalesHelperEJB {
 	 * @param auctionId
 	 * @param bidValue
 	 * @param string
+	 * @param b 
 	 */
-	public void publishBid(long auctionId, float bidValue, String string) {
+	public void publishBid(Bid b, String jmsType ) {
 		Connection connection = null;
 		Session session = null;
+		
+		BidDTO dto = DTOConversionUtil.convertBid(b);
 		
 		try {
 			connection = connFactory.createConnection();
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-			publishBid(session, auctionId, bidValue, string);
+			publishBid(session, dto, jmsType);
 		}catch (JMSException ex) {
 			log.error("error publishing bid", ex);
 		} finally {
@@ -232,17 +231,15 @@ public class SalesHelperEJB {
 	 * @param jmsType
 	 * @throws JMSException 
 	 */
-	private void publishBid(Session session, long auctionId, float bidValue,
+	private void publishBid(Session session, BidDTO dto,
 			String jmsType) throws JMSException {
 		MessageProducer producer = null;
 		try {
 			producer = session.createProducer(sellTopic);
-			MapMessage message = session.createMapMessage();
+			ObjectMessage message = session.createObjectMessage(dto);
 			message.setJMSType(jmsType);
-			message.setLong("id", auctionId);
-			message.setFloat("bid", bidValue);
 			producer.send(message);
-			log.debug("sent bid=" + message);
+			log.debug("sent bid[" + message + "] = " + dto.toString());
 		} finally {
 			if (producer != null) {
 				producer.close();

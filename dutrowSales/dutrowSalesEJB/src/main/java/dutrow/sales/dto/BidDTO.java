@@ -26,4 +26,14 @@ public class BidDTO implements Serializable, Comparable<BidDTO> {
 	public int compareTo(BidDTO other) {
 		return Float.compare(this.amount, other.amount);
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "BidDTO [amount=" + amount + ", timestamp=" + timestamp
+				+ ", poc=" + poc + ", poc_email=" + poc_email
+				+ ", auctionItem=" + auctionItem + "]";
+	}
 }

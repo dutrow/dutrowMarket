@@ -89,7 +89,7 @@ A few convenient commands/bookmarks
 	b.	Design your JMS Message. You can use any JMS Type and JMS/custom properties you wish. 
 			dutrow.sales.ejb.SalesHelperEJB.java - dutrowSalesEJB/src/main/java
 			void dutrow.sales.ejb.SalesHelperEJB.publishAuctionItem(Session session, AuctionItem item, String jmsType) throws JMSException{...}
-			done: uses a MapMessage 
+			done: I implemented v1 with a MapMessage, but now am using an ObjectMessage
 		
 		However, you need to account for the fact that subscribers will be filtering on such things as the category or state of an auction.
 			done: the message has a "category" string property and "open" boolean property

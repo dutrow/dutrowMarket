@@ -9,6 +9,7 @@ import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
+import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
@@ -130,7 +131,7 @@ public class Subscriber implements Runnable {
 					count += 1;
 					StringBuilder text = new StringBuilder();
 					text.append(name + " received message #" + count
-							+ ", msgId=" + message.getJMSMessageID());
+							+ ", msgId=" + message.getJMSMessageID() + ", msgType=" + message.getJMSType());
 					if (message instanceof TextMessage) {
 						text.append(", body="
 								+ ((TextMessage) message).getText());
@@ -143,6 +144,9 @@ public class Subscriber implements Runnable {
 							
 							text.append(", " + item + "=" + mm.getObject(item).toString());
 						}
+					} else if (message instanceof ObjectMessage){
+						ObjectMessage om = (ObjectMessage) message;
+						// DTOs won't deserialize, so don't bother
 					}
 					log.debug(text.toString());
 					Thread.yield();

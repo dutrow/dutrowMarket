@@ -62,6 +62,24 @@ public class AuctionDTO implements Serializable{
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "AuctionDTO [id=" + id + ", title=" + title + ", category="
+				+ category + ", description=" + description + ", startTime="
+				+ startTime + ", endTime=" + endTime + ", seller=" + seller
+				+ ", seller_email=" + seller_email + ", buyer=" + buyer
+				+ ", buyer_email=" + buyer_email + ", askingPrice="
+				+ askingPrice + ", purchasePrice=" + purchasePrice
+				+ ", isOpen=" + isOpen + ", shipTo=" + shipTo + ", bids="
+				+ bids + ", images=" + images + ", isExpired=" + isExpired
+				+ "]";
+	}
+	
+	
+
 	
 	
 }
