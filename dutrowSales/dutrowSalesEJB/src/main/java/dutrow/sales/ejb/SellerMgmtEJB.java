@@ -86,7 +86,7 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 	@PostConstruct
 	public void init() {
 		try {
-			log.info("**** init ****");
+			log.info("**** SellerMgmtEJB init ****");
 			log.info("timerService=" + timerService);
 			log.info("checkAuctionInterval=" + checkAuctionInterval);
 			log.info("sellerManager=" + sellerMgmt);
@@ -99,7 +99,7 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 
 	@Override
 	public void cancelTimers() {
-		log.debug("canceling timers");
+		log.debug("sales canceling timers");
 		for (Timer timer : (Collection<Timer>) timerService.getTimers()) {
 			timer.cancel();
 		}

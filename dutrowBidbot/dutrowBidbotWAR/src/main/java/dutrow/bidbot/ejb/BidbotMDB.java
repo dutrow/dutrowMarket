@@ -1,8 +1,5 @@
 package dutrow.bidbot.ejb;
 
-import java.util.Date;
-import java.util.List;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.ActivationConfigProperty;
@@ -10,9 +7,9 @@ import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
 import javax.ejb.MessageDrivenContext;
 import javax.inject.Inject;
-import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,6 +43,9 @@ public class BidbotMDB implements MessageListener {
 	@Resource
 	private MessageDrivenContext ctx;
 
+	@EJB
+	OrderMgmtHelperEJB orderMgmtHelper;
+
 	@PostConstruct
 	public void init() {
 		log.info("*** BuyerMDB init() ***");
@@ -57,62 +57,22 @@ public class BidbotMDB implements MessageListener {
 	public void onMessage(Message message) {
 		try {
 			log.debug("onMessage:" + message.getJMSMessageID());
-			if (message.getJMSType().equalsIgnoreCase("saleUpdate")) {
-				MapMessage auctionMsg = (MapMessage) message;
-				long itemId = auctionMsg.getLong("id");
-				String titleIn = auctionMsg.getString("title");
-				String categoryIn = auctionMsg.getString("category");
-				String descriptionIn = "";
-				Date startTimeIn = null;
-				Date endTimeIn = null;
-				boolean isOpen = auctionMsg.getBoolean("open");
-				float askingPriceIn = auctionMsg.getFloat("askingPrice");
-				float numBids = auctionMsg.getFloat("bids");
-				float highestBid = auctionMsg.getFloat("highestBid");
-				String sellerIn = auctionMsg.getString("seller");
-				AuctionDTO ai = new AuctionDTO(titleIn, categoryIn,
-						descriptionIn, startTimeIn, endTimeIn, askingPriceIn,
-						sellerIn, "", isOpen);
-
-				processAuctionItem(ai);
+			if (message instanceof ObjectMessage) {
+				ObjectMessage om = (ObjectMessage) message;
+				Object o = om.getObject();
+				if (o instanceof AuctionDTO) {
+					AuctionDTO dto = (AuctionDTO) o;
+					if (message.getJMSType().equalsIgnoreCase("saleUpdate")) {
+						orderMgmtHelper.processAuctionItem(dto);
+					} else if (message.getJMSType().equalsIgnoreCase("closed")) {
+						orderMgmt.endOrder(dto.id);
+					}
+				}
 			}
+
 		} catch (Exception ex) {
 			log.error("error processing message", ex);
 		}
 	}
 
-	protected void processAuctionItem(AuctionDTO ai) {
-		List<BidOrder> orders = null;
-
-		orders = orderMgmt.getOrdersforItem(ai.id);
-		for (BidOrder order : orders) {
-			processOrder(order, ai);
-		}
-
-	}
-
-	protected void processOrder(BidOrder order, AuctionDTO item) {
-		log.debug("processing order:" + order);
-		long auctionId = order.getAuctionId();
-
-		BidDTO highestBid = item.bids.last();
-		String bidderAcct = order.getBidder().getSalesAccount();
-		String bidderPasswd = order.getBidder().getSalesPassword();
-
-		if (highestBid == null) {
-			if (item.askingPrice < order.getMaxBid()) {
-
-				buyerManager.placeBid(item.id, bidderAcct, bidderPasswd,
-						item.askingPrice);
-				log.debug("placed initial bid for order:" + order);
-			}
-		} else if (highestBid.amount < order.getMaxBid()
-		// add don't bid against ourself
-				&& !highestBid.poc.equals(order.getBidder().getSalesAccount())) {
-			float bidAmount = Math
-					.min(order.getMaxBid(), highestBid.amount + 1);
-			buyerManager.placeBid(item.id, bidderAcct, bidderPasswd, bidAmount);
-			log.debug("placed new bid for order:" + order);
-		}
-	}
 }

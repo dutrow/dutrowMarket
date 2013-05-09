@@ -94,7 +94,7 @@ public class SalesHelperEJB {
 	}
 
 	public int checkAuction() throws SellerMgmtRemoteException {
-		log.info("checking auctions");
+		log.info("esales checking auctions");
 		Connection connection = null;
 		Session session = null;
 		int index = 0;
@@ -104,7 +104,7 @@ public class SalesHelperEJB {
 			Collection<AuctionItem> items = null;
 
 			items = sellerMgmt.getOpenAuctions();
-			log.info("#items: " + items.size());
+			log.info("esales sees #items: " + items.size());
 
 			Calendar now = Calendar.getInstance();
 

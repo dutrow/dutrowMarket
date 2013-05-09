@@ -115,9 +115,10 @@ public class OrderMgmtImpl implements OrderMgmt {
 	 */
 	@Override
 	public boolean endOrder(long bidOrder) {
-		BidOrder bo = accountDAO.getOrderById(bidOrder);
+		BidOrder bo = accountDAO.getOrderById(bidOrder);		
 		bo.setComplete(true);
 		accountDAO.updateOrder(bo);
+		log.info("endOrder: " + bidOrder);
 		return bo.isComplete();
 	}
 
@@ -173,7 +174,7 @@ public class OrderMgmtImpl implements OrderMgmt {
 	 * @see dutrow.bidbot.bl.OrderMgmt#getOrdersforItem(long)
 	 */
 	@Override
-	public List<BidOrder> getOrdersforItem(long itemId) {
+	public List<BidOrder> getOrdersForItem(long itemId) {
 		return accountDAO.getBidOrdersByAuctionId(itemId);
 	}
 

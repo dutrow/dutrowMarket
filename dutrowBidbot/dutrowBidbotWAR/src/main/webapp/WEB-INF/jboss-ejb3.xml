@@ -18,7 +18,6 @@
         	<sec:security-domain>other</sec:security-domain>
         	<sec:run-as-principal>sysbidbot1</sec:run-as-principal>
         </sec:security>
-    </assembly-descriptor>
-    
+    </assembly-descriptor>    
     
 </jboss:ejb-jar>

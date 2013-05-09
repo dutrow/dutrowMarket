@@ -27,4 +27,6 @@ public interface OrderMgmtRemote {
 	
 	BidResultDTO placeBid(long auctionId, BidAccount bidder, float bidAmount)
 			throws BuyerMgmtRemoteException;
+	
+	void cancelTimers();
 }

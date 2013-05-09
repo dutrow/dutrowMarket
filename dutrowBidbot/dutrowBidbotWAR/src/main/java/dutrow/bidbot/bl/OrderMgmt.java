@@ -7,6 +7,7 @@ import java.util.List;
 
 import dutrow.bidbot.bo.BidAccount;
 import dutrow.bidbot.bo.BidOrder;
+import dutrow.sales.dto.AuctionDTO;
 
 /**
  * @author dutroda1
@@ -22,7 +23,9 @@ public interface OrderMgmt {
 	BidAccount createAccount(String userId, String accountId, String passwd);
 	BidAccount getAccount(String userId);
 	
-	List<BidOrder> getOrdersforItem(long itemId);
+	List<BidOrder> getOrdersForItem(long itemId);
+	
+	
 
 	
 

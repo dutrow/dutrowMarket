@@ -3,13 +3,22 @@
  */
 package dutrow.bidbot.ejb;
 
+import java.beans.Transient;
+import java.util.Collection;
 import java.util.TreeSet;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
+import javax.ejb.Schedule;
+import javax.ejb.ScheduleExpression;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.ejb.Timeout;
+import javax.ejb.Timer;
+import javax.ejb.TimerService;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
@@ -56,12 +65,69 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 	@EJB(mappedName = mName)
 	private BuyerMgmtRemote buyerManager;
 	
-	
-	//final String hName = "ejb:dutrowBidbot/OrderMgmtHelper!dutrow.bidbot.ejb.OrderMgmtHelper";
-	//@EJB(mappedName = hName)
 	@EJB
 	OrderMgmtHelperEJB orderMgmtHelper;
+	
+	@Resource
+	private TimerService timerService;
 
+	// not injected
+	long checkAuctionInterval;
+	
+	@PostConstruct
+	public void init() {
+		try {
+			log.info("**** OrderMgmtEJB init ****");
+			log.info("timerService=" + timerService);
+			
+			log.info("orderManager=" + orderMgmt);
+			log.info("buyerManager=" + buyerManager);
+			
+			
+			checkAuctionInterval = 10000;
+			log.info("setting checkAuctionInterval=" + checkAuctionInterval);
+			
+			
+		} catch (Throwable ex) {
+			log.warn("error in init", ex);
+			throw new EJBException("error in init" + ex);
+		}
+	}
+	
+
+	@Override
+	public void cancelTimers() {
+		log.debug("bidbot canceling timers");
+		for (Timer timer : (Collection<Timer>) timerService.getTimers()) {
+			timer.cancel();
+		}
+	}
+	
+	public void initTimers(long delay) {
+		cancelTimers();
+		log.debug("initializing bidbot btimers, checkAuctionInterval=" + delay);
+		timerService.createTimer(0, delay, "checkAuctionTimer");
+	}
+
+	public void initTimers(ScheduleExpression schedule) {
+		cancelTimers();
+		log.debug("initializing bidbot timers, schedule=" + schedule);
+		timerService.createCalendarTimer(schedule);
+	}
+
+	@Timeout
+	@Transient
+	@Schedule(second = "*/2", minute = "*", hour = "*", dayOfMonth = "*", month = "*", year = "*")
+	public void execute(Timer timer) {
+		log.info("timer fired:" + timer);
+		try {
+			orderMgmtHelper.checkAuction();
+		} catch (Exception ex) {
+			log.error("error checking auction", ex);
+		}
+	}
+
+	
 	protected BidResultDTO executeOrder(BidOrder order)
 			throws BuyerMgmtRemoteException, NamingException {
 		log.debug(" **** executeOrder ****");

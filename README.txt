@@ -89,21 +89,23 @@ A few convenient commands/bookmarks
 	b.	Design your JMS Message. You can use any JMS Type and JMS/custom properties you wish. 
 			dutrow.sales.ejb.SalesHelperEJB.java - dutrowSalesEJB/src/main/java
 			void dutrow.sales.ejb.SalesHelperEJB.publishAuctionItem(Session session, AuctionItem item, String jmsType) throws JMSException{...}
-			done: I implemented v1 with a MapMessage, but now am using an ObjectMessage
+			done: I implemented v1 with a MapMessage, but now am using an ObjectMessage -- the DTOs wont deserialize in the dutrowSalesImpl
+			-- because they are only available in the EJB layer or through the ejb-client jar but that's okay since the Subscriber is allowed to be simple.
 		
 		However, you need to account for the fact that subscribers will be filtering on such things as the category or state of an auction.
 			done: the message has a "category" string property and "open" boolean property
 	
 	c.	Have your eSales EJBs publish JMS Messages to the topic when the Auction changes state (created, bid, close).
 			dutrow.sales.ejb.SellerMgmtEJB
-				createAuction -> "forSale"
+				createAuction -> "forSale" (object payload: AuctionDTO)
 				
-			TODO:: BID UPDATES AND STUFF 
+			dutrow.sales.ejb.BuyerMgmtEJB
+				placeBid -> "bid" (object payload: BidDTO)
 	
 			dutrow.sales.ejb.SalesHelperEJB::
-				checkAuction -> "saleUpdate"
-				closeBidding -> "closed"
-				sellItem -> "sold"
+				checkAuction -> "saleUpdate" (object payload: AuctionDTO)
+				closeBidding -> "closed" (object payload: AuctionDTO)
+				sellItem -> "sold" (object payload: AuctionDTO)
 				
 			
 8.		Add a Java SE JMS subscriber to consume events about Auctions pertaining to a specific category.
@@ -118,15 +120,32 @@ A few convenient commands/bookmarks
 			@ActivationConfigProperty(propertyName = "messageSelector", propertyValue = "JMSType in ('closed', forSale)"),
 	
 	b.	Update any orders as being closed and with results based on the contents of the JMS message.
-	
-			TODO !!!!
+			when the "closed" message comes in, BidbotMDB calls orderMgmt.endOrder(dto) to update and close the order;
 
 10.		Implement an EJB Timer that will allow eSales to automatically wake-up and expire auctions.
 			dutrow.sales.ejb.SellerMgmtEJB
 				@Timeout @Transient	@Schedule(...)
 				public void execute(Timer timer) { calls esalessys.checkAuction(); }
+			SalesHelperEJB.checkAuction() expires auctions.
 				
 11.		Implement an EJB Timer that will allow eBidbot to periodically wake-up and check on the open auctions that it has bid orders for.
-	
-				TODO!!!!!
+			dutrow.bidbot.ejb.OrderMgmtEJB
+				@Timeout @Transient	@Schedule(...)
+				public void execute(Timer timer) { calls orderMgmtHelper.checkAuction(); }
+			OrderMgmtHelperEJB.checkAuction check on the open auctions that it has bid orders for - and bids if warranted
 				
+				
+Testing
+1.		Provide JUnit tests that verify the EJB functionality of eSales accessed through its remote interface using new access control restrictions.
+			- All dutrow.sales.ejbclient.*IT tests have been updated to runAs with proper access
+			- SalesAccessControlIT shows failures when attempting to get access controlled resources without proper access
+
+2.		Provide JUnit tests that verify the EJB functionality of eBidbot using its new access control restrictions and ability to authenticate with eSales.
+			- All dutrow.bidbot.ejbclient.*IT tests have been updated to runAs with proper access
+			- OrderMgmtIT calls OrderMgmt classes which in turn calls eSales
+			-- testPlaceBid calls OrderMgmtEJB.placeBid(long auctionId, BidAccount bidder, float bidAmount)
+			-- which calls OrderMgmtHelper.placeBid(auctionId, bidder, bidAmount) which runs as "esales-trusted"
+			-- which then autheticates with eSales to place a bid by the specified bidder.
+			- BidbotAccessControlIT shows failures when attempting to get access controlled resources without proper access
+			
+3.		TODO!!!

@@ -55,12 +55,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Needs to go last in classpath so provider versions used first -->
-		<dependency>
-			<groupId>javax.ejb</groupId>
-			<artifactId>ejb-api</artifactId>
-			<version>3.0</version>
-		</dependency>
+
 
 		<dependency>
 			<groupId>javax.enterprise</groupId>
@@ -71,8 +66,7 @@
 
 		<dependency>
 			<groupId>javax.jms</groupId>
-			<artifactId>jms-api</artifactId>
-			<version>1.1-rev-1</version>
+			<artifactId>jms</artifactId>
 		</dependency>
 
 		<dependency>
@@ -80,13 +74,24 @@
 			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<!-- brings in JBoss RMI client dependencies -->
 		<dependency>
 			<groupId>ejava.common</groupId>
 			<artifactId>jboss-rmi-client</artifactId>
 			<type>pom</type>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- Needs to go last in classpath so provider versions used first -->
+		<dependency>
+			<groupId>javax.ejb</groupId>
+			<artifactId>ejb-api</artifactId>
+			<version>3.0</version>
 		</dependency>
 
 	</dependencies>
