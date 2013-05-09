@@ -81,7 +81,7 @@ public class OrderMgmtHelperEJB {
 				processAuctionItem(item);
 			}
 
-			log.debug("processed " + index + " active items");
+			log.info("processed " + index + " active items");
 			return index;
 		} catch (JMSException ex) {
 			log.error("error publishing auction item updates", ex);
@@ -110,7 +110,7 @@ public class OrderMgmtHelperEJB {
 	}
 
 	protected void processOrder(BidOrder order, AuctionDTO item) {
-		log.debug("processing order:" + order);
+		log.info("processing order:" + order);
 		long auctionId = order.getAuctionId();
 
 		BidDTO highestBid = item.bids.last();
@@ -122,7 +122,7 @@ public class OrderMgmtHelperEJB {
 
 				buyerManager.placeBid(item.id, bidderAcct, bidderPasswd,
 						item.askingPrice);
-				log.debug("placed initial bid for order:" + order);
+				log.info("placed initial bid for order:" + order);
 			}
 		} else if (highestBid.amount < order.getMaxBid()
 		// add don't bid against ourself
@@ -130,7 +130,7 @@ public class OrderMgmtHelperEJB {
 			float bidAmount = Math
 					.min(order.getMaxBid(), highestBid.amount + 1);
 			buyerManager.placeBid(item.id, bidderAcct, bidderPasswd, bidAmount);
-			log.debug("placed new bid for order:" + order);
+			log.info("placed new bid for order:" + order);
 		}
 	}
 

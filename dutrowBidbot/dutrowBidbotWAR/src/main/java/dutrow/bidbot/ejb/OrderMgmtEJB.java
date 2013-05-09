@@ -97,7 +97,7 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 
 	@Override
 	public void cancelTimers() {
-		log.debug("bidbot canceling timers");
+		log.info("bidbot canceling timers");
 		for (Timer timer : (Collection<Timer>) timerService.getTimers()) {
 			timer.cancel();
 		}
@@ -105,13 +105,13 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 	
 	public void initTimers(long delay) {
 		cancelTimers();
-		log.debug("initializing bidbot btimers, checkAuctionInterval=" + delay);
+		log.info("initializing bidbot btimers, checkAuctionInterval=" + delay);
 		timerService.createTimer(0, delay, "checkAuctionTimer");
 	}
 
 	public void initTimers(ScheduleExpression schedule) {
 		cancelTimers();
-		log.debug("initializing bidbot timers, schedule=" + schedule);
+		log.info("initializing bidbot timers, schedule=" + schedule);
 		timerService.createCalendarTimer(schedule);
 	}
 
@@ -130,7 +130,7 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 	
 	protected BidResultDTO executeOrder(BidOrder order)
 			throws BuyerMgmtRemoteException, NamingException {
-		log.debug(" **** executeOrder ****");
+		log.info(" **** executeOrder ****");
 
 		if (order == null) {
 			log.warn("BidOrder is null");
@@ -189,7 +189,7 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 
 	public long createOrder(BidOrder order) throws BuyerMgmtRemoteException,
 			NamingException {
-		log.debug(" **** createOrder ****");
+		log.info(" **** createOrder ****");
 		String bidderId = order.getBidder().getUserId();
 		String callerId = ctx.getCallerPrincipal().getName();
 		if (bidderId.equalsIgnoreCase(callerId) == false) {
@@ -207,35 +207,35 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 	}
 
 	public BidOrder getOrder(long bidOrderId) {
-		log.debug(" **** getOrder ****");
+		log.info(" **** getOrder ****");
 		return orderMgmt.getOrder(bidOrderId);
 	}
 
 	public boolean endOrder(long bidOrderId) {
-		log.debug(" **** endOrder ****");
+		log.info(" **** endOrder ****");
 		return orderMgmt.endOrder(bidOrderId);
 	} // complete order processing once auction has closed and note if won.
 
 	public boolean getOrderStatus(long bidOrderId) {
-		log.debug(" **** getOrderStatus ****");
+		log.info(" **** getOrderStatus ****");
 		return orderMgmt.getOrderStatus(bidOrderId);
 	} // did user win or not
 
 	@RolesAllowed({ "ebidbot-admin" })
 	public boolean createAccount(BidAccount ba) {
-		log.debug(" **** createAccount(BidAccount) ****");
+		log.info(" **** createAccount(BidAccount) ****");
 		return orderMgmt.createAccount(ba);
 	}
 
 	@RolesAllowed({ "ebidbot-admin" })
 	public BidAccount createAccount(String userId, String accountId,
 			String passwd) {
-		log.debug(" **** createAccount(String,String,String) ****");
+		log.info(" **** createAccount(String,String,String) ****");
 		return orderMgmt.createAccount(userId, accountId, passwd);
 	}
 
 	public BidAccount getAccount(String userId) {
-		log.debug(" **** getAccount ****");
+		log.info(" **** getAccount ****");
 		return orderMgmt.getAccount(userId);
 	}
 

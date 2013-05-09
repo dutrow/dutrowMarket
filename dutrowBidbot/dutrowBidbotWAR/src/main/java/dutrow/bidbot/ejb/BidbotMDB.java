@@ -15,10 +15,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import dutrow.bidbot.bl.OrderMgmt;
-import dutrow.bidbot.bo.BidOrder;
 import dutrow.bidbot.cdi.BidbotOrderManager;
 import dutrow.sales.dto.AuctionDTO;
-import dutrow.sales.dto.BidDTO;
 import dutrow.sales.ejb.BuyerMgmtRemote;
 
 /**
@@ -56,16 +54,18 @@ public class BidbotMDB implements MessageListener {
 
 	public void onMessage(Message message) {
 		try {
-			log.debug("onMessage:" + message.getJMSMessageID());
+			log.info("ON MESSAGE:" + message.getJMSMessageID());
 			if (message instanceof ObjectMessage) {
 				ObjectMessage om = (ObjectMessage) message;
 				Object o = om.getObject();
 				if (o instanceof AuctionDTO) {
 					AuctionDTO dto = (AuctionDTO) o;
 					if (message.getJMSType().equalsIgnoreCase("saleUpdate")) {
+						log.info("processAuctionItem");
 						orderMgmtHelper.processAuctionItem(dto);
 					} else if (message.getJMSType().equalsIgnoreCase("closed")) {
-						orderMgmt.endOrder(dto.id);
+						log.info("endOrders");
+						orderMgmt.endOrders(dto);
 					}
 				}
 			}
