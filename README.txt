@@ -148,4 +148,4 @@ Testing
 			-- which then autheticates with eSales to place a bid by the specified bidder.
 			- BidbotAccessControlIT shows failures when attempting to get access controlled resources without proper access
 			
-3.		TODO!!!
+3.		DONE!
