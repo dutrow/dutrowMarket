@@ -57,6 +57,12 @@
 
 
 		<dependency>
+			<groupId>org.jboss.spec.javax.ejb</groupId>
+			<artifactId>jboss-ejb-api_3.1_spec</artifactId>
+			<version>1.0.2.Final</version>
+		</dependency>
+
+		<dependency>
 			<groupId>javax.enterprise</groupId>
 			<artifactId>cdi-api</artifactId>
 			<version>1.0-SP4</version>
@@ -74,11 +80,7 @@
 			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
+
 		<!-- brings in JBoss RMI client dependencies -->
 		<dependency>
 			<groupId>ejava.common</groupId>
@@ -87,12 +89,17 @@
 			<scope>test</scope>
 		</dependency>
 
+
+
 		<!-- Needs to go last in classpath so provider versions used first -->
 		<dependency>
 			<groupId>javax.ejb</groupId>
 			<artifactId>ejb-api</artifactId>
 			<version>3.0</version>
+			<scope>provided</scope>
 		</dependency>
+
+
 
 	</dependencies>
 
