@@ -148,4 +148,5 @@ Testing
 			-- which then autheticates with eSales to place a bid by the specified bidder.
 			- BidbotAccessControlIT shows failures when attempting to get access controlled resources without proper access
 			
-3.		DONE!
+3.		Implement the scripted use case below as an automated JUnit test and manually driven script through the Web UI.
+			DONE!
