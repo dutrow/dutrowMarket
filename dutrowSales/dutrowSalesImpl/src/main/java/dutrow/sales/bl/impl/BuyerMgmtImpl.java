@@ -8,13 +8,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import dutrow.sales.bl.BuyerMgmt;
 import dutrow.sales.bo.Account;
 import dutrow.sales.bo.AuctionItem;
 import dutrow.sales.bo.Bid;
 import dutrow.sales.bo.BidResult;
-import dutrow.sales.bo.Image;
-import dutrow.sales.bo.POC;
 import dutrow.sales.dao.AccountDAO;
 import dutrow.sales.dao.AuctionDAO;
 
@@ -23,6 +24,7 @@ import dutrow.sales.dao.AuctionDAO;
  *
  */
 public class BuyerMgmtImpl implements BuyerMgmt {
+	private static Log log = LogFactory.getLog(BuyerMgmtImpl.class);	
 
 	private AccountDAO accounts;
 	private AuctionDAO auctions;
@@ -66,6 +68,8 @@ public class BuyerMgmtImpl implements BuyerMgmt {
 	 */
 	@Override
 	public BidResult placeBid(String bidder, long auctionId, float amount) {
+
+		log.info("request to place bid of amount: " + amount);
 		
 		Date now = GregorianCalendar.getInstance().getTime();
 		
@@ -88,8 +92,8 @@ public class BuyerMgmtImpl implements BuyerMgmt {
 		
 		// the bid amount must be greater than any pre-existing bid
 		Bid highestBid = verifiedAuction.getHighestBid();
-		if (highestBid != null && highestBid.getAmount() > amount){
-			return new BidResult(null, "bid is not higher than previous bid");
+		if (highestBid != null && highestBid.getAmount() >= amount){
+			return new BidResult(null, "bid of " + amount + " is not higher than previous bid of " + highestBid.getAmount());
 		}
 		
 		// the bid is valid

@@ -21,9 +21,7 @@ public interface SellerMgmtRemote {
 	Collection<AuctionDTO> getOpenUserAuctions();
 	AuctionDTO getAuction(long auctionId);
 	Collection<ImageDTO> getAuctionImages(long auctionId);
-	
-	void workSync(int count, long delay);
-	void workAsync(int count, long delay);	
+		
 	void cancelTimers();
 		
 	

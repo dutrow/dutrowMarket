@@ -10,12 +10,11 @@ import java.util.Date;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-
 /**
  * @author dutroda1
- *
+ * 
  */
-public class AuctionDTO implements Serializable{
+public class AuctionDTO implements Serializable {
 	private static final long serialVersionUID = 7300123732092489492L;
 	public long id;
 	public String title;
@@ -30,11 +29,11 @@ public class AuctionDTO implements Serializable{
 	public float askingPrice;
 	public float purchasePrice;
 	public boolean isOpen;
-	
+
 	public AddressDTO shipTo;
-	
+
 	public SortedSet<BidDTO> bids;
-	
+
 	public Collection<ImageDTO> images;
 	public boolean isExpired;
 
@@ -44,8 +43,10 @@ public class AuctionDTO implements Serializable{
 	public AuctionDTO() {
 		super();
 	}
-	
-	public AuctionDTO(String titleIn, String categoryIn, String descriptionIn, Date startTimeIn, Date endTimeIn, float askingPriceIn, String sellerIn, String sellerEmailIn, boolean isOpen){
+
+	public AuctionDTO(String titleIn, String categoryIn, String descriptionIn,
+			Date startTimeIn, Date endTimeIn, float askingPriceIn,
+			String sellerIn, String sellerEmailIn, boolean isOpen) {
 		this.title = titleIn;
 		this.category = categoryIn;
 		this.description = descriptionIn;
@@ -58,11 +59,12 @@ public class AuctionDTO implements Serializable{
 		this.images = new ArrayList<ImageDTO>();
 		this.bids = new TreeSet<BidDTO>();
 		this.isExpired = false;
-		
-		
+
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -77,9 +79,17 @@ public class AuctionDTO implements Serializable{
 				+ bids + ", images=" + images + ", isExpired=" + isExpired
 				+ "]";
 	}
-	
-	
 
-	
-	
+	/**
+	 * @return
+	 */
+	public float highestBid() {
+		float bid = -1; 
+		if (this.bids != null && !this.bids.isEmpty()){
+			bid = this.bids.last().amount;
+		}
+		
+		return bid;
+	}
+
 }

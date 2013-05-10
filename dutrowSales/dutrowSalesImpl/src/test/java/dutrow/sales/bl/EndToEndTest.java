@@ -144,8 +144,9 @@ public class EndToEndTest extends JPATestBase{
 			BidResult succesfulBid = buyerManager.placeBid(b.getUserId(), auctionId, nextBid);
 			log.info("placed bid: " + succesfulBid.getBid());
 			log.info(succesfulBid.getResult());
-			Assert.assertNotNull("Bid was rejected", succesfulBid.getBid());
-			
+			Assert.assertNotNull("Bid was rejected: ", succesfulBid.getBid());
+
+			nextBid += 1.0f;
 		}
 
 		// * getAuction (using BuyerMgmtImpl) -- i.e., showing auction has bids

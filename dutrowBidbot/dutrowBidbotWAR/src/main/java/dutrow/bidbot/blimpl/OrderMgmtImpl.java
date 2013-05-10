@@ -186,7 +186,12 @@ public class OrderMgmtImpl implements OrderMgmt {
 	 */
 	@Override
 	public void endOrders(AuctionDTO dto) {
+		log.info("END orders for item: " + dto.id);
+		
 		List<BidOrder> ordersToUpdateAndClose = getOrdersForItem(dto.id);
+		
+		log.info(ordersToUpdateAndClose.size() + " orders to close");
+		
 		for (BidOrder bidOrder : ordersToUpdateAndClose) {
 			bidOrder.setComplete(true);
 			if (!dto.bids.isEmpty()) {

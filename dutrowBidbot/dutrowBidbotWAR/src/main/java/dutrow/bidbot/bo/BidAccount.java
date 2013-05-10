@@ -40,7 +40,6 @@ public class BidAccount implements Serializable {
 	
 	protected BidAccount() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

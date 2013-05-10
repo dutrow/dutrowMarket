@@ -10,7 +10,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.annotation.security.RunAs;
-import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -20,7 +19,6 @@ import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.MapMessage;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
@@ -55,9 +53,6 @@ public class SalesHelperEJB {
 
 	@Resource
 	protected SessionContext ctx;
-
-	private @EJB
-	SellerMgmtActionEJB actions;
 
 	@Resource(mappedName = "java:/JmsXA")
 	private ConnectionFactory connFactory;
@@ -109,12 +104,13 @@ public class SalesHelperEJB {
 			Calendar now = Calendar.getInstance();
 
 			for (AuctionItem item : items) {
-				log.info(item.getTitle() + " ends: " + item.getEndTime());
+				//log.info(item.getTitle() + " ends: " + item.getEndTime());
 				if (now.getTime().after(item.getEndTime())) {
-					log.info("we should close");
+					log.info("we should close this item:");
+					log.info(item.getTitle() + " ends: " + item.getEndTime());
 					closeBidding(session, item);
 				} else {
-					log.info("we should keep the sale going");
+					//log.info("we should keep the sale going");
 					publishAuctionItem(session, item, "saleUpdate");
 				}
 			}

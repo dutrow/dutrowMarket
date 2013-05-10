@@ -64,36 +64,34 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 	final String mName = "ejb:dutrowSalesEAR/dutrowSalesEJB/BuyerMgmtEJB!dutrow.sales.ejb.BuyerMgmtRemote";
 	@EJB(mappedName = mName)
 	private BuyerMgmtRemote buyerManager;
-	
+
 	@EJB
 	OrderMgmtHelperEJB orderMgmtHelper;
-	
+
 	@Resource
 	private TimerService timerService;
 
 	// not injected
 	long checkAuctionInterval;
-	
+
 	@PostConstruct
 	public void init() {
 		try {
 			log.info("**** OrderMgmtEJB init ****");
 			log.info("timerService=" + timerService);
-			
+
 			log.info("orderManager=" + orderMgmt);
 			log.info("buyerManager=" + buyerManager);
-			
-			
+
 			checkAuctionInterval = 10000;
 			log.info("setting checkAuctionInterval=" + checkAuctionInterval);
-			
+
 			
 		} catch (Throwable ex) {
 			log.warn("error in init", ex);
 			throw new EJBException("error in init" + ex);
 		}
 	}
-	
 
 	@Override
 	public void cancelTimers() {
@@ -102,7 +100,7 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 			timer.cancel();
 		}
 	}
-	
+
 	public void initTimers(long delay) {
 		cancelTimers();
 		log.info("initializing bidbot btimers, checkAuctionInterval=" + delay);
@@ -117,7 +115,7 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 
 	@Timeout
 	@Transient
-	@Schedule(second = "*/2", minute = "*", hour = "*", dayOfMonth = "*", month = "*", year = "*")
+	@Schedule(second = "*/10", minute = "*", hour = "*", dayOfMonth = "*", month = "*", year = "*")
 	public void execute(Timer timer) {
 		log.info("timer fired:" + timer);
 		try {
@@ -127,7 +125,6 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 		}
 	}
 
-	
 	protected BidResultDTO executeOrder(BidOrder order)
 			throws BuyerMgmtRemoteException, NamingException {
 		log.info(" **** executeOrder ****");
@@ -168,13 +165,12 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 			}
 		}
 
-		BidResultDTO result = orderMgmtHelper.placeBid(order.getAuctionId(), order.getBidder(),
-				bidAmount);
+		BidResultDTO result = orderMgmtHelper.placeBid(order.getAuctionId(),
+				order.getBidder(), bidAmount);
 
 		return result;
 
 	}
-
 
 	@Override
 	public BidResultDTO placeBid(long auctionId, BidAccount bidder,
@@ -186,10 +182,17 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 
 	}
 
-
 	public long createOrder(BidOrder order) throws BuyerMgmtRemoteException,
 			NamingException {
 		log.info(" **** createOrder ****");
+		if (order == null) {
+			throw new IllegalArgumentException("order is null");
+		}
+		
+		if (order.getBidder() == null) {
+			throw new IllegalArgumentException("bidder is null");
+		}
+		
 		String bidderId = order.getBidder().getUserId();
 		String callerId = ctx.getCallerPrincipal().getName();
 		if (bidderId.equalsIgnoreCase(callerId) == false) {
@@ -239,17 +242,26 @@ public class OrderMgmtEJB implements OrderMgmtRemote {
 		return orderMgmt.getAccount(userId);
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see dutrow.bidbot.ejb.OrderMgmtRemote#createOrder(long, float, float)
 	 */
 	@Override
-	public long createOrder(long auctionid, float firstBid, float maxBid) throws BuyerMgmtRemoteException, NamingException {
+	public long createOrder(long auctionid, float firstBid, float maxBid)
+			throws BuyerMgmtRemoteException, NamingException {
 		String callerId = ctx.getCallerPrincipal().getName();
+		log.info("creating order on behalf of " + callerId);
 		BidAccount account = orderMgmt.getAccount(callerId);
+		
+		if (account == null){
+			throw new IllegalArgumentException(
+				"Bid account does not exist for user");
+		}
+		log.info("bid account is " + account.toString());
 		BidOrder bo = new BidOrder(auctionid, firstBid, maxBid, account);
 		return createOrder(bo);
-		
+
 	}
 
 }

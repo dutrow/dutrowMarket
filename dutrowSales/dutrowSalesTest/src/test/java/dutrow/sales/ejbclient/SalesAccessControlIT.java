@@ -54,9 +54,7 @@ public class SalesAccessControlIT extends SalesSupport {
 
 		// not runAs(knownUser, knownPassword);
 
-		log.info("createAccount for buyer2 in eBidbot::TODO");
-		// TODO: orderManager.createAccountDTO(buyer2);
-
+		
 		log.info("createAuction for seller");
 		// not runAs(user1User, user1Password);
 		Calendar cal = Calendar.getInstance();

@@ -115,7 +115,7 @@ public class IngestorImpl implements Ingestor{
 			ai.getImages().add(i);
 
 			auctionDAO.updateAuction(ai);
-			log.info("updated auction: " + ai);
+			log.trace("updated auction: " + ai);
 		} else
 			log.warn("AuctionItem does not exist with id: "
 					+ auctionObject.getId());
@@ -185,7 +185,7 @@ public class IngestorImpl implements Ingestor{
 		} 
 
 		auctionDAO.createAuction(ai);
-		log.info("created auction item: " + ai);
+		log.trace("created auction item: " + ai);
 	}
 
 	/**
@@ -223,6 +223,6 @@ public class IngestorImpl implements Ingestor{
 
 		}
 		accountDAO.createAccount(accountBO);
-		log.debug("created account:" + accountBO);
+		log.trace("created account:" + accountBO);
 	}
 }

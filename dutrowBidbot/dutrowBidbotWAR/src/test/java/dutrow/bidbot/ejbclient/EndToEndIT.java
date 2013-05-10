@@ -42,7 +42,7 @@ public class EndToEndIT extends BidbotSupport {
 	}
 
 	@Test
-	public void endToEnd() throws BuyerMgmtRemoteException, NamingException {
+	public void endToEnd() throws BuyerMgmtRemoteException, NamingException, InterruptedException {
 		log.debug(" **** endToEnd **** ");
 		
 //		eSales initializes the EJB Timer to check for expired auctions
@@ -56,23 +56,33 @@ public class EndToEndIT extends BidbotSupport {
 		log.info("reset sales databases");
 		boolean isReset = testSupportSales.resetAll();
 		Assert.assertTrue(isReset);
-
-//		admin2 resets the eBidbot tables (using the EBidbotTestUtilEJB)
-//		admin2 populates the eBidbot tables (using the EBidTestUtilEJB) if necessary. Suggest adding account for user3 at this point.
-
-		runAs(admin2User, admin2Password);
-		log.info("reset bidbot databases");
-		isReset = super.testSupport.reset();
-		Assert.assertTrue(isReset);
-
-		log.info("ingest data");
+		log.info("ingest data for eSales");
 		try {
-			runAs(admin2User, admin2Password);
 			parser.ingest();
 		} catch (Exception e) {
 			log.error("Parser ingest failed", e);
 			Assert.fail("Parser ingest failed: " + e.getMessage());
 		}
+
+//		admin2 resets the eBidbot tables (using the EBidbotTestUtilEJB)
+		runAs(admin2User, admin2Password);
+		log.info("reset bidbot databases");
+		isReset = super.testSupport.reset();
+		Assert.assertTrue(isReset);
+		
+//		admin2 populates the eBidbot tables (using the EBidTestUtilEJB) if necessary.
+//		log.info("ingest data");
+//		try {
+//			EBidTestUtilEJB.ingest();
+//		} catch (Exception e) {
+//			log.error("Parser ingest failed", e);
+//			Assert.fail("Parser ingest failed: " + e.getMessage());
+//		}
+//		Suggest adding account for user3 at this point.
+//		yeah, let's just do that
+		BidAccount user3 = orderManager.createAccount(user3User, user3User, user3Password);		
+		Assert.assertNotNull("User 3 not created", user3);
+		
 		runAs(knownUser, knownPassword);
 
 		AccountDTO seller = null;
@@ -87,7 +97,7 @@ public class EndToEndIT extends BidbotSupport {
 		runAs(user1User, user1Password);
 		Calendar cal = Calendar.getInstance();
 		Date now = cal.getTime();
-		cal.add(Calendar.SECOND, 10);
+		cal.add(Calendar.SECOND, 20);
 		Date end = cal.getTime();
 		AuctionDTO auction = new AuctionDTO("VT Fuse", "Science & Toys",
 				"detonates an explosive device automatically", now , end, 18.00f, seller.userId,
@@ -115,6 +125,7 @@ public class EndToEndIT extends BidbotSupport {
 		AuctionDTO gotAuction = null;
 		try {
 			gotAuction = buyerManager.getAuctionDTO(auction.id);
+			log.info("Found the auction we're going to bid on: " + gotAuction.toString());
 		} catch (BuyerMgmtRemoteException h) {
 			Assert.fail("Buyer manager threw exception on getAuctionDTO");
 		}
@@ -127,12 +138,17 @@ public class EndToEndIT extends BidbotSupport {
 		Collection<AuctionDTO> gotOpenAuctions = buyerManager.getOpenAuctions();
 		Assert.assertNotSame("Auctions not open", 0, gotOpenAuctions.size());
 //		user2 places bid on an auction
-		BidResultDTO bidResult = buyerManager.placeBid(gotAuction.id, 1f);
+		BidResultDTO bidResult = buyerManager.placeBid(gotAuction.id, 20f);
 		Assert.assertNotNull("Bid invalid: " + bidResult.result, bidResult.bid);
+		log.info(bidResult.result);
 
 //		user2 views the current status of the auction they are bidding on
 		AuctionDTO currStatus = buyerManager.getAuctionDTO(gotAuction.id);
 		log.info("user2 sees auction status is " + currStatus.isOpen);
+		Assert.assertTrue(currStatus.isOpen);
+		log.info(currStatus.toString());
+		log.info("highestBid: " +  currStatus.highestBid());	
+		Assert.assertEquals("Bid amount not what was expected", 20f, currStatus.highestBid());
 		
 		log.info("getAuctions for buyer1");
 		// :: NOTE :: This isn't a defined interface in the buyerManager,
@@ -143,26 +159,44 @@ public class EndToEndIT extends BidbotSupport {
 //		user3 gets a list of open auctions
 		runAs(user3User, user3Password);
 		Collection<AuctionDTO> openAuctions = buyerManager.getOpenAuctions();
+		for (AuctionDTO auctionDTO : openAuctions) {
+			// do nothing;
+		}
 		
 //		user3 views the current status of the auction that was bid by user2
 		currStatus = buyerManager.getAuctionDTO(gotAuction.id);
 		log.info("user3 sees auction status is " + currStatus.isOpen);
+		Assert.assertTrue("Auction not open", currStatus.isOpen);
 		
 //		user3 places order with eBidbot		
 		runAs(user3User, user3Password);
-		orderManager.createOrder(gotAuction.id, 3f, 15f);
+		long user3Order = orderManager.createOrder(gotAuction.id, 23f, 35f);
 //		eBidbot EJB places bid for user3
 
+		currStatus = buyerManager.getAuctionDTO(gotAuction.id);
+		log.info(currStatus.toString());
+		Assert.assertEquals("Bid amount not what was expected", 23f, currStatus.highestBid());
 		
 //		user2 places another bid on auction
 		runAs(user2User, user2Password);
-		bidResult = buyerManager.placeBid(gotAuction.id, 5f);
+		bidResult = buyerManager.placeBid(gotAuction.id, 25f);
 		Assert.assertNotNull("Bid invalid: " + bidResult.result, bidResult.bid);
+		log.info(bidResult.result);
+		currStatus = buyerManager.getAuctionDTO(gotAuction.id);
+		log.info(currStatus.toString());
+		Assert.assertEquals("Bid amount not what was expected", 25f, currStatus.highestBid());
 
+		log.info("Sleeping so that the auction can play out");
+		Thread.sleep(11000);
 //		eBidbot EJB wakes up again from an EJBTimer
 //		eBidbot EJB sees they have been raised and places another bid for user3
 //		* This happens automatically
-
+		currStatus = buyerManager.getAuctionDTO(gotAuction.id);
+		log.info(currStatus.toString());
+		Assert.assertEquals("Bid amount not what was expected", 26f, currStatus.highestBid());
+		
+		log.info("Sleeping so that the auction can finish");
+		Thread.sleep(16000);
 //		eSales EJB wakes up from an EJBTimer and closes the auction
 //		eSales EJB publishes a message to the topic that informs everyone of the closing and that user3 has win.
 //		* This happens automatically
@@ -175,8 +209,10 @@ public class EndToEndIT extends BidbotSupport {
 
 //		user3 checks their order with eBidbot and finds out they won
 		runAs(user3User, user3Password);
-		boolean stat = orderManager.getOrderStatus(gotAuction.id);
+		boolean stat = orderManager.getOrderStatus(user3Order);
 		log.info("user3 order status: " + stat);
-
+		Assert.assertTrue("User 3 should have won", stat);
+		
+		log.info("YOU WIN!");
 	}
 }

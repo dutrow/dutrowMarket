@@ -76,8 +76,10 @@ public class OrderMgmtHelperEJB {
 
 			Calendar now = Calendar.getInstance();
 
+			
 			for (AuctionDTO item : items) {
-				log.info(item.title + " : " + item.id + " is open");
+				index++;
+				//log.info(item.title + " : " + item.id + " is open");
 				processAuctionItem(item);
 			}
 
@@ -112,7 +114,7 @@ public class OrderMgmtHelperEJB {
 	public void processOrder(BidOrder order, AuctionDTO item) {
 		log.info("processing order:" + order);
 		long auctionId = order.getAuctionId();
-
+		log.info("for item: " + item);
 		BidDTO highestBid = item.bids.last();
 		String bidderAcct = order.getBidder().getSalesAccount();
 		String bidderPasswd = order.getBidder().getSalesPassword();
@@ -120,17 +122,23 @@ public class OrderMgmtHelperEJB {
 		if (highestBid == null) {
 			if (item.askingPrice < order.getMaxBid()) {
 
-				buyerManager.placeBid(item.id, bidderAcct, bidderPasswd,
+				BidResultDTO res = buyerManager.placeBid(item.id, bidderAcct, bidderPasswd,
 						item.askingPrice);
 				log.info("placed initial bid for order:" + order);
+				item.bids.add(res.bid);
 			}
 		} else if (highestBid.amount < order.getMaxBid()
 		// add don't bid against ourself
 				&& !highestBid.poc.equals(order.getBidder().getSalesAccount())) {
+			log.info("highestBidder: " + highestBid.poc + " $" + highestBid.amount);
+			log.info("you: " + order.getBidder().getSalesAccount() + " max$" + order.getMaxBid());
+			
 			float bidAmount = Math
 					.min(order.getMaxBid(), highestBid.amount + 1);
-			buyerManager.placeBid(item.id, bidderAcct, bidderPasswd, bidAmount);
+			log.info("place bid of : " + bidAmount);
+			BidResultDTO res = buyerManager.placeBid(item.id, bidderAcct, bidderPasswd, bidAmount);
 			log.info("placed new bid for order:" + order);
+			item.bids.add(res.bid);
 		}
 	}
 

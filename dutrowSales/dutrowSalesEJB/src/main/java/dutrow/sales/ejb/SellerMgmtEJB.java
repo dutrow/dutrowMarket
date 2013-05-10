@@ -73,9 +73,6 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 	@Resource
 	protected SessionContext ctx;
 
-	private @EJB // TODO: Remove, I think this serves the same function as my SalesHelperEJB
-	SellerMgmtActionEJB actions;
-
 	@Resource
 	private TimerService timerService;
 	
@@ -129,62 +126,6 @@ public class SellerMgmtEJB implements SellerMgmtLocal, SellerMgmtRemote {
 		}
 	}
 
-	/**
-	 * Perform action synchronously while caller waits.
-	 */
-	@Override
-	public void workSync(int count, long delay) {
-		DateFormat df = new SimpleDateFormat("HH:mm:ss.SSS");
-
-		long startTime = System.currentTimeMillis();
-		for (int i = 0; i < count; i++) {
-			log.info(String.format("%s issuing sync request, delay=%d",
-					df.format(new Date()), delay));
-			@SuppressWarnings("unused")
-			Date date = actions.doWorkSync(delay);
-			log.info(String.format("sync waitTime=%d msecs",
-					System.currentTimeMillis() - startTime));
-		}
-		long syncTime = System.currentTimeMillis() - startTime;
-		log.info(String.format("workSync time=%d msecs", syncTime));
-	}
-
-	/**
-	 * Perform action async from caller.
-	 */
-	@Override
-	public void workAsync(int count, long delay) {
-		DateFormat df = new SimpleDateFormat("HH:mm:ss.SSS");
-
-		long startTime = System.currentTimeMillis();
-		List<Future<Date>> results = new ArrayList<Future<Date>>();
-		for (int i = 0; i < count; i++) {
-			log.info(String.format("%s issuing async request, delay=%d",
-					df.format(new Date()), delay));
-			Future<Date> date = actions.doWorkAsync(delay);
-			results.add(date);
-			log.info(String.format("async waitTime=%d msecs",
-					System.currentTimeMillis() - startTime));
-		}
-		for (Future<Date> f : results) {
-			log.info(String.format("%s getting async response",
-					df.format(new Date())));
-			try {
-				@SuppressWarnings("unused")
-				Date date = f.get();
-			} catch (Exception ex) {
-				log.error("unexpected error on future.get()", ex);
-				throw new EJBException("unexpected error during future.get():"
-						+ ex);
-			}
-			log.info(String.format("%s got async response",
-					df.format(new Date())));
-		}
-		long asyncTime = System.currentTimeMillis() - startTime;
-		log.info(String.format("workAsync time=%d msecs", asyncTime));
-	}
-
-	
 	
 
 	@Override

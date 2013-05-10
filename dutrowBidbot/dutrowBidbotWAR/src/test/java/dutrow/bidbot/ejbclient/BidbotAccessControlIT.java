@@ -173,22 +173,4 @@ public class BidbotAccessControlIT extends BidbotSupport {
 
 	}
 
-	@Test
-	public void testCreateAccount() throws NamingException {
-
-		try {
-			BidAccount ba1 = orderManager.createAccount("dan", "ddutrow",
-					"passwdd");
-			BidAccount ba2 = orderManager.getAccount("dan");
-			Assert.assertNotNull("Created account null", ba1);
-			Assert.assertNotNull("Retrieved account null", ba2);
-			Assert.assertEquals(ba1.getSalesAccount(), ba2.getSalesAccount());
-			Assert.assertEquals(ba1.getSalesPassword(), ba2.getSalesPassword());
-
-			Assert.fail("EJB Access Should Fail");
-		} catch (EJBAccessException ae) {
-			log.info("Caught EJBAccessException: good!");
-		}
-	}
-
 }

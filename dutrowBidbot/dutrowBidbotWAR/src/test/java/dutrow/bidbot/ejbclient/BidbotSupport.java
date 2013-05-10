@@ -14,6 +14,7 @@ import javax.naming.NamingException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 
 import dutrow.bidbot.ejb.BidbotUtilRemote;
@@ -21,8 +22,8 @@ import dutrow.bidbot.ejb.OrderMgmtRemote;
 import dutrow.sales.ejb.AccountMgmtRemote;
 import dutrow.sales.ejb.BuyerMgmtRemote;
 import dutrow.sales.ejb.ParserRemote;
-import dutrow.sales.ejb.SellerMgmtRemote;
 import dutrow.sales.ejb.SalesSupportRemote;
+import dutrow.sales.ejb.SellerMgmtRemote;
 
 /**
  * @author dutroda1
@@ -148,6 +149,7 @@ public class BidbotSupport {
 		} catch (NamingException ne) {
 			log.warn(ne.getMessage());
 			log.warn(ne.getExplanation());
+			Assert.fail(ne.toString());
 		}
 		log.debug("orderManager=" + orderManager);
 		log.debug("sellerManager=" + sellerManager);
